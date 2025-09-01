@@ -19,7 +19,6 @@ from drift_check import DriftChecker
 
 
 class TestDriftChecker(unittest.TestCase):
-
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
         self.repo_root = Path(self.temp_dir)
