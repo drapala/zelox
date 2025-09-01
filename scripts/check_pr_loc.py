@@ -23,9 +23,9 @@ class FileCategory(Enum):
 # Category patterns for classification
 CATEGORY_PATTERNS = {
     FileCategory.TEST: [
-        r"/test_[^/]*\.py$",  # test_*.py files
+        r"(^|/)test_[^/]*\.py$",  # test_*.py files
         r"^scripts/test_[^/]*\.py$",  # test files in scripts
-        r"/[^/]*_test\.py$",  # *_test.py files
+        r"(^|/)[^/]*_test\.py$",  # *_test.py files
         r"\.test\.[tj]sx?$",  # *.test.js/ts/jsx/tsx
         r"\.spec\.[tj]sx?$",  # *.spec.js/ts/jsx/tsx
         r"^tests?/",  # files in test(s) directories

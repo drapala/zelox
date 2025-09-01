@@ -15,7 +15,7 @@ since_version: "0.2.0"
 
 import sys
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import ANY, patch
 
 import pytest
 
@@ -84,13 +84,15 @@ class TestGitCommands:
 
         assert result == "file1.py\nfile2.js"
         mock_subprocess.assert_called_once_with(
-            ["git", "diff", "--name-only", "HEAD"], text=True, stderr=pytest.ANY
+            ["git", "diff", "--name-only", "HEAD"], text=True, stderr=ANY
         )
 
     @patch("check_pr_loc.subprocess.check_output")
     def test_run_git_command_failure(self, mock_subprocess):
         """Test git command failure handling."""
-        mock_subprocess.side_effect = Exception("Git error")
+        from subprocess import CalledProcessError
+
+        mock_subprocess.side_effect = CalledProcessError(1, "git")
 
         result = run_git_command("invalid", "command")
 
@@ -174,7 +176,7 @@ class TestPRAnalysis:
         stats = analyze_pr("main...HEAD")
 
         assert stats["total_files"] == 5
-        assert len(stats["categorized_files"][FileCategory.APPLICATION]) == 1  # main.py
+        assert len(stats["categorized_files"][FileCategory.APPLICATION]) == 1  # main.py only
         assert len(stats["categorized_files"][FileCategory.TEST]) == 1  # test_main.py
         assert len(stats["categorized_files"][FileCategory.CONFIG]) == 1  # ci.yml
         assert len(stats["categorized_files"][FileCategory.DOCUMENTATION]) == 2  # README, LICENSE
@@ -304,8 +306,8 @@ class TestEdgeCases:
     @patch("check_pr_loc.get_changed_files")
     @patch("check_pr_loc.get_file_diff_stats")
     def test_large_pr_with_only_docs(self, mock_diff, mock_files):
-        """Large PR with only docs should pass."""
-        # 50 markdown files (way over file limit)
+        """Large PR with only docs should fail due to total file limit."""
+        # 50 markdown files (way over total file limit)
         mock_files.return_value = [f"doc{i}.md" for i in range(50)]
         mock_diff.return_value = (100, 50)  # Many changes per file
 
@@ -316,7 +318,21 @@ class TestEdgeCases:
         # Docs don't count towards LOC
         assert stats["categorized_stats"][FileCategory.DOCUMENTATION]["loc"] == 0
 
-        # Should pass because documentation has no limits
+        # Should FAIL because exceeds total file limit of 25
+        assert check_limits(stats) is False
+
+    @patch("check_pr_loc.get_changed_files")
+    @patch("check_pr_loc.get_file_diff_stats")
+    def test_reasonable_docs_pr_passes(self, mock_diff, mock_files):
+        """PR with reasonable number of docs should pass."""
+        # 20 markdown files (under total limit)
+        mock_files.return_value = [f"doc{i}.md" for i in range(20)]
+        mock_diff.return_value = (100, 50)  # Many changes per file
+
+        stats = analyze_pr("main...HEAD")
+
+        assert len(stats["categorized_files"][FileCategory.DOCUMENTATION]) == 20
+        # Should pass because under total file limit
         assert check_limits(stats) is True
 
 
