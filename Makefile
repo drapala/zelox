@@ -1,7 +1,7 @@
 # LLM-First Makefile for Zelox
 # Provides consistent targets for LLM-friendly development workflow
 
-.PHONY: help pr.loc llm.check test.fast clean confusion.report cost.report pr.check validate.schemas llm.index.validate
+.PHONY: help pr.loc llm.check test.fast clean confusion.report confusion.plan confusion.focus cost.report pr.check validate.schemas llm.index.validate
 
 # Default target
 help:
@@ -9,6 +9,9 @@ help:
 	@echo "  pr.loc          - Check PR size limits (excludes Markdown)"
 	@echo "  llm.check       - Run LLM readiness checks"
 	@echo "  test.fast       - Run fast test suite"
+	@echo "  confusion.report - Generate cognitive complexity analysis"
+	@echo "  confusion.plan   - Generate refactoring recommendations"
+	@echo "  confusion.focus  - Analyze specific directory for complexity"
 	@echo "  clean           - Clean temporary files"
 
 # PR LOC gate - excludes documentation from limits
@@ -26,10 +29,20 @@ test.fast:
 	@echo "Running fast tests..."
 	@echo "⚠️  Configure your test framework here (pytest, npm test, etc.)"
 
-# Generate confusion report (planned)
+# Generate cognitive complexity analysis
 confusion.report:
-	@echo "Generating confusion report..."
-	@echo "⚠️  Configure confusion metrics analysis here"
+	@echo "Generating cognitive complexity analysis..."
+	@python3 scripts/confusion_report.py
+
+# Generate refactoring recommendations  
+confusion.plan:
+	@echo "Generating refactoring recommendations..."
+	@python3 scripts/confusion_report.py --plan --output refactoring_plan.md
+
+# Analyze specific directory for complexity
+confusion.focus:
+	@read -p "Enter directory path: " dir; \
+	python3 scripts/confusion_report.py --focus $$dir --verbose
 
 # Generate cost report (planned)
 cost.report:
