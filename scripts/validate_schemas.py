@@ -86,7 +86,8 @@ class SchemaValidator:
                         self.errors.append(f"   Path: {path}")
                 return False
 
-            print("✅ INDEX.yaml schema validation passed")
+            print("   ✅ Schema structure valid - all modules properly defined")
+            print("   ✅ Cross-references valid - no broken dependencies")
             return True
             
         except yaml.YAMLError as e:
@@ -105,8 +106,14 @@ class SchemaValidator:
         yaml_end = None
         
         for i, line in enumerate(lines):
-            if line.strip() == '```yaml' and 'Machine-readable metadata' in lines[i-1] if i > 0 else False:
-                yaml_start = i + 1
+            # Check for ```yaml with "machine-readable metadata" comment nearby
+            if line.strip() == '```yaml':
+                # Check if previous line contains metadata comment (case-insensitive)
+                if i > 0 and 'machine-readable metadata' in lines[i-1].lower():
+                    yaml_start = i + 1
+                # Also check if it's part of Front-matter section
+                elif i > 0 and any(prev_line.startswith('## Front-matter') for prev_line in lines[max(0, i-3):i]):
+                    yaml_start = i + 1
             elif yaml_start is not None and line.strip() == '```':
                 yaml_end = i
                 break
@@ -116,7 +123,9 @@ class SchemaValidator:
         
         yaml_content = '\n'.join(lines[yaml_start:yaml_end])
         try:
-            return yaml.safe_load(yaml_content), True
+            # Skip comment lines
+            yaml_lines = [line for line in yaml_content.split('\n') if not line.strip().startswith('#')]
+            return yaml.safe_load('\n'.join(yaml_lines)), True
         except yaml.YAMLError:
             return {}, False
     
@@ -161,7 +170,9 @@ class SchemaValidator:
         
         total_adrs = len([f for f in adr_files if "template" not in f.name])
         if total_adrs > 0:
-            print(f"✅ ADR frontmatter: {valid_count}/{total_adrs} files valid")
+            print(f"   ✅ {valid_count}/{total_adrs} ADRs have valid frontmatter")
+            if valid_count == total_adrs:
+                print(f"   ✅ All ADRs properly tagged for LLM discovery")
         
         return len(self.errors) == 0
     
@@ -205,21 +216,41 @@ class SchemaValidator:
                 self.errors.append(f"❌ {obs_plan.relative_to(self.repo_root)} validation failed: {e}")
         
         if obs_plans:
-            print(f"✅ OBS_PLAN validation: {valid_count}/{len(obs_plans)} files valid")
+            print(f"   ✅ {valid_count}/{len(obs_plans)} OBS_PLANs have valid structure")
+            if valid_count == len(obs_plans):
+                print(f"   ✅ All features have proper observability contracts")
         
         return len(self.errors) == 0
     
     def run_all_validations(self) -> bool:
         """Run all schema validations."""
         print("=" * 60)
-        print("SCHEMA VALIDATION")
+        print("SCHEMA VALIDATION FOR LLM-FIRST ARCHITECTURE")
         print("=" * 60)
+        print("\n📚 WHY THESE VALIDATIONS MATTER:")
+        print("→ Schemas ensure machine-readable contracts for LLM agents")
+        print("→ Consistent structure reduces cognitive load")
+        print("→ Valid metadata enables automated tooling")
+        print("")
         
         results = []
         
-        # Validate each schema type
+        # Validate INDEX.yaml
+        print("1️⃣  INDEX.yaml Validation")
+        print("   WHAT: Central module registry and API contracts")
+        print("   WHY: LLMs need structured navigation to understand the codebase")
         results.append(self.validate_index_yaml())
+        
+        # Validate ADR frontmatter
+        print("\n2️⃣  ADR Frontmatter Validation")
+        print("   WHAT: Machine-readable metadata in Architecture Decision Records")
+        print("   WHY: Enables LLMs to understand decision context and impact")
         results.append(self.validate_adr_frontmatter())
+        
+        # Validate OBS_PLAN files
+        print("\n3️⃣  OBS_PLAN.md Validation")
+        print("   WHAT: Observability contracts for each feature")
+        print("   WHY: Defines metrics, alerts, and SLOs for automated monitoring")
         results.append(self.validate_obs_plans())
         
         # Print summary
@@ -241,8 +272,18 @@ class SchemaValidator:
         
         if all_passed:
             print("\n✅ All schema validations passed!")
+            print("\n💡 WHAT THIS MEANS:")
+            print("   • Your repository structure is LLM-readable")
+            print("   • All contracts and metadata are valid")
+            print("   • Automated tools can parse your codebase")
+            print("   • New contributors (human or AI) can navigate easily")
         else:
             print("\n❌ Schema validation failed!")
+            print("\n💡 HOW TO FIX:")
+            print("   • Check the specific errors above")
+            print("   • Ensure YAML syntax is correct")
+            print("   • Verify required fields are present")
+            print("   • Run 'make validate.schemas' locally before pushing")
         
         return all_passed
 
