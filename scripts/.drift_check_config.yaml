@@ -1,0 +1,23 @@
+# Drift check configuration
+scan_patterns:
+  - "**/*.py"
+  - "**/*.js"
+  - "**/*.ts"
+  - "**/*.yaml"
+  - "**/*.yml"
+
+exclude_patterns:
+  - "**/node_modules/**"
+  - "**/__pycache__/**"
+  - "**/test_*"
+  - "**/.git/**"
+
+default_tolerance: "whitespace"
+
+tolerance_overrides:
+  "auth_*": "exact"      # Auth code must be identical
+  "config_*": "minor"    # Config can vary slightly
+  "template_*": "flexible" # Templates expected to diverge
+
+max_drift_ratio: 0.3     # Fail CI if drift exceeds 30%
+orphan_tolerance: 0      # No orphaned blocks allowed
