@@ -34,7 +34,9 @@
         "enum": [
           "architecture", "llm-first", "refactor", "quality", "testing", 
           "ci", "observability", "security", "performance", "vsa", 
-          "co-location", "bdd", "pr-size", "gates", "tooling"
+          "co-location", "bdd", "pr-size", "gates", "quality-gates", "tooling",
+          "foundational", "documentation", "developer-experience", 
+          "workflow", "logging", "telemetry", "metrics"
         ]
       },
       "minItems": 1,
