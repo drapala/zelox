@@ -12,7 +12,7 @@ import re
 
 try:
     import jsonschema
-    from jsonschema import Draft7Validator, RefResolver
+    from jsonschema import Draft7Validator
 except ImportError:
     print("❌ jsonschema package required: pip install jsonschema")
     sys.exit(1)
@@ -67,15 +67,13 @@ class SchemaValidator:
         try:
             with open(index_path, 'r', encoding='utf-8') as f:
                 index_data = yaml.safe_load(f)
-            # Load main schema and resolve local $refs in ./schemas
+            # Load main schema and resolve local $refs manually
             schema = self.load_schema("index")
-            store = self.build_schema_store()
-            resolver = RefResolver(
-                base_uri=f"file://{self.schemas_dir}/",
-                referrer=schema,
-                store=store,
-            )
-            validator = Draft7Validator(schema, resolver=resolver)
+            
+            # Resolve $refs in the schema manually
+            schema = self._resolve_refs(schema)
+            
+            validator = Draft7Validator(schema)
             errors = list(validator.iter_errors(index_data))
 
             if errors:
@@ -96,6 +94,29 @@ class SchemaValidator:
         except Exception as e:
             self.errors.append(f"❌ INDEX.yaml validation failed: {e}")
             return False
+    
+    def _resolve_refs(self, schema: Dict[str, Any]) -> Dict[str, Any]:
+        """Recursively resolve $ref references in schema."""
+        if isinstance(schema, dict):
+            if "$ref" in schema:
+                ref_path = schema["$ref"]
+                if ref_path.startswith("#/"):
+                    # Internal reference, not handling for now
+                    return schema
+                elif ref_path.endswith(".schema.json"):
+                    # External file reference
+                    ref_name = ref_path.replace(".schema.json", "").split("/")[-1]
+                    try:
+                        return self.load_schema(ref_name)
+                    except:
+                        return schema
+                return schema
+            else:
+                return {k: self._resolve_refs(v) for k, v in schema.items()}
+        elif isinstance(schema, list):
+            return [self._resolve_refs(item) for item in schema]
+        else:
+            return schema
     
     def extract_yaml_frontmatter(self, content: str) -> Tuple[Dict[str, Any], bool]:
         """Extract YAML frontmatter from markdown file."""

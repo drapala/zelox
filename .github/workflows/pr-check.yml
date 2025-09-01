@@ -1,5 +1,16 @@
 name: PR Quality Gate
 
+# ============================================================================
+# PURPOSE: Enforce LLM-First architecture standards on every Pull Request
+# 
+# This CI pipeline ensures code changes follow principles that maximize
+# AI agent effectiveness, including:
+# - Small PR sizes (≤500 LOC, ≤10 files) for focused changes
+# - Vertical Slice Architecture (VSA) with co-located tests
+# - Comprehensive documentation and metadata
+# - Sequential ADR numbering for decision tracking
+# ============================================================================
+
 on:
   pull_request:
     branches: [ main, develop ]
@@ -31,24 +42,72 @@ jobs:
         python -m pip install --upgrade pip
         pip install pyyaml jsonschema
         
-    - name: PR LOC Gate (exclude Markdown)
+    - name: PR LOC Gate (Categorized Limits)
+      # WHAT: Enforces differentiated PR size limits per ADR-003 and ADR-006
+      # WHY: Small PRs are easier to review while incentivizing comprehensive testing
+      # HOW: Categorizes files and applies different limits per category:
+      #   - APPLICATION: ≤500 LOC, ≤10 files (strict for business logic)
+      #   - TEST: ≤1000 LOC, ≤20 files (generous to encourage testing)
+      #   - CONFIG: ≤250 LOC, ≤5 files (config changes should be minimal)
+      #   - DOCUMENTATION: No limits (always encourage docs)
+      # TOTAL: ≤25 files across all categories (safety net)
       run: |
-        echo "🔍 Checking PR size limits..."
+        echo "🔍 Checking categorized PR size limits..."
+        echo "→ Application code: max 500 LOC, 10 files"
+        echo "→ Test code: max 1000 LOC, 20 files"  
+        echo "→ Config/schemas: max 250 LOC, 5 files"
+        echo "→ Documentation: no limits (excluded)"
+        echo "→ Total files: max 25 (safety net)"
         python3 scripts/check_pr_loc.py origin/main...HEAD
       
     - name: Schema Validation
+      # WHAT: Validates YAML/JSON files against their schemas
+      # WHY: Ensures configuration files follow expected structure
+      # HOW: Uses JSON Schema Draft 7 validation
+      # FILES: INDEX.yaml, ADR frontmatter, OBS_PLAN.md files
       run: |
         echo "📋 Validating repository schemas..."
+        echo "→ Checking docs/repo/INDEX.yaml structure"
+        echo "→ Validating ADR YAML frontmatter"
+        echo "→ Verifying OBS_PLAN.md formats"
         python3 scripts/validate_schemas.py
         
     - name: LLM Readiness Check
+      # WHAT: Calculates repository's LLM Readiness Score
+      # WHY: Measures how well the codebase follows LLM-first principles
+      # HOW: Scores based on:
+      #   - Co-location (tests with code): 25 points
+      #   - Import complexity (avg hops): 20 points  
+      #   - Front-matter coverage: 20 points
+      #   - Documentation structure: 20 points
+      #   - ADR completeness: 10 points
+      #   - Feature structure: 5 points
+      # THRESHOLD: Must score ≥80/100 to pass
       run: |
         echo "🤖 Checking LLM readiness score..."
+        echo "→ Co-location: Are tests next to code?"
+        echo "→ Import complexity: How many hops to understand code?"
+        echo "→ Front-matter: Do files have metadata headers?"
+        echo "→ Documentation: Are required docs present?"
+        echo "→ ADRs: Are architecture decisions documented?"
+        echo "→ Features: Do they follow VSA structure?"
         python3 scripts/check_llm_readiness.py
         
     - name: Validate File Structure
+      # WHAT: Verifies repository follows LLM-first directory structure
+      # WHY: Consistent structure helps LLMs navigate and understand code
+      # HOW: Checks for required directories and files per ADR-001
+      # STRUCTURE:
+      #   - features/: Vertical slices with co-located tests
+      #   - docs/repo/: Navigation maps and indexes
+      #   - docs/adr/: Architecture decision records
+      #   - schemas/: JSON schema definitions
+      #   - scripts/: Tooling and automation
+      #   - shared/: Cross-cutting concerns
       run: |
         echo "📁 Checking LLM-first file structure..."
+        echo "→ Verifying directory layout follows VSA principles"
+        echo "→ Ensuring navigation files are present"
         
         # Check for required directories
         echo "Checking required directories..."
@@ -82,8 +141,14 @@ jobs:
         echo "✅ File structure validation passed"
         
     - name: ADR Consistency Check
+      # WHAT: Ensures Architecture Decision Records are properly maintained
+      # WHY: ADRs document critical decisions for both humans and LLMs
+      # HOW: Verifies sequential numbering (001, 002, 003...)
+      # REQUIREMENT: No gaps in numbering, template at 000
       run: |
         echo "📄 Checking ADR consistency..."
+        echo "→ Verifying ADRs are numbered sequentially"
+        echo "→ Ensuring no gaps in numbering"
         
         # Check that ADRs are numbered sequentially
         python3 -c "
@@ -107,8 +172,17 @@ print(f'✅ ADR numbering is sequential: {len(numbers)} ADRs found')
 "
         
     - name: Feature Template Check
+      # WHAT: Validates features follow Vertical Slice Architecture
+      # WHY: VSA reduces cognitive hops for LLMs by co-locating related code
+      # HOW: Checks each feature directory for:
+      #   - README.md: Feature documentation
+      #   - Implementation files: service.py, models.py, or api.py
+      #   - Tests: Co-located test files (warning if missing)
+      # NOTE: Template directory is ignored
       run: |
         echo "📦 Checking feature template compliance..."
+        echo "→ Features should be self-contained vertical slices"
+        echo "→ Each feature should have README.md and tests co-located"
         
         # Check if features follow VSA structure
         if [ -d "features" ] && [ "$(find features -mindepth 1 -maxdepth 1 -type d | wc -l)" -gt 0 ]; then
@@ -117,6 +191,12 @@ print(f'✅ ADR numbering is sequential: {len(numbers)} ADRs found')
           for feature_dir in features/*/; do
             if [ -d "$feature_dir" ]; then
               feature_name=$(basename "$feature_dir")
+              
+              # Skip template directory
+              if [ "$feature_name" = "template" ]; then
+                continue
+              fi
+              
               echo "Checking feature: $feature_name"
               
               # Check for README.md
@@ -137,10 +217,16 @@ print(f'✅ ADR numbering is sequential: {len(numbers)} ADRs found')
         echo "✅ Feature structure check completed"
 
     - name: Generate PR Summary
+      # WHAT: Creates final report of all quality checks
+      # WHY: Provides clear feedback on PR compliance
+      # HOW: Summarizes file counts, LOC, and gate results
       if: always()
       run: |
         echo "📊 PR Quality Summary"
         echo "===================="
+        echo ""
+        echo "This PR has been evaluated against LLM-First architecture standards:"
+        echo ""
         
         # Get file counts
         total_files=$(git diff --name-only origin/main...HEAD | wc -l)

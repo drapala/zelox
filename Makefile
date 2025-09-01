@@ -52,7 +52,7 @@ validate.schemas:
 # Validate INDEX.yaml with modular schemas and cross-checks
 llm.index.validate:
 	@echo "Validating INDEX.yaml with cross-validation..."
-	@python3 scripts/validate_index.py
+	@python3 scripts/validate_schemas.py
 
 # Clean temporary files
 clean:
