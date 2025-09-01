@@ -17,7 +17,7 @@ import sys
 from dataclasses import dataclass
 from difflib import SequenceMatcher
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 @dataclass
@@ -39,7 +39,7 @@ class DriftChecker:
 
     def __init__(self, repo_root: Path | None = None, config_file: Path | None = None):
         self.repo_root = repo_root or Path.cwd()
-        self.blocks: Dict[str, List[DuplicatedBlock]] = {}
+        self.blocks: dict[str, list[DuplicatedBlock]] = {}
         self.drift_tolerance = {
             "exact": 0.0,
             "whitespace": 0.95,
@@ -75,7 +75,7 @@ class DriftChecker:
                 if start_match:
                     block_id = start_match.group(1)
                     start_line = i + 1
-                    block_content: List[str] = []
+                    block_content: list[str] = []
 
                     i += 1
                     while i < len(lines):
@@ -101,7 +101,7 @@ class DriftChecker:
         except Exception as e:
             print(f"Error scanning {file_path}: {e}", file=sys.stderr)
 
-    def check_drift(self) -> Dict[str, Any]:
+    def check_drift(self) -> dict[str, Any]:
         """Check for drift between duplicated blocks."""
         report = {
             "summary": {
@@ -161,7 +161,7 @@ class DriftChecker:
             except Exception as e:
                 print(f"Warning: Could not load config {config_file}: {e}", file=sys.stderr)
 
-    def _extract_tolerance(self, lines: List[str], current_line: int) -> str | None:
+    def _extract_tolerance(self, lines: list[str], current_line: int) -> str | None:
         """Extract tolerance setting from block comments."""
         # Look for DRIFT_TOLERANCE comment in the block header area
         for i in range(max(0, current_line - 5), min(len(lines), current_line + 3)):
