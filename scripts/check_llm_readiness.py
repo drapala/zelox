@@ -264,7 +264,7 @@ def print_results(results: dict):
     else:
         status = "❌ FAIL"
 
-    print(f"Overall Score: {score}/{max_score} ({score/max_score:.1%}) - {status}")
+    print(f"Overall Score: {score}/{max_score} ({score / max_score:.1%}) - {status}")
     print()
 
     # Individual checks
