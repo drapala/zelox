@@ -68,13 +68,11 @@ features/
 We accept strategic duplication to reduce indirection:
 
 ```python
-# DUPLICATED_BLOCK: user_validation_v1
-# REASON: OAuth validation shared across user/admin APIs  
-# DRIFT_TOLERANCE: exact
-def validate_oauth_token(token: str) -> bool:
-    if not token:
+    try:
+        jwt.decode(token, SECRET_KEY)
+        return True
+    except Exception:
         return False
-    return jwt.decode(token, SECRET_KEY)
 # END_DUPLICATED_BLOCK: user_validation_v1
 ```
 
