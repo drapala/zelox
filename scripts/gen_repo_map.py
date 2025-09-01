@@ -207,18 +207,28 @@ class StructureMapper:
             return adrs
 
         for adr_path in sorted(adr_dir.glob("*.md")):
-            # Extract ADR number from filename (e.g., "001-title.md" -> "001")
-            adr_number = adr_path.stem.split("-")[0] if "-" in adr_path.stem else adr_path.stem
+            # Extract ADR number from filename using regex (e.g., "001-title.md" -> "001")
+            # Look for first numeric sequence in filename
+            match = re.search(r"(\d+)", adr_path.stem)
+            if match:
+                adr_number = match.group(1)
+                # Extract everything after the number for title
+                remainder = adr_path.stem[match.end() :]
+                raw_title = remainder.lstrip("-_")  # Remove leading separators
+            else:
+                adr_number = ""
+                raw_title = adr_path.stem
 
-            # Try to extract frontmatter or parse from filename
-            title = adr_path.stem.replace("-", " ").replace("_", " ").title()
-            if title.startswith(adr_number):
-                title = title[len(adr_number) :].strip()
+            # Clean up title from filename
+            title = raw_title.replace("-", " ").replace("_", " ").strip().title()
+
+            # Generate relative path from REPO_MAP.md location
+            relative_path = f"../adr/{adr_path.name}"
 
             # Default values - could be enhanced to parse frontmatter from markdown files
             adr_info = {
                 "number": adr_number,
-                "path": f"../adr/{adr_path.name}",
+                "path": relative_path,
                 "title": title,
                 "status": "accepted",  # Default, could be parsed from content
                 "impact": "medium",  # Default, could be parsed from content
