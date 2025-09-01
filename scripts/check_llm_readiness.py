@@ -57,7 +57,13 @@ class LLMReadinessChecker:
             file_count = 0
 
             for py_file in self.repo_root.rglob("*.py"):
-                if "test" in str(py_file) or "__pycache__" in str(py_file):
+                # Skip test files and cache directories
+                file_name = py_file.name
+                if (
+                    file_name.startswith("test_")
+                    or file_name.endswith("_test.py")
+                    or "__pycache__" in str(py_file)
+                ):
                     continue
 
                 try:
