@@ -174,6 +174,47 @@ purpose: Generate repository map
         self.assertEqual(script["name"], "gen_repo_map.py")
         self.assertEqual(script["purpose"], "Generate repository map")
 
+    def test_scan_adrs(self):
+        """Test scanning ADR directory."""
+        # Create test ADR directory and files
+        adr_dir = self.repo_root / "docs" / "adr"
+        adr_dir.mkdir(parents=True, exist_ok=True)
+        (adr_dir / "001-test-decision.md").write_text("# Test ADR")
+        (adr_dir / "002_another_decision.md").write_text("# Another ADR")
+        (adr_dir / "003use-microservices.md").write_text("# No separator")
+        (adr_dir / "my-adr-004-title.md").write_text("# Edge case")
+
+        result = self.mapper.scan_adrs()
+
+        # Should find all ADRs
+        self.assertEqual(len(result), 4)
+
+        # Test normal dash separator
+        first_adr = result[0]
+        self.assertEqual(first_adr["number"], "001")
+        self.assertEqual(first_adr["title"], "Test Decision")
+        self.assertEqual(first_adr["path"], "../adr/001-test-decision.md")
+
+        # Test underscore separator
+        second_adr = result[1]
+        self.assertEqual(second_adr["number"], "002")
+        self.assertEqual(second_adr["title"], "Another Decision")
+
+        # Test no separator
+        third_adr = result[2]
+        self.assertEqual(third_adr["number"], "003")
+        self.assertEqual(third_adr["title"], "Use Microservices")
+
+        # Test edge case - should extract first number, not 'my'
+        fourth_adr = result[3]
+        self.assertEqual(fourth_adr["number"], "004")
+        self.assertEqual(fourth_adr["title"], "Title")
+
+    def test_scan_adrs_empty(self):
+        """Test scanning empty ADR directory."""
+        result = self.mapper.scan_adrs()
+        self.assertEqual(len(result), 0)
+
 
 class TestMarkdownGenerator(unittest.TestCase):
     """Test MarkdownGenerator class functionality."""
