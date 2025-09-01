@@ -4,23 +4,108 @@
 **Purpose:** Define minimal observability for LLM-first diagnostics  
 **Updated:** [DATE]
 
+## Machine-Readable Plan
+
+```yaml
+metrics:
+  - name: feature_name_request_duration_p95
+    budget: "200ms"
+    alert_threshold: "500ms"
+    type: latency
+    description: "P95 response time for [FEATURE_NAME] operations"
+    applies_to:
+      feature: "[feature_name]"
+      entrypoint: "[entrypoint_name]"
+
+  - name: feature_name_error_rate
+    budget: "1%"
+    alert_threshold: "5%"
+    type: error_rate
+    description: "Percentage of failed [FEATURE_NAME] operations"
+    applies_to:
+      feature: "[feature_name]"
+      entrypoint: "[entrypoint_name]"
+
+  - name: feature_name_active_count
+    budget: "1000"
+    alert_threshold: "10000"
+    type: gauge
+    description: "Current number of active [FEATURE_NAME] entities"
+
+cost_tracking:
+  - item: database_calls_per_request
+    tracking_method: tracked
+    budget: "3"
+    unit: "requests"
+  
+  - item: compute_time
+    tracking_method: measured
+    budget: "50ms"
+    unit: "request"
+  
+  - item: storage_usage
+    tracking_method: estimated
+    budget: "1KB"
+    unit: "entity"
+
+confusion_hotspots:
+  - metric: cross_file_references
+    measurement_method: static_analysis
+    target_value: 2
+    current_value: null
+    
+  - metric: indirection_depth
+    measurement_method: automated
+    target_value: 2
+    current_value: null
+    
+  - metric: import_complexity
+    measurement_method: static_analysis
+    target_value: 5
+    current_value: null
+
+alerts:
+  - metric_name: feature_name_request_duration_p95
+    condition: "> 500ms"
+    action: log
+    severity: warning
+    
+  - metric_name: feature_name_error_rate
+    condition: "> 5%"
+    action: ci_fail
+    severity: error
+
+dependency_freshness:
+  check_frequency: weekly
+  critical_deps:
+    - database_driver
+    - validation_library
+    - logging_framework
+```
+
 ## Essential Metrics
 
 ```yaml
 metrics:
-  - name: [feature_name]_request_duration_p95
+  - name: "[feature_name]_request_duration_p95"
     budget: 200ms
     alert_threshold: 500ms
     type: latency
     description: P95 response time for [FEATURE_NAME] operations
+    applies_to:
+      feature: [feature_name]
+      entrypoint: [entrypoint_name]
 
-  - name: [feature_name]_error_rate
+  - name: "[feature_name]_error_rate"
     budget: 1%
     alert_threshold: 5%
     type: error_rate
     description: Percentage of failed [FEATURE_NAME] operations
+    applies_to:
+      feature: [feature_name]
+      entrypoint: [entrypoint_name]
 
-  - name: [feature_name]_active_count
+  - name: "[feature_name]_active_count"
     budget: 1000
     alert_threshold: 10000
     type: gauge
@@ -71,12 +156,12 @@ confusion_hotspots:
 
 ```yaml
 alerts:
-  - metric_name: [feature_name]_request_duration_p95
+  - metric_name: "[feature_name]_request_duration_p95"
     condition: "> 500ms"
     action: log
     severity: warning
     
-  - metric_name: [feature_name]_error_rate
+  - metric_name: "[feature_name]_error_rate"
     condition: "> 5%"
     action: ci_fail
     severity: error
