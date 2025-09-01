@@ -102,8 +102,12 @@ class TestAverageHopsCheck:
 
     def test_low_import_complexity(self, tmp_path):
         """Test low import count scores well."""
+        # Create a features directory to avoid test filtering
+        features_dir = tmp_path / "features"
+        features_dir.mkdir()
+
         # Create Python file with few imports
-        py_file = tmp_path / "simple.py"
+        py_file = features_dir / "simple.py"
         py_file.write_text("""
 import os
 from pathlib import Path
@@ -121,8 +125,12 @@ def main():
 
     def test_medium_import_complexity(self, tmp_path):
         """Test medium import count scores moderately."""
+        # Create a features directory to avoid test filtering
+        features_dir = tmp_path / "features"
+        features_dir.mkdir()
+
         # Create Python file with medium imports
-        py_file = tmp_path / "medium.py"
+        py_file = features_dir / "medium.py"
         py_file.write_text("""
 import os
 import sys
@@ -141,8 +149,12 @@ def main():
 
     def test_high_import_complexity(self, tmp_path):
         """Test high import count scores poorly."""
+        # Create a features directory to avoid test filtering
+        features_dir = tmp_path / "features"
+        features_dir.mkdir()
+
         # Create Python file with many imports
-        py_file = tmp_path / "complex.py"
+        py_file = features_dir / "complex.py"
         py_file.write_text("""
 import os
 import sys
