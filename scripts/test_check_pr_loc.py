@@ -13,24 +13,24 @@ stability: stable
 since_version: "0.2.0"
 """
 
-import pytest
 import sys
-import os
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
+
+import pytest
 
 # Add scripts to path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from check_pr_loc import (
-    run_git_command,
-    get_changed_files,
-    is_documentation_only,
-    get_file_diff_stats,
-    analyze_pr,
-    check_limits,
     HARD_FILES_LIMIT,
     HARD_LOC_LIMIT,
+    analyze_pr,
+    check_limits,
+    get_changed_files,
+    get_file_diff_stats,
+    is_documentation_only,
+    run_git_command,
 )
 
 
@@ -39,30 +39,30 @@ class TestDocumentationDetection:
 
     def test_markdown_files_are_documentation(self):
         """Markdown files should be detected as documentation."""
-        assert is_documentation_only("README.md") == True
-        assert is_documentation_only("docs/guide.md") == True
-        assert is_documentation_only("CHANGELOG.MD") == True  # Case insensitive
+        assert is_documentation_only("README.md") is True
+        assert is_documentation_only("docs/guide.md") is True
+        assert is_documentation_only("CHANGELOG.MD") is True  # Case insensitive
 
     def test_license_files_are_documentation(self):
         """License and notice files should be documentation."""
-        assert is_documentation_only("LICENSE") == True
-        assert is_documentation_only("NOTICE") == True
-        assert is_documentation_only("AUTHORS") == True
-        assert is_documentation_only("CONTRIBUTORS.txt") == True
+        assert is_documentation_only("LICENSE") is True
+        assert is_documentation_only("NOTICE") is True
+        assert is_documentation_only("AUTHORS") is True
+        assert is_documentation_only("CONTRIBUTORS.txt") is True
 
     def test_code_files_are_not_documentation(self):
         """Code files should NOT be detected as documentation."""
-        assert is_documentation_only("main.py") == False
-        assert is_documentation_only("script.js") == False
-        assert is_documentation_only("style.css") == False
-        assert is_documentation_only("config.yaml") == False
-        assert is_documentation_only("package.json") == False
+        assert is_documentation_only("main.py") is False
+        assert is_documentation_only("script.js") is False
+        assert is_documentation_only("style.css") is False
+        assert is_documentation_only("config.yaml") is False
+        assert is_documentation_only("package.json") is False
 
     def test_path_with_directories(self):
         """Should work with full paths."""
-        assert is_documentation_only("docs/adr/001-decision.md") == True
-        assert is_documentation_only("src/components/README.md") == True
-        assert is_documentation_only("src/main.py") == False
+        assert is_documentation_only("docs/adr/001-decision.md") is True
+        assert is_documentation_only("src/components/README.md") is True
+        assert is_documentation_only("src/main.py") is False
 
 
 class TestGitCommands:
@@ -197,7 +197,7 @@ class TestLimitChecking:
 
         result = check_limits(stats)
 
-        assert result == True
+        assert result is True
 
     def test_check_limits_too_many_files(self):
         """Test PR with too many files fails."""
@@ -208,7 +208,7 @@ class TestLimitChecking:
 
         result = check_limits(stats)
 
-        assert result == False
+        assert result is False
 
     def test_check_limits_too_many_lines(self):
         """Test PR with too many lines fails."""
@@ -219,7 +219,7 @@ class TestLimitChecking:
 
         result = check_limits(stats)
 
-        assert result == False
+        assert result is False
 
     def test_check_limits_both_exceeded(self):
         """Test PR exceeding both limits fails."""
@@ -227,7 +227,7 @@ class TestLimitChecking:
 
         result = check_limits(stats)
 
-        assert result == False
+        assert result is False
 
     def test_check_limits_at_maximum(self):
         """Test PR exactly at limits passes."""
@@ -235,7 +235,7 @@ class TestLimitChecking:
 
         result = check_limits(stats)
 
-        assert result == True
+        assert result is True
 
 
 class TestEdgeCases:
@@ -243,9 +243,9 @@ class TestEdgeCases:
 
     def test_binary_files_handled(self):
         """Binary files should be treated as code (not docs)."""
-        assert is_documentation_only("image.png") == False
-        assert is_documentation_only("data.db") == False
-        assert is_documentation_only("archive.zip") == False
+        assert is_documentation_only("image.png") is False
+        assert is_documentation_only("data.db") is False
+        assert is_documentation_only("archive.zip") is False
 
     @patch("check_pr_loc.get_changed_files")
     @patch("check_pr_loc.get_file_diff_stats")
@@ -262,7 +262,7 @@ class TestEdgeCases:
         assert stats["effective_loc"] == 0  # Docs don't count
 
         # Should pass because no code files
-        assert check_limits(stats) == True
+        assert check_limits(stats) is True
 
 
 if __name__ == "__main__":

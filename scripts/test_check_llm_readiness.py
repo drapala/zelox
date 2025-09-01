@@ -13,12 +13,10 @@ stability: stable
 since_version: "0.2.0"
 """
 
-import pytest
 import sys
-import tempfile
-import shutil
 from pathlib import Path
-from unittest.mock import patch, MagicMock, mock_open
+
+import pytest
 
 # Add scripts to path
 sys.path.insert(0, str(Path(__file__).parent))

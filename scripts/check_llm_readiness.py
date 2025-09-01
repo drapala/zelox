@@ -4,14 +4,9 @@ LLM Readiness Score Calculator
 Measures how well the repository is optimized for LLM agent effectiveness.
 """
 
-import os
-import sys
-import yaml
-import json
-from pathlib import Path
-from typing import Dict, List, Tuple
 import re
-import subprocess
+import sys
+from pathlib import Path
 
 
 class LLMReadinessChecker:
@@ -21,7 +16,7 @@ class LLMReadinessChecker:
         self.max_score = 100
         self.checks = []
 
-    def check_co_location(self) -> Tuple[int, str]:
+    def check_co_location(self) -> tuple[int, str]:
         """Check if tests are co-located with code (target: ≥80%)"""
         features_dir = self.repo_root / "features"
         if not features_dir.exists():
@@ -50,12 +45,11 @@ class LLMReadinessChecker:
         score = int(co_location_ratio * 25)  # 25 points max
 
         status = "✅" if co_location_ratio >= 0.8 else "❌"
-        return (
-            score,
-            f"{status} Co-location: {co_located_count}/{total_count} features ({co_location_ratio:.1%})",
-        )
+        msg = f"{status} Co-location: {co_located_count}/{total_count} features "
+        msg += f"({co_location_ratio:.1%})"
+        return score, msg
 
-    def check_average_hops(self) -> Tuple[int, str]:
+    def check_average_hops(self) -> tuple[int, str]:
         """Check average cognitive hops via import analysis (target: ≤3)"""
         try:
             # Simple heuristic: count imports in Python files
@@ -67,7 +61,7 @@ class LLMReadinessChecker:
                     continue
 
                 try:
-                    with open(py_file, "r", encoding="utf-8") as f:
+                    with open(py_file, encoding="utf-8") as f:
                         content = f.read()
                         # Count import statements
                         imports = len(re.findall(r"^(?:import|from)\s+\w+", content, re.MULTILINE))
@@ -96,7 +90,7 @@ class LLMReadinessChecker:
         except Exception as e:
             return 10, f"⚠️  Could not analyze imports: {str(e)}"
 
-    def check_front_matter_coverage(self) -> Tuple[int, str]:
+    def check_front_matter_coverage(self) -> tuple[int, str]:
         """Check front-matter coverage in feature files (target: ≥90%)"""
         features_dir = self.repo_root / "features"
         if not features_dir.exists():
@@ -113,7 +107,7 @@ class LLMReadinessChecker:
                 continue
 
             try:
-                with open(py_file, "r", encoding="utf-8") as f:
+                with open(py_file, encoding="utf-8") as f:
                     content = f.read()
                     # Check for YAML front-matter or structured docstrings
                     if (
@@ -137,12 +131,11 @@ class LLMReadinessChecker:
         score = int(coverage * 20)  # 20 points max
 
         status = "✅" if coverage >= 0.9 else "❌"
-        return (
-            score,
-            f"{status} Front-matter coverage: {files_with_frontmatter}/{total_files} files ({coverage:.1%})",
-        )
+        msg = f"{status} Front-matter coverage: {files_with_frontmatter}/{total_files} files "
+        msg += f"({coverage:.1%})"
+        return score, msg
 
-    def check_documentation_structure(self) -> Tuple[int, str]:
+    def check_documentation_structure(self) -> tuple[int, str]:
         """Check for required documentation files"""
         required_files = [
             ("CLAUDE.md", 5),
@@ -166,7 +159,7 @@ class LLMReadinessChecker:
         else:
             return score, "✅ All required documentation files present"
 
-    def check_adr_structure(self) -> Tuple[int, str]:
+    def check_adr_structure(self) -> tuple[int, str]:
         """Check ADR structure and completeness"""
         adr_dir = self.repo_root / "docs" / "adr"
         if not adr_dir.exists():
@@ -180,7 +173,7 @@ class LLMReadinessChecker:
         valid_adrs = 0
         for adr_file in adr_files:
             try:
-                with open(adr_file, "r", encoding="utf-8") as f:
+                with open(adr_file, encoding="utf-8") as f:
                     content = f.read()
                     if "adr_number:" in content and "status:" in content:
                         valid_adrs += 1
@@ -192,7 +185,7 @@ class LLMReadinessChecker:
         else:
             return 5, f"⚠️  ADR structure: {valid_adrs}/{len(adr_files)} properly formatted"
 
-    def run_all_checks(self) -> Dict:
+    def run_all_checks(self) -> dict:
         """Run all readiness checks and return results"""
         results = {"score": 0, "max_score": self.max_score, "checks": [], "recommendations": []}
 
@@ -254,7 +247,7 @@ class LLMReadinessChecker:
         return results
 
 
-def print_results(results: Dict):
+def print_results(results: dict):
     """Print formatted results"""
     score = results["score"]
     max_score = results["max_score"]
@@ -266,13 +259,10 @@ def print_results(results: Dict):
     # Overall score
     if score >= 80:
         status = "✅ PASS"
-        color = ""
     elif score >= 60:
         status = "⚠️  NEEDS IMPROVEMENT"
-        color = ""
     else:
         status = "❌ FAIL"
-        color = ""
 
     print(f"Overall Score: {score}/{max_score} ({score/max_score:.1%}) - {status}")
     print()

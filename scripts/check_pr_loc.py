@@ -5,11 +5,9 @@ Implements differentiated limits for application code, tests, and configuration.
 Per ADR-003 and ADR-006: Incentivizes comprehensive testing while maintaining focus.
 """
 
+import re
 import subprocess
 import sys
-import re
-import pathlib
-from typing import Tuple, List, Dict
 from enum import Enum
 
 
@@ -94,22 +92,20 @@ def categorize_file(filepath: str) -> FileCategory:
 def run_git_command(*args) -> str:
     """Execute git command and return output."""
     try:
-        result = subprocess.check_output(
-            ["git"] + list(args), text=True, stderr=subprocess.DEVNULL
-        )
+        result = subprocess.check_output(["git"] + list(args), text=True, stderr=subprocess.DEVNULL)
         return result.strip()
-    except subprocess.CalledProcessError as e:
+    except subprocess.CalledProcessError:
         print(f"Error running git command: {' '.join(args)}")
         return ""
 
 
-def get_changed_files(base_ref: str = "origin/main...HEAD") -> List[str]:
+def get_changed_files(base_ref: str = "origin/main...HEAD") -> list[str]:
     """Get list of changed files in PR."""
     output = run_git_command("diff", "--name-only", base_ref)
     return [f for f in output.splitlines() if f.strip()]
 
 
-def get_file_diff_stats(filepath: str, base_ref: str = "origin/main...HEAD") -> Tuple[int, int]:
+def get_file_diff_stats(filepath: str, base_ref: str = "origin/main...HEAD") -> tuple[int, int]:
     """Get added and deleted line counts for a file."""
     try:
         # Get unified diff with no context lines
@@ -127,7 +123,7 @@ def get_file_diff_stats(filepath: str, base_ref: str = "origin/main...HEAD") -> 
         return 0, 0
 
 
-def analyze_pr(base_ref: str = "origin/main...HEAD") -> Dict:
+def analyze_pr(base_ref: str = "origin/main...HEAD") -> dict:
     """Analyze PR and return categorized statistics."""
     all_files = get_changed_files(base_ref)
 
@@ -155,7 +151,7 @@ def analyze_pr(base_ref: str = "origin/main...HEAD") -> Dict:
     }
 
 
-def print_analysis(stats: Dict) -> None:
+def print_analysis(stats: dict) -> None:
     """Print categorized analysis results."""
     print("=" * 60)
     print("PR LOC ANALYSIS (Categorized)")
@@ -182,11 +178,11 @@ def print_analysis(stats: Dict) -> None:
             # Show limits for this category
             limits = CATEGORY_LIMITS[category]
             if limits["loc"]:
-                print(
-                    f"  Limits: {cat_stats['loc']}/{limits['loc']} LOC, {len(files)}/{limits['files']} files"
-                )
+                loc_msg = f"  Limits: {cat_stats['loc']}/{limits['loc']} LOC, "
+                loc_msg += f"{len(files)}/{limits['files']} files"
+                print(loc_msg)
         else:
-            print(f"  (Documentation excluded from LOC limits)")
+            print("  (Documentation excluded from LOC limits)")
 
         # Show first few files
         for f in files[:3]:
@@ -195,7 +191,7 @@ def print_analysis(stats: Dict) -> None:
             print(f"    ... and {len(files) - 3} more")
 
 
-def generate_claude_pr_prompt(stats: Dict, violations: List[str]) -> None:
+def generate_claude_pr_prompt(stats: dict, violations: list[str]) -> None:
     """Generate a copy-paste prompt for Claude CLI to split the PR."""
     print("\n" + "=" * 60)
     print("🤖 CLAUDE CLI FIX PROMPT")
@@ -208,7 +204,7 @@ def generate_claude_pr_prompt(stats: Dict, violations: List[str]) -> None:
     for violation in violations:
         prompt += f"• {violation}\n"
 
-    prompt += f"\nCURRENT PR BREAKDOWN:\n"
+    prompt += "\nCURRENT PR BREAKDOWN:\n"
     for category in FileCategory:
         files = stats["categorized_files"][category]
         if files:
@@ -233,7 +229,7 @@ def generate_claude_pr_prompt(stats: Dict, violations: List[str]) -> None:
     print("\n💡 TIP: Claude will create focused PRs respecting category limits")
 
 
-def check_limits(stats: Dict) -> bool:
+def check_limits(stats: dict) -> bool:
     """Check if PR exceeds any category limits."""
     violations = []
 
@@ -256,15 +252,15 @@ def check_limits(stats: Dict) -> bool:
 
         # Check file count limit
         if limits["files"] and len(files) > limits["files"]:
-            violations.append(
-                f"{category.value.capitalize()} files ({len(files)}) exceed limit of {limits['files']}"
-            )
+            msg = f"{category.value.capitalize()} files ({len(files)}) "
+            msg += f"exceed limit of {limits['files']}"
+            violations.append(msg)
 
         # Check LOC limit
         if limits["loc"] and cat_stats["loc"] > limits["loc"]:
-            violations.append(
-                f"{category.value.capitalize()} LOC ({cat_stats['loc']}) exceeds limit of {limits['loc']}"
-            )
+            msg = f"{category.value.capitalize()} LOC ({cat_stats['loc']}) "
+            msg += f"exceeds limit of {limits['loc']}"
+            violations.append(msg)
 
     if violations:
         print("\n" + "=" * 60)
@@ -294,9 +290,9 @@ def check_limits(stats: Dict) -> bool:
         if files:
             cat_stats = stats["categorized_stats"][category]
             limits = CATEGORY_LIMITS[category]
-            print(
-                f"  {category.value}: {cat_stats['loc']}/{limits['loc']} LOC, {len(files)}/{limits['files']} files"
-            )
+            status_msg = f"  {category.value}: {cat_stats['loc']}/{limits['loc']} LOC, "
+            status_msg += f"{len(files)}/{limits['files']} files"
+            print(status_msg)
 
     return True
 
