@@ -177,7 +177,22 @@ class DriftChecker:
 
     def _calculate_similarity(self, content1: str, content2: str) -> float:
         """Calculate similarity ratio between two content blocks."""
-        return SequenceMatcher(None, content1.strip(), content2.strip()).ratio()
+        # For whitespace tolerance, normalize internal whitespace
+        # This makes indentation differences insignificant
+        normalized1 = self._normalize_whitespace(content1)
+        normalized2 = self._normalize_whitespace(content2)
+        return SequenceMatcher(None, normalized1, normalized2).ratio()
+
+    def _normalize_whitespace(self, content: str) -> str:
+        """Normalize whitespace for comparison."""
+        lines = content.strip().splitlines()
+        # Remove leading/trailing whitespace and normalize internal spaces
+        normalized_lines = []
+        for line in lines:
+            # Strip leading/trailing whitespace and collapse multiple spaces to single
+            normalized = " ".join(line.split())
+            normalized_lines.append(normalized)
+        return "\n".join(normalized_lines)
 
     def run(self, report_only: bool = False) -> int:
         """Main execution method."""

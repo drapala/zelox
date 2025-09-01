@@ -159,11 +159,13 @@ class TestStructureMapper(unittest.TestCase):
     def test_scan_scripts(self):
         """Test scanning scripts directory."""
         # Create test scripts
-        (self.repo_root / "scripts" / "gen_repo_map.py").write_text('''"""
+        (self.repo_root / "scripts" / "gen_repo_map.py").write_text(
+            '''"""
 title: Repo Map Generator
 purpose: Generate repository map
 """
-''')
+'''
+        )
         (self.repo_root / "scripts" / "test_gen_repo_map.py").write_text("# Test file")
 
         result = self.mapper.scan_scripts()

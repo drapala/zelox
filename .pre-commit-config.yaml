@@ -65,6 +65,22 @@ repos:
         files: \.py$
         stages: [pre-commit]
         args: ["-m", "py_compile"]
+      - id: drift-check-tests
+        name: Drift check unit tests
+        entry: python3
+        language: system
+        pass_filenames: false
+        files: ""  # run always
+        stages: [pre-commit]
+        args: ["scripts/test_drift_check.py"]
+      - id: repo-map-tests
+        name: Repository map generator tests
+        entry: python3
+        language: system
+        pass_filenames: false
+        files: ""  # run always
+        stages: [pre-commit]
+        args: ["scripts/test_gen_repo_map.py"]
 
 # Global excludes to speed up hooks that still look at repo root
 exclude: |
