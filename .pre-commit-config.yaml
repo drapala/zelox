@@ -1,0 +1,48 @@
+repos:
+  # Ruff format (idempotent code style)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9  # pin to a known version
+    hooks:
+      - id: ruff-format
+        name: ruff-format
+        types_or: [python]
+
+  # Ruff check (linting; keep after format so auto-fixes run first)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        name: ruff-check
+        types_or: [python]
+        additional_dependencies: []  # keep empty unless you need extras
+
+  # Local hooks for documentation coverage
+  - repo: local
+    hooks:
+      - id: readme-coverage
+        name: README coverage (LLM-First)
+        entry: python3
+        language: system
+        pass_filenames: false
+        files: ""  # run always
+        stages: [pre-commit]
+        args: ["scripts/check_readme_coverage.py"]
+      - id: frontmatter-coverage
+        name: Frontmatter coverage (LLM-First)
+        entry: python3
+        language: system
+        pass_filenames: false
+        files: ""  # run always
+        stages: [pre-commit]
+        args: ["scripts/validate_schemas.py", "--check-source-files"]
+
+# Global excludes to speed up hooks that still look at repo root
+exclude: |
+  (?x)(
+    ^\.git/|
+    ^\.venv/|^venv/|
+    ^node_modules/|
+    ^dist/|^build/|
+    ^\.mypy_cache/|^\.ruff_cache/|^\.pytest_cache/|^\.tox/|
+    ^\.next/
+  )
