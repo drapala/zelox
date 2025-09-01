@@ -2,6 +2,10 @@
 
 [tool.ruff]
 line-length = 99
+# Exclude template directories from linting
+exclude = [
+    "features/template",  # Template files contain placeholders, not valid Python
+]
 
 [tool.ruff.lint]
 # E = pycodestyle (errors)
