@@ -198,6 +198,35 @@ class StructureMapper:
 
         return scripts
 
+    def scan_adrs(self) -> list[dict[str, Any]]:
+        """Scan docs/adr directory for Architecture Decision Records."""
+        adrs = []
+        adr_dir = self.repo_root / "docs" / "adr"
+
+        if not adr_dir.exists():
+            return adrs
+
+        for adr_path in sorted(adr_dir.glob("*.md")):
+            # Extract ADR number from filename (e.g., "001-title.md" -> "001")
+            adr_number = adr_path.stem.split("-")[0] if "-" in adr_path.stem else adr_path.stem
+
+            # Try to extract frontmatter or parse from filename
+            title = adr_path.stem.replace("-", " ").replace("_", " ").title()
+            if title.startswith(adr_number):
+                title = title[len(adr_number) :].strip()
+
+            # Default values - could be enhanced to parse frontmatter from markdown files
+            adr_info = {
+                "number": adr_number,
+                "path": f"../adr/{adr_path.name}",
+                "title": title,
+                "status": "accepted",  # Default, could be parsed from content
+                "impact": "medium",  # Default, could be parsed from content
+            }
+            adrs.append(adr_info)
+
+        return adrs
+
 
 class MarkdownGenerator:
     """Generate properly formatted REPO_MAP.md."""
@@ -286,44 +315,21 @@ zelox/
         return section + "\n"
 
     def generate_adr_section(self) -> str:
-        """Generate ADR table."""
-        adr_data = [
-            (
-                "001",
-                "../adr/001-adopt-llm-first-architecture.md",
-                "Adopt LLM-First Architecture",
-                "accepted",
-                "high",
-            ),
-            (
-                "002",
-                "../adr/002-adopt-bdd-lite.md",
-                "Adopt BDD-Lite for Critical Features",
-                "proposed",
-                "medium",
-            ),
-            (
-                "003",
-                "../adr/003-pr-loc-gate.md",
-                "PR LOC Gate (Exclude Markdown)",
-                "proposed",
-                "medium",
-            ),
-            (
-                "004",
-                "../adr/004-llm-first-observability.md",
-                "LLM-First Observability Standards",
-                "proposed",
-                "high",
-            ),
-        ]
+        """Generate ADR table from discovered ADR files."""
+        adrs = self.structure_mapper.scan_adrs()
+
+        if not adrs:
+            return "\n## Architecture Decisions\n\n*No ADR files found in docs/adr/*\n\n"
 
         section = "\n## Architecture Decisions\n\n"
         section += "| ADR | Title | Status | Impact |\n"
         section += "|-----|-------|---------|---------|\n"
 
-        for num, path, title, status, impact in adr_data:
-            section += f"| [{num}]({path}) | {title} | {status} | {impact} |\n"
+        for adr in adrs:
+            section += (
+                f"| [{adr['number']}]({adr['path']}) | "
+                f"{adr['title']} | {adr['status']} | {adr['impact']} |\n"
+            )
 
         return section + "\n"
 
