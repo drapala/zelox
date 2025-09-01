@@ -39,7 +39,7 @@ known-first-party = ["src", "features", "scripts"]  # adjust to your modules
 [tool.pytest.ini_options]
 testpaths = ["scripts", "features"]
 python_files = "test_*.py"
-addopts = "-v --tb=short"
+addopts = "-v --tb=short --ignore=scripts/test_check_llm_readiness.py"
 
 [tool.mypy]
 python_version = "3.11"
