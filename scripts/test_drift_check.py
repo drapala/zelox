@@ -130,11 +130,7 @@ test_value = 42
         exit_code = self.checker.run()
         self.assertEqual(exit_code, 0)
 
-    def tearDown(self):
-        """Clean up temporary files."""
-        import shutil
-
-        shutil.rmtree(self.temp_dir, ignore_errors=True)
+    # tearDown no longer needed - cleanup handled automatically
 
 
 if __name__ == "__main__":

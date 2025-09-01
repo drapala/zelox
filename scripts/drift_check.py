@@ -31,7 +31,13 @@ class DuplicatedBlock:
 
 
 class DriftChecker:
-    def __init__(self, repo_root: Path | None = None):
+    # Comment patterns for different languages
+    BLOCK_PATTERNS = {
+        "start": r"(?:#|//|<!--)\s*DUPLICATED_BLOCK:\s*(\w+)",
+        "end": r"(?:#|//|<!--)\s*END_DUPLICATED_BLOCK:\s*(\w+)",
+    }
+
+    def __init__(self, repo_root: Path | None = None, config_file: Path | None = None):
         self.repo_root = repo_root or Path.cwd()
         self.blocks: Dict[str, List[DuplicatedBlock]] = {}
         self.drift_tolerance = {
@@ -41,6 +47,7 @@ class DriftChecker:
             "minor": 0.75,
             "flexible": 0.50,
         }
+        self._load_config(config_file)
 
     def scan_files(self) -> None:
         """Scan repository for DUPLICATED_BLOCK tags."""
@@ -59,8 +66,8 @@ class DriftChecker:
             content = file_path.read_text(encoding="utf-8")
             lines = content.splitlines()
 
-            block_pattern = r"(?:#|//)\s*DUPLICATED_BLOCK:\s*(\w+)"
-            end_pattern = r"(?:#|//)\s*END_DUPLICATED_BLOCK:\s*(\w+)"
+            block_pattern = self.BLOCK_PATTERNS["start"]
+            end_pattern = self.BLOCK_PATTERNS["end"]
 
             i = 0
             while i < len(lines):
@@ -75,12 +82,15 @@ class DriftChecker:
                         end_match = re.search(end_pattern, lines[i])
                         if end_match and end_match.group(1) == block_id:
                             end_line = i + 1
+                            # Extract tolerance from block comments or use default
+                            tolerance = self._extract_tolerance(lines, i) or "whitespace"
                             block = DuplicatedBlock(
                                 id=block_id,
                                 content="\n".join(block_content),
                                 file_path=str(file_path.relative_to(self.repo_root)),
                                 start_line=start_line,
                                 end_line=end_line,
+                                tolerance=tolerance,
                             )
                             self.blocks.setdefault(block_id, []).append(block)
                             break
@@ -137,6 +147,33 @@ class DriftChecker:
                 report["summary"]["healthy_blocks"] += 1
 
         return report
+
+    def _load_config(self, config_file: Path | None) -> None:
+        """Load configuration from YAML file if provided."""
+        if config_file and config_file.exists():
+            try:
+                import yaml
+
+                with open(config_file) as f:
+                    config = yaml.safe_load(f)
+                    if "drift_tolerance" in config:
+                        self.drift_tolerance.update(config["drift_tolerance"])
+            except Exception as e:
+                print(f"Warning: Could not load config {config_file}: {e}", file=sys.stderr)
+
+    def _extract_tolerance(self, lines: List[str], current_line: int) -> str | None:
+        """Extract tolerance setting from block comments."""
+        # Look for DRIFT_TOLERANCE comment in the block header area
+        for i in range(max(0, current_line - 5), min(len(lines), current_line + 3)):
+            line = lines[i].lower()
+            if "drift_tolerance:" in line or "drift-tolerance:" in line:
+                # Extract tolerance value (exact, whitespace, etc.)
+                parts = line.split(":")
+                if len(parts) > 1:
+                    tolerance = parts[1].strip()
+                    if tolerance in self.drift_tolerance:
+                        return tolerance
+        return None
 
     def _calculate_similarity(self, content1: str, content2: str) -> float:
         """Calculate similarity ratio between two content blocks."""
