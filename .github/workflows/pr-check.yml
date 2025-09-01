@@ -42,16 +42,22 @@ jobs:
         python -m pip install --upgrade pip
         pip install pyyaml jsonschema
         
-    - name: PR LOC Gate (exclude Markdown)
-      # WHAT: Enforces PR size limits per ADR-003
-      # WHY: Small PRs are easier for both humans and LLMs to review
-      # HOW: Counts lines of code (LOC) excluding documentation files
-      # LIMITS: ≤500 LOC, ≤10 code files changed
+    - name: PR LOC Gate (Categorized Limits)
+      # WHAT: Enforces differentiated PR size limits per ADR-003 and ADR-006
+      # WHY: Small PRs are easier to review while incentivizing comprehensive testing
+      # HOW: Categorizes files and applies different limits per category:
+      #   - APPLICATION: ≤500 LOC, ≤10 files (strict for business logic)
+      #   - TEST: ≤1000 LOC, ≤20 files (generous to encourage testing)
+      #   - CONFIG: ≤250 LOC, ≤5 files (config changes should be minimal)
+      #   - DOCUMENTATION: No limits (always encourage docs)
+      # TOTAL: ≤25 files across all categories (safety net)
       run: |
-        echo "🔍 Checking PR size limits..."
-        echo "→ Maximum 500 lines of code (additions + deletions)"
-        echo "→ Maximum 10 code files changed"
-        echo "→ Markdown/docs files are excluded from counts"
+        echo "🔍 Checking categorized PR size limits..."
+        echo "→ Application code: max 500 LOC, 10 files"
+        echo "→ Test code: max 1000 LOC, 20 files"  
+        echo "→ Config/schemas: max 250 LOC, 5 files"
+        echo "→ Documentation: no limits (excluded)"
+        echo "→ Total files: max 25 (safety net)"
         python3 scripts/check_pr_loc.py origin/main...HEAD
       
     - name: Schema Validation

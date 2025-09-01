@@ -1,29 +1,90 @@
 #!/usr/bin/env python3
 """
-PR LOC Gate Script - Enforces size limits on PRs for LLM-friendly reviews.
-Excludes pure documentation files from LOC count while maintaining strict limits on code changes.
+PR LOC Gate Script - Enforces categorized size limits on PRs.
+Implements differentiated limits for application code, tests, and configuration.
+Per ADR-003 and ADR-006: Incentivizes comprehensive testing while maintaining focus.
 """
 import subprocess
 import sys
 import re
 import pathlib
-from typing import Tuple, List
+from typing import Tuple, List, Dict
+from enum import Enum
 
-# Extensions/names EXCLUDED from LOC count (pure documentation)
-EXCLUDE_PATTERNS = (
-    r"\.md$",
-    r"\.mdx$", 
-    r"\.rst$",
-    r"\.adoc$",
-    r"\.txt$",
-    r"(^|/)(LICENSE|NOTICE|AUTHORS|CONTRIBUTORS|CHANGELOG|CHANGES|HISTORY|NEWS|README|TODO)(\.[a-z]+)?$"
-)
+class FileCategory(Enum):
+    """File categories with different LOC limits."""
+    APPLICATION = "application"  # Core business logic
+    TEST = "test"  # Test files
+    CONFIG = "config"  # Configuration and schemas
+    DOCUMENTATION = "documentation"  # Pure documentation (excluded)
 
-EXCLUDE_RE = re.compile("|".join(EXCLUDE_PATTERNS), re.IGNORECASE)
+# Category patterns for classification
+CATEGORY_PATTERNS = {
+    FileCategory.TEST: [
+        r"/test_[^/]*\.py$",  # test_*.py files
+        r"^scripts/test_[^/]*\.py$",  # test files in scripts
+        r"/[^/]*_test\.py$",  # *_test.py files
+        r"\.test\.[tj]sx?$",  # *.test.js/ts/jsx/tsx
+        r"\.spec\.[tj]sx?$",  # *.spec.js/ts/jsx/tsx
+        r"^tests?/",  # files in test(s) directories
+    ],
+    FileCategory.CONFIG: [
+        r"^\.github/.*\.(yml|yaml)$",  # GitHub workflows
+        r"^schemas/.*\.json$",  # JSON schemas
+        r"^\..*rc(\..*)?$",  # Dotfiles like .eslintrc
+        r"(Makefile|makefile)$",  # Makefiles
+        r"Dockerfile$",  # Dockerfiles
+        r"docker-compose.*\.(yml|yaml)$",  # Docker compose files
+    ],
+    FileCategory.DOCUMENTATION: [
+        r"\.md$",
+        r"\.mdx$", 
+        r"\.rst$",
+        r"\.adoc$",
+        r"\.txt$",
+        r"(^|/)(LICENSE|NOTICE|AUTHORS|CONTRIBUTORS|CHANGELOG|CHANGES|HISTORY|NEWS|README|TODO)(\.[a-z]+)?$"
+    ],
+}
 
-# Configuration
-HARD_FILES_LIMIT = 10
-HARD_LOC_LIMIT = 500
+# Compile regex patterns for efficiency
+CATEGORY_REGEX = {
+    category: re.compile("|".join(patterns), re.IGNORECASE)
+    for category, patterns in CATEGORY_PATTERNS.items()
+}
+
+# Differentiated limits per category
+CATEGORY_LIMITS = {
+    FileCategory.APPLICATION: {
+        "loc": 500,  # Strict limit for application code changes
+        "files": 10,  # Max application files in one PR
+    },
+    FileCategory.TEST: {
+        "loc": 1000,  # More generous for comprehensive tests
+        "files": 20,  # Allow more test files
+    },
+    FileCategory.CONFIG: {
+        "loc": 250,  # Config changes should be small and focused
+        "files": 5,  # Few config files at once
+    },
+    FileCategory.DOCUMENTATION: {
+        "loc": None,  # No limit for docs - encourage documentation
+        "files": None,  # No limit for doc files
+    },
+}
+
+# Total files limit across all categories (safety net)
+TOTAL_FILES_LIMIT = 25
+
+
+def categorize_file(filepath: str) -> FileCategory:
+    """Categorize a file based on its path and extension."""
+    # Check categories in order: TEST > CONFIG > DOCUMENTATION > APPLICATION
+    for category in [FileCategory.TEST, FileCategory.CONFIG, FileCategory.DOCUMENTATION]:
+        if CATEGORY_REGEX[category].search(filepath):
+            return category
+    
+    # Default to APPLICATION for any code file not matching other patterns
+    return FileCategory.APPLICATION
 
 
 def run_git_command(*args) -> str:
@@ -40,11 +101,6 @@ def get_changed_files(base_ref: str = "origin/main...HEAD") -> List[str]:
     """Get list of changed files in PR."""
     output = run_git_command("diff", "--name-only", base_ref)
     return [f for f in output.splitlines() if f.strip()]
-
-
-def is_documentation_only(filepath: str) -> bool:
-    """Check if file is pure documentation that should be excluded from LOC count."""
-    return bool(EXCLUDE_RE.search(filepath))
 
 
 def get_file_diff_stats(filepath: str, base_ref: str = "origin/main...HEAD") -> Tuple[int, int]:
@@ -67,94 +123,131 @@ def get_file_diff_stats(filepath: str, base_ref: str = "origin/main...HEAD") -> 
         return 0, 0
 
 
-def analyze_pr(base_ref: str = "origin/main...HEAD") -> dict:
-    """Analyze PR and return statistics."""
+def analyze_pr(base_ref: str = "origin/main...HEAD") -> Dict:
+    """Analyze PR and return categorized statistics."""
     all_files = get_changed_files(base_ref)
     
-    # Separate code files from documentation
-    code_files = []
-    doc_files = []
+    # Categorize files
+    categorized_files = {category: [] for category in FileCategory}
+    categorized_stats = {category: {"added": 0, "deleted": 0, "loc": 0} 
+                        for category in FileCategory}
     
-    for f in all_files:
-        if is_documentation_only(f):
-            doc_files.append(f)
-        else:
-            code_files.append(f)
-    
-    # Calculate LOC for code files only
-    total_added = 0
-    total_deleted = 0
-    
-    for filepath in code_files:
-        added, deleted = get_file_diff_stats(filepath, base_ref)
-        total_added += added
-        total_deleted += deleted
-    
-    effective_loc = total_added + total_deleted
+    for filepath in all_files:
+        category = categorize_file(filepath)
+        categorized_files[category].append(filepath)
+        
+        # Get LOC stats for non-documentation files
+        if category != FileCategory.DOCUMENTATION:
+            added, deleted = get_file_diff_stats(filepath, base_ref)
+            categorized_stats[category]["added"] += added
+            categorized_stats[category]["deleted"] += deleted
+            categorized_stats[category]["loc"] += (added + deleted)
     
     return {
         "total_files": len(all_files),
-        "code_files": code_files,
-        "doc_files": doc_files,
-        "code_files_count": len(code_files),
-        "doc_files_count": len(doc_files),
-        "lines_added": total_added,
-        "lines_deleted": total_deleted,
-        "effective_loc": effective_loc
+        "categorized_files": categorized_files,
+        "categorized_stats": categorized_stats,
     }
 
 
-def print_analysis(stats: dict) -> None:
-    """Print analysis results."""
+def print_analysis(stats: Dict) -> None:
+    """Print categorized analysis results."""
     print("=" * 60)
-    print("PR LOC ANALYSIS")
+    print("PR LOC ANALYSIS (Categorized)")
     print("=" * 60)
     
-    print(f"Total files changed: {stats['total_files']}")
-    print(f"  Code files: {stats['code_files_count']}")
-    print(f"  Documentation files: {stats['doc_files_count']} (excluded from LOC)")
+    print(f"\nTotal files changed: {stats['total_files']}")
+    print("\nBreakdown by category:")
     
-    print(f"\nCode changes:")
-    print(f"  Lines added: +{stats['lines_added']}")
-    print(f"  Lines deleted: -{stats['lines_deleted']}")
-    print(f"  Effective LOC: {stats['effective_loc']}")
-    
-    print(f"\nLimits:")
-    print(f"  Max code files: {HARD_FILES_LIMIT}")
-    print(f"  Max effective LOC: {HARD_LOC_LIMIT}")
-    
-    if stats['doc_files']:
-        print(f"\nExcluded documentation files:")
-        for f in stats['doc_files'][:5]:  # Show first 5
-            print(f"  - {f}")
-        if len(stats['doc_files']) > 5:
-            print(f"  ... and {len(stats['doc_files']) - 5} more")
+    for category in FileCategory:
+        files = stats["categorized_files"][category]
+        cat_stats = stats["categorized_stats"][category]
+        
+        if not files:
+            continue
+            
+        print(f"\n{category.value.upper()}:")
+        print(f"  Files: {len(files)}")
+        
+        if category != FileCategory.DOCUMENTATION:
+            print(f"  Lines added: +{cat_stats['added']}")
+            print(f"  Lines deleted: -{cat_stats['deleted']}")
+            print(f"  Effective LOC: {cat_stats['loc']}")
+            
+            # Show limits for this category
+            limits = CATEGORY_LIMITS[category]
+            if limits["loc"]:
+                print(f"  Limits: {cat_stats['loc']}/{limits['loc']} LOC, {len(files)}/{limits['files']} files")
+        else:
+            print(f"  (Documentation excluded from LOC limits)")
+        
+        # Show first few files
+        for f in files[:3]:
+            print(f"    - {f}")
+        if len(files) > 3:
+            print(f"    ... and {len(files) - 3} more")
 
 
-def check_limits(stats: dict) -> bool:
-    """Check if PR exceeds limits."""
-    files_ok = stats['code_files_count'] <= HARD_FILES_LIMIT
-    loc_ok = stats['effective_loc'] <= HARD_LOC_LIMIT
+def check_limits(stats: Dict) -> bool:
+    """Check if PR exceeds any category limits."""
+    violations = []
     
-    if not files_ok or not not loc_ok:
+    # Check total files limit
+    total_files = stats["total_files"]
+    if total_files > TOTAL_FILES_LIMIT:
+        violations.append(f"Total files ({total_files}) exceeds limit of {TOTAL_FILES_LIMIT}")
+    
+    # Check per-category limits
+    for category in FileCategory:
+        if category == FileCategory.DOCUMENTATION:
+            continue  # Skip documentation
+            
+        files = stats["categorized_files"][category]
+        cat_stats = stats["categorized_stats"][category]
+        limits = CATEGORY_LIMITS[category]
+        
+        if not files:
+            continue
+            
+        # Check file count limit
+        if limits["files"] and len(files) > limits["files"]:
+            violations.append(
+                f"{category.value.capitalize()} files ({len(files)}) exceed limit of {limits['files']}"
+            )
+        
+        # Check LOC limit
+        if limits["loc"] and cat_stats["loc"] > limits["loc"]:
+            violations.append(
+                f"{category.value.capitalize()} LOC ({cat_stats['loc']}) exceeds limit of {limits['loc']}"
+            )
+    
+    if violations:
         print("\n" + "=" * 60)
         print("❌ PR EXCEEDS LIMITS")
         print("=" * 60)
+        for violation in violations:
+            print(f"✗ {violation}")
         
-        if not files_ok:
-            print(f"✗ Too many code files: {stats['code_files_count']} > {HARD_FILES_LIMIT}")
-            print("  Consider splitting this PR into smaller, focused changes")
-        
-        if not loc_ok:
-            print(f"✗ Too many lines changed: {stats['effective_loc']} > {HARD_LOC_LIMIT}")
-            print("  Break this into multiple PRs for better reviewability")
-        
-        print("\nNote: Documentation files (*.md, etc.) don't count toward limits")
+        print("\n💡 Suggestions:")
+        print("  - Split application logic changes into smaller, focused PRs")
+        print("  - Consider if all test changes are necessary in this PR")
+        print("  - Configuration changes might warrant a separate PR")
+        print("\n📖 Per ADR-006: Different categories have different limits to")
+        print("   incentivize testing while maintaining reviewability.")
         return False
     
     print("\n" + "=" * 60)
     print("✅ PR WITHIN LIMITS")
     print("=" * 60)
+    print("\n✓ All category limits respected:")
+    
+    for category in [FileCategory.APPLICATION, FileCategory.TEST, FileCategory.CONFIG]:
+        files = stats["categorized_files"][category]
+        if files:
+            cat_stats = stats["categorized_stats"][category]
+            limits = CATEGORY_LIMITS[category]
+            print(f"  {category.value}: {cat_stats['loc']}/{limits['loc']} LOC, {len(files)}/{limits['files']} files")
+    
     return True
 
 
@@ -173,7 +266,7 @@ def main():
         else:
             base_ref = "HEAD~1...HEAD"
     
-    print(f"Checking PR against: {base_ref}\n")
+    print(f"Checking PR against: {base_ref}")
     
     # Analyze PR
     stats = analyze_pr(base_ref)
