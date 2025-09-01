@@ -12,6 +12,7 @@ import re
 
 try:
     import jsonschema
+    from jsonschema import Draft7Validator, RefResolver
 except ImportError:
     print("❌ jsonschema package required: pip install jsonschema")
     sys.exit(1)
@@ -22,6 +23,7 @@ class SchemaValidator:
         self.schemas_dir = self.repo_root / "schemas"
         self.errors = []
         self.warnings = []
+        self._schema_store = None
     
     def load_schema(self, schema_name: str) -> Dict[str, Any]:
         """Load a JSON schema file."""
@@ -31,9 +33,32 @@ class SchemaValidator:
         
         with open(schema_path, 'r', encoding='utf-8') as f:
             return json.load(f)
+
+    def build_schema_store(self) -> Dict[str, Any]:
+        """Load all schemas and build a URI store for $id-based resolution."""
+        if self._schema_store is not None:
+            return self._schema_store
+        store: Dict[str, Any] = {}
+        for schema_file in self.schemas_dir.glob("*.schema.json"):
+            try:
+                with open(schema_file, 'r', encoding='utf-8') as f:
+                    schema_obj = json.load(f)
+                schema_id = schema_obj.get("$id")
+                if schema_id:
+                    store[schema_id] = schema_obj
+                # Also map file URI to schema
+                try:
+                    store[schema_file.resolve().as_uri()] = schema_obj
+                except Exception:
+                    pass
+            except Exception:
+                # Skip malformed schema files, will be caught during validation anyway
+                continue
+        self._schema_store = store
+        return store
     
     def validate_index_yaml(self) -> bool:
-        """Validate docs/repo/INDEX.yaml against schema."""
+        """Validate docs/repo/INDEX.yaml against schema with $ref resolution."""
         index_path = self.repo_root / "docs" / "repo" / "INDEX.yaml"
         if not index_path.exists():
             self.errors.append("❌ INDEX.yaml not found at docs/repo/INDEX.yaml")
@@ -42,20 +67,30 @@ class SchemaValidator:
         try:
             with open(index_path, 'r', encoding='utf-8') as f:
                 index_data = yaml.safe_load(f)
-            
+            # Load main schema and resolve local $refs in ./schemas
             schema = self.load_schema("index")
-            jsonschema.validate(index_data, schema)
-            
+            store = self.build_schema_store()
+            resolver = RefResolver(
+                base_uri=f"file://{self.schemas_dir}/",
+                referrer=schema,
+                store=store,
+            )
+            validator = Draft7Validator(schema, resolver=resolver)
+            errors = list(validator.iter_errors(index_data))
+
+            if errors:
+                for e in errors:
+                    path = ".".join(str(p) for p in e.absolute_path)
+                    self.errors.append(f"❌ INDEX.yaml validation error: {e.message}")
+                    if path:
+                        self.errors.append(f"   Path: {path}")
+                return False
+
             print("✅ INDEX.yaml schema validation passed")
             return True
             
         except yaml.YAMLError as e:
             self.errors.append(f"❌ INDEX.yaml YAML syntax error: {e}")
-            return False
-        except jsonschema.ValidationError as e:
-            self.errors.append(f"❌ INDEX.yaml validation error: {e.message}")
-            if e.absolute_path:
-                self.errors.append(f"   Path: {'.'.join(str(p) for p in e.absolute_path)}")
             return False
         except Exception as e:
             self.errors.append(f"❌ INDEX.yaml validation failed: {e}")
