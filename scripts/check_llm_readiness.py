@@ -4,9 +4,110 @@ LLM Readiness Score Calculator
 Measures how well the repository is optimized for LLM agent effectiveness.
 """
 
-import re
+import ast
 import sys
+from collections import defaultdict
 from pathlib import Path
+
+
+class CognitiveComplexityAnalyzer:
+    """Analyze cognitive complexity for LLM editability."""
+
+    def __init__(self, repo_root: Path):
+        self.repo_root = repo_root
+        self.call_graph = defaultdict(set)
+        self.import_graph = defaultdict(set)
+
+    def analyze_file(self, file_path: Path) -> dict[str, int]:
+        """Analyze cognitive complexity metrics for a single file."""
+        try:
+            with open(file_path, encoding="utf-8") as f:
+                content = f.read()
+
+            tree = ast.parse(content)
+
+            return {
+                "cyclomatic": self._calculate_cyclomatic_complexity(tree),
+                "indirection_depth": self._calculate_indirection_depth(tree),
+                "context_switches": self._count_context_switches(tree),
+                "mutation_surface": self._estimate_mutation_surface(tree),
+            }
+        except Exception:
+            return {
+                "cyclomatic": 0,
+                "indirection_depth": 0,
+                "context_switches": 0,
+                "mutation_surface": 0,
+            }
+
+    def _calculate_cyclomatic_complexity(self, tree: ast.AST) -> int:
+        """Calculate cyclomatic complexity."""
+        complexity = 1  # Base complexity
+
+        for node in ast.walk(tree):
+            if isinstance(
+                node,
+                ast.If
+                | ast.While
+                | ast.For
+                | ast.AsyncFor
+                | ast.ExceptHandler
+                | ast.BoolOp
+                | ast.Compare,
+            ):
+                complexity += 1
+
+        return complexity
+
+    def _calculate_indirection_depth(self, tree: ast.AST) -> int:
+        """Calculate maximum call chain depth."""
+
+        class CallDepthVisitor(ast.NodeVisitor):
+            def __init__(self):
+                self.current_depth = 0
+                self.max_depth = 0
+
+            def visit_Call(self, node):
+                self.current_depth += 1
+                self.max_depth = max(self.max_depth, self.current_depth)
+                self.generic_visit(node)
+                self.current_depth -= 1
+
+        visitor = CallDepthVisitor()
+        visitor.visit(tree)
+        return visitor.max_depth
+
+    def _count_context_switches(self, tree: ast.AST) -> int:
+        """Count cross-module references that require context switching."""
+        context_switches = 0
+
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Attribute):
+                # Attribute access might indicate cross-module dependency
+                context_switches += 1
+            elif isinstance(node, ast.Import | ast.ImportFrom):
+                # Each import represents a potential context switch
+                context_switches += len(node.names) if hasattr(node, "names") else 1
+
+        return context_switches
+
+    def _estimate_mutation_surface(self, tree: ast.AST) -> int:
+        """Estimate how many places could be affected by a change."""
+        mutation_points = 0
+
+        for node in ast.walk(tree):
+            if isinstance(
+                node,
+                ast.FunctionDef
+                | ast.AsyncFunctionDef
+                | ast.ClassDef
+                | ast.Assign
+                | ast.AugAssign
+                | ast.AnnAssign,
+            ):
+                mutation_points += 1
+
+        return mutation_points
 
 
 class LLMReadinessChecker:
@@ -15,6 +116,7 @@ class LLMReadinessChecker:
         self.score = 0
         self.max_score = 100
         self.checks = []
+        self.cognitive_analyzer = CognitiveComplexityAnalyzer(self.repo_root)
 
     def check_co_location(self) -> tuple[int, str]:
         """Check if tests are co-located with code (target: ≥80%)"""
@@ -49,11 +151,12 @@ class LLMReadinessChecker:
         msg += f"({co_location_ratio:.1%})"
         return score, msg
 
-    def check_average_hops(self) -> tuple[int, str]:
-        """Check average cognitive hops via import analysis (target: ≤3)"""
+    def check_cognitive_complexity(self) -> tuple[int, str]:
+        """Check cognitive complexity across codebase (target: ≤5 avg complexity)"""
         try:
-            # Simple heuristic: count imports in Python files
-            total_imports = 0
+            total_complexity = 0
+            total_indirection = 0
+            total_context_switches = 0
             file_count = 0
 
             for py_file in self.repo_root.rglob("*.py"):
@@ -66,35 +169,37 @@ class LLMReadinessChecker:
                 ):
                     continue
 
-                try:
-                    with open(py_file, encoding="utf-8") as f:
-                        content = f.read()
-                        # Count import statements
-                        imports = len(re.findall(r"^(?:import|from)\s+\w+", content, re.MULTILINE))
-                        total_imports += imports
-                        file_count += 1
-                except Exception:
-                    continue
+                metrics = self.cognitive_analyzer.analyze_file(py_file)
+                total_complexity += metrics["cyclomatic"]
+                total_indirection += metrics["indirection_depth"]
+                total_context_switches += metrics["context_switches"]
+                file_count += 1
 
             if file_count == 0:
                 return 15, "⚠️  No Python files found to analyze"
 
-            avg_imports = total_imports / file_count
-            # Score based on imports (lower is better)
-            if avg_imports <= 3:
-                score = 20
+            avg_complexity = total_complexity / file_count
+            avg_indirection = total_indirection / file_count
+            avg_context_switches = total_context_switches / file_count
+
+            # Scoring based on cognitive load (lower is better for LLM)
+            if avg_complexity <= 5 and avg_indirection <= 3 and avg_context_switches <= 10:
+                score = 25
                 status = "✅"
-            elif avg_imports <= 5:
-                score = 15
+            elif avg_complexity <= 8 and avg_indirection <= 5 and avg_context_switches <= 15:
+                score = 18
                 status = "⚠️ "
             else:
-                score = 5
+                score = 8
                 status = "❌"
 
-            return score, f"{status} Average imports per file: {avg_imports:.1f} (target: ≤3)"
+            return score, (
+                f"{status} Cognitive metrics - Complexity: {avg_complexity:.1f}, "
+                f"Indirection: {avg_indirection:.1f}, Context switches: {avg_context_switches:.1f}"
+            )
 
         except Exception as e:
-            return 10, f"⚠️  Could not analyze imports: {str(e)}"
+            return 10, f"⚠️  Could not analyze cognitive complexity: {str(e)}"
 
     def check_front_matter_coverage(self) -> tuple[int, str]:
         """Check front-matter coverage in feature files (target: ≥90%)"""
@@ -198,7 +303,7 @@ class LLMReadinessChecker:
         # Run individual checks
         checks_to_run = [
             ("Co-location Index", self.check_co_location),
-            ("Average Hops", self.check_average_hops),
+            ("Cognitive Complexity", self.check_cognitive_complexity),
             ("Front-matter Coverage", self.check_front_matter_coverage),
             ("Documentation Structure", self.check_documentation_structure),
             ("ADR Structure", self.check_adr_structure),
