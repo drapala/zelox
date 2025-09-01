@@ -17,7 +17,7 @@ import sys
 from dataclasses import dataclass
 from difflib import SequenceMatcher
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 
 @dataclass
@@ -31,7 +31,7 @@ class DuplicatedBlock:
 
 
 class DriftChecker:
-    def __init__(self, repo_root: Optional[Path] = None):
+    def __init__(self, repo_root: Path | None = None):
         self.repo_root = repo_root or Path.cwd()
         self.blocks: Dict[str, List[DuplicatedBlock]] = {}
         self.drift_tolerance = {
@@ -59,8 +59,8 @@ class DriftChecker:
             content = file_path.read_text(encoding="utf-8")
             lines = content.splitlines()
 
-            block_pattern = r"#\s*DUPLICATED_BLOCK:\s*(\w+)"
-            end_pattern = r"#\s*END_DUPLICATED_BLOCK:\s*(\w+)"
+            block_pattern = r"(?:#|//)\s*DUPLICATED_BLOCK:\s*(\w+)"
+            end_pattern = r"(?:#|//)\s*END_DUPLICATED_BLOCK:\s*(\w+)"
 
             i = 0
             while i < len(lines):
@@ -163,7 +163,7 @@ class DriftChecker:
                 similarity = drift["similarity"]
                 threshold = drift["threshold"]
                 print(f"  - {drift['id']}: similarity {similarity:.2f} < {threshold}")
-            return 2 if drifted > 0 else 1
+            return 2
 
 
 if __name__ == "__main__":
