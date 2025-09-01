@@ -4,6 +4,7 @@ PR LOC Gate Script - Enforces categorized size limits on PRs.
 Implements differentiated limits for application code, tests, and configuration.
 Per ADR-003 and ADR-006: Incentivizes comprehensive testing while maintaining focus.
 """
+
 import subprocess
 import sys
 import re
@@ -11,12 +12,15 @@ import pathlib
 from typing import Tuple, List, Dict
 from enum import Enum
 
+
 class FileCategory(Enum):
     """File categories with different LOC limits."""
+
     APPLICATION = "application"  # Core business logic
     TEST = "test"  # Test files
     CONFIG = "config"  # Configuration and schemas
     DOCUMENTATION = "documentation"  # Pure documentation (excluded)
+
 
 # Category patterns for classification
 CATEGORY_PATTERNS = {
@@ -38,11 +42,11 @@ CATEGORY_PATTERNS = {
     ],
     FileCategory.DOCUMENTATION: [
         r"\.md$",
-        r"\.mdx$", 
+        r"\.mdx$",
         r"\.rst$",
         r"\.adoc$",
         r"\.txt$",
-        r"(^|/)(LICENSE|NOTICE|AUTHORS|CONTRIBUTORS|CHANGELOG|CHANGES|HISTORY|NEWS|README|TODO)(\.[a-z]+)?$"
+        r"(^|/)(LICENSE|NOTICE|AUTHORS|CONTRIBUTORS|CHANGELOG|CHANGES|HISTORY|NEWS|README|TODO)(\.[a-z]+)?$",
     ],
 }
 
@@ -82,7 +86,7 @@ def categorize_file(filepath: str) -> FileCategory:
     for category in [FileCategory.TEST, FileCategory.CONFIG, FileCategory.DOCUMENTATION]:
         if CATEGORY_REGEX[category].search(filepath):
             return category
-    
+
     # Default to APPLICATION for any code file not matching other patterns
     return FileCategory.APPLICATION
 
@@ -108,16 +112,14 @@ def get_file_diff_stats(filepath: str, base_ref: str = "origin/main...HEAD") -> 
     try:
         # Get unified diff with no context lines
         diff_output = run_git_command("diff", "--unified=0", base_ref, "--", filepath)
-        
+
         if not diff_output:
             return 0, 0
-        
+
         lines = diff_output.splitlines()
-        added = sum(1 for line in lines 
-                   if line.startswith("+") and not line.startswith("+++"))
-        deleted = sum(1 for line in lines 
-                     if line.startswith("-") and not line.startswith("---"))
-        
+        added = sum(1 for line in lines if line.startswith("+") and not line.startswith("+++"))
+        deleted = sum(1 for line in lines if line.startswith("-") and not line.startswith("---"))
+
         return added, deleted
     except Exception:
         return 0, 0
@@ -126,23 +128,24 @@ def get_file_diff_stats(filepath: str, base_ref: str = "origin/main...HEAD") -> 
 def analyze_pr(base_ref: str = "origin/main...HEAD") -> Dict:
     """Analyze PR and return categorized statistics."""
     all_files = get_changed_files(base_ref)
-    
+
     # Categorize files
     categorized_files = {category: [] for category in FileCategory}
-    categorized_stats = {category: {"added": 0, "deleted": 0, "loc": 0} 
-                        for category in FileCategory}
-    
+    categorized_stats = {
+        category: {"added": 0, "deleted": 0, "loc": 0} for category in FileCategory
+    }
+
     for filepath in all_files:
         category = categorize_file(filepath)
         categorized_files[category].append(filepath)
-        
+
         # Get LOC stats for non-documentation files
         if category != FileCategory.DOCUMENTATION:
             added, deleted = get_file_diff_stats(filepath, base_ref)
             categorized_stats[category]["added"] += added
             categorized_stats[category]["deleted"] += deleted
-            categorized_stats[category]["loc"] += (added + deleted)
-    
+            categorized_stats[category]["loc"] += added + deleted
+
     return {
         "total_files": len(all_files),
         "categorized_files": categorized_files,
@@ -155,32 +158,34 @@ def print_analysis(stats: Dict) -> None:
     print("=" * 60)
     print("PR LOC ANALYSIS (Categorized)")
     print("=" * 60)
-    
+
     print(f"\nTotal files changed: {stats['total_files']}")
     print("\nBreakdown by category:")
-    
+
     for category in FileCategory:
         files = stats["categorized_files"][category]
         cat_stats = stats["categorized_stats"][category]
-        
+
         if not files:
             continue
-            
+
         print(f"\n{category.value.upper()}:")
         print(f"  Files: {len(files)}")
-        
+
         if category != FileCategory.DOCUMENTATION:
             print(f"  Lines added: +{cat_stats['added']}")
             print(f"  Lines deleted: -{cat_stats['deleted']}")
             print(f"  Effective LOC: {cat_stats['loc']}")
-            
+
             # Show limits for this category
             limits = CATEGORY_LIMITS[category]
             if limits["loc"]:
-                print(f"  Limits: {cat_stats['loc']}/{limits['loc']} LOC, {len(files)}/{limits['files']} files")
+                print(
+                    f"  Limits: {cat_stats['loc']}/{limits['loc']} LOC, {len(files)}/{limits['files']} files"
+                )
         else:
             print(f"  (Documentation excluded from LOC limits)")
-        
+
         # Show first few files
         for f in files[:3]:
             print(f"    - {f}")
@@ -191,43 +196,43 @@ def print_analysis(stats: Dict) -> None:
 def check_limits(stats: Dict) -> bool:
     """Check if PR exceeds any category limits."""
     violations = []
-    
+
     # Check total files limit
     total_files = stats["total_files"]
     if total_files > TOTAL_FILES_LIMIT:
         violations.append(f"Total files ({total_files}) exceeds limit of {TOTAL_FILES_LIMIT}")
-    
+
     # Check per-category limits
     for category in FileCategory:
         if category == FileCategory.DOCUMENTATION:
             continue  # Skip documentation
-            
+
         files = stats["categorized_files"][category]
         cat_stats = stats["categorized_stats"][category]
         limits = CATEGORY_LIMITS[category]
-        
+
         if not files:
             continue
-            
+
         # Check file count limit
         if limits["files"] and len(files) > limits["files"]:
             violations.append(
                 f"{category.value.capitalize()} files ({len(files)}) exceed limit of {limits['files']}"
             )
-        
+
         # Check LOC limit
         if limits["loc"] and cat_stats["loc"] > limits["loc"]:
             violations.append(
                 f"{category.value.capitalize()} LOC ({cat_stats['loc']}) exceeds limit of {limits['loc']}"
             )
-    
+
     if violations:
         print("\n" + "=" * 60)
         print("❌ PR EXCEEDS LIMITS")
         print("=" * 60)
         for violation in violations:
             print(f"✗ {violation}")
-        
+
         print("\n💡 Suggestions:")
         print("  - Split application logic changes into smaller, focused PRs")
         print("  - Consider if all test changes are necessary in this PR")
@@ -235,19 +240,21 @@ def check_limits(stats: Dict) -> bool:
         print("\n📖 Per ADR-006: Different categories have different limits to")
         print("   incentivize testing while maintaining reviewability.")
         return False
-    
+
     print("\n" + "=" * 60)
     print("✅ PR WITHIN LIMITS")
     print("=" * 60)
     print("\n✓ All category limits respected:")
-    
+
     for category in [FileCategory.APPLICATION, FileCategory.TEST, FileCategory.CONFIG]:
         files = stats["categorized_files"][category]
         if files:
             cat_stats = stats["categorized_stats"][category]
             limits = CATEGORY_LIMITS[category]
-            print(f"  {category.value}: {cat_stats['loc']}/{limits['loc']} LOC, {len(files)}/{limits['files']} files")
-    
+            print(
+                f"  {category.value}: {cat_stats['loc']}/{limits['loc']} LOC, {len(files)}/{limits['files']} files"
+            )
+
     return True
 
 
@@ -255,29 +262,34 @@ def main():
     """Main entry point."""
     # Get base ref from command line or use default
     base_ref = sys.argv[1] if len(sys.argv) > 1 else "origin/main...HEAD"
-    
+
     # Special case for CI environments
     if base_ref == "auto":
         # Try to detect the base branch
-        if subprocess.call(["git", "rev-parse", "origin/main"], 
-                          stdout=subprocess.DEVNULL, 
-                          stderr=subprocess.DEVNULL) == 0:
+        if (
+            subprocess.call(
+                ["git", "rev-parse", "origin/main"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            == 0
+        ):
             base_ref = "origin/main...HEAD"
         else:
             base_ref = "HEAD~1...HEAD"
-    
+
     print(f"Checking PR against: {base_ref}")
-    
+
     # Analyze PR
     stats = analyze_pr(base_ref)
-    
+
     # Print results
     print_analysis(stats)
-    
+
     # Check limits and exit accordingly
     if not check_limits(stats):
         sys.exit(1)
-    
+
     sys.exit(0)
 
 
