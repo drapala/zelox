@@ -108,13 +108,15 @@ class TestAverageHopsCheck:
 
         # Create Python file with few imports
         py_file = features_dir / "simple.py"
-        py_file.write_text("""
+        py_file.write_text(
+            """
 import os
 from pathlib import Path
 
 def main():
     pass
-""")
+"""
+        )
 
         checker = LLMReadinessChecker(tmp_path)
         score, message = checker.check_average_hops()
@@ -131,7 +133,8 @@ def main():
 
         # Create Python file with medium imports
         py_file = features_dir / "medium.py"
-        py_file.write_text("""
+        py_file.write_text(
+            """
 import os
 import sys
 from pathlib import Path
@@ -139,7 +142,8 @@ from typing import List
 
 def main():
     pass
-""")
+"""
+        )
 
         checker = LLMReadinessChecker(tmp_path)
         score, message = checker.check_average_hops()
@@ -155,7 +159,8 @@ def main():
 
         # Create Python file with many imports
         py_file = features_dir / "complex.py"
-        py_file.write_text("""
+        py_file.write_text(
+            """
 import os
 import sys
 import json
@@ -167,7 +172,8 @@ import requests
 
 def main():
     pass
-""")
+"""
+        )
 
         checker = LLMReadinessChecker(tmp_path)
         score, message = checker.check_average_hops()
@@ -196,7 +202,8 @@ class TestFrontMatterCoverage:
 
         # Create file with proper front-matter
         py_file = features_dir / "service.py"
-        py_file.write_text('''"""
+        py_file.write_text(
+            '''"""
 title: Test Service
 purpose: Handle test operations
 inputs: [{"name": "data", "type": "dict"}]
@@ -205,7 +212,8 @@ outputs: [{"name": "result", "type": "bool"}]
 
 def process():
     pass
-''')
+'''
+        )
 
         checker = LLMReadinessChecker(tmp_path)
         score, message = checker.check_front_matter_coverage()
@@ -221,10 +229,12 @@ def process():
 
         # Create file without front-matter
         py_file = features_dir / "service.py"
-        py_file.write_text("""
+        py_file.write_text(
+            """
 def process():
     pass
-""")
+"""
+        )
 
         checker = LLMReadinessChecker(tmp_path)
         score, message = checker.check_front_matter_coverage()
@@ -240,13 +250,15 @@ def process():
 
         # Create file with YAML front-matter
         py_file = features_dir / "config.py"
-        py_file.write_text("""---
+        py_file.write_text(
+            """---
 title: Config Module
 purpose: Configuration management
 ---
 
 CONFIG = {}
-""")
+"""
+        )
 
         checker = LLMReadinessChecker(tmp_path)
         score, message = checker.check_front_matter_coverage()
@@ -315,14 +327,16 @@ class TestADRStructure:
         (adr_dir / "000-template.md").write_text("# Template")
 
         # Create ADR with proper front-matter
-        (adr_dir / "001-decision.md").write_text("""
+        (adr_dir / "001-decision.md").write_text(
+            """
 # ADR-001: Test Decision
 
 ```yaml
 adr_number: 1
 status: accepted
 ```
-""")
+"""
+        )
 
         checker = LLMReadinessChecker(tmp_path)
         score, message = checker.check_adr_structure()
@@ -367,7 +381,8 @@ class TestOverallScore:
         feature1.mkdir(parents=True)
 
         # Co-located code and tests with front-matter
-        (feature1 / "service.py").write_text('''"""
+        (feature1 / "service.py").write_text(
+            '''"""
 title: Service
 purpose: Business logic
 """
@@ -375,7 +390,8 @@ import os
 
 def process():
     pass
-''')
+'''
+        )
         (feature1 / "tests.py").write_text("# Tests")
 
         # All documentation
@@ -390,12 +406,14 @@ def process():
         adr_dir = tmp_path / "docs" / "adr"
         adr_dir.mkdir(parents=True)
         (adr_dir / "000-template.md").write_text("# Template")
-        (adr_dir / "001-decision.md").write_text("""
+        (adr_dir / "001-decision.md").write_text(
+            """
 ```yaml
 adr_number: 1
 status: accepted
 ```
-""")
+"""
+        )
 
         checker = LLMReadinessChecker(tmp_path)
         results = checker.run_all_checks()
