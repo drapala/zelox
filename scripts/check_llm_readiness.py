@@ -274,7 +274,7 @@ def print_results(results: Dict):
         status = "❌ FAIL"
         color = ""
 
-    print(f"Overall Score: {score}/{max_score} ({score / max_score:.1%}) - {status}")
+    print(f"Overall Score: {score}/{max_score} ({score/max_score:.1%}) - {status}")
     print()
 
     # Individual checks

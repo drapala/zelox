@@ -322,12 +322,85 @@ class SchemaValidator:
         return all_passed
 
 
+def check_source_files_frontmatter(repo_root: Path) -> bool:
+    """Check Python source files for frontmatter coverage."""
+    features_dir = repo_root / "features"
+    if not features_dir.exists():
+        print("⚠️  No features directory found")
+        return True
+
+    python_files = []
+    missing_frontmatter = []
+
+    # Find all Python files (excluding tests and templates)
+    for py_file in features_dir.rglob("*.py"):
+        if "test" in py_file.name or "__init__" in py_file.name or "template" in str(py_file):
+            continue
+        python_files.append(py_file)
+
+        # Check for frontmatter
+        try:
+            with open(py_file, "r", encoding="utf-8") as f:
+                content = f.read()
+                # Check for structured docstrings with metadata
+                if not (
+                    '"""' in content
+                    and any(
+                        keyword in content.lower()
+                        for keyword in ["title:", "purpose:", "inputs:", "outputs:"]
+                    )
+                ):
+                    missing_frontmatter.append(str(py_file.relative_to(repo_root)))
+        except Exception:
+            continue
+
+    if not python_files:
+        print("⚠️  No Python source files found to check")
+        return True
+
+    coverage = (len(python_files) - len(missing_frontmatter)) / len(python_files)
+
+    print("=" * 60)
+    print("SOURCE FILE FRONTMATTER CHECK")
+    print("=" * 60)
+    print(
+        f"\nCoverage: {coverage:.1%} ({len(python_files) - len(missing_frontmatter)}/{len(python_files)} files)"
+    )
+
+    if coverage >= 0.9:  # 90% threshold
+        print("✅ Frontmatter coverage meets LLM-first standards")
+        return True
+    else:
+        print(f"❌ {len(missing_frontmatter)} files missing frontmatter:")
+        for file in missing_frontmatter[:5]:  # Show first 5
+            print(f"   - {file}")
+        if len(missing_frontmatter) > 5:
+            print(f"   ... and {len(missing_frontmatter) - 5} more")
+        return False
+
+
 def main():
     """Main entry point."""
-    repo_root = sys.argv[1] if len(sys.argv) > 1 else "."
+    import argparse
 
-    validator = SchemaValidator(repo_root)
-    success = validator.run_all_validations()
+    parser = argparse.ArgumentParser(description="Validate schemas and frontmatter")
+    parser.add_argument("repo_root", nargs="?", default=".", help="Repository root path")
+    parser.add_argument(
+        "--check-source-files",
+        action="store_true",
+        help="Check Python source files for frontmatter",
+    )
+    args = parser.parse_args()
+
+    repo_root = Path(args.repo_root)
+
+    if args.check_source_files:
+        # Just check source file frontmatter
+        success = check_source_files_frontmatter(repo_root)
+    else:
+        # Run full schema validations
+        validator = SchemaValidator(repo_root)
+        success = validator.run_all_validations()
 
     sys.exit(0 if success else 1)
 

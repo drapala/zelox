@@ -40,7 +40,24 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pyyaml jsonschema
+        pip install pre-commit ruff pyyaml jsonschema
+    
+    - name: Pre-commit checks (all files)
+      # WHAT: Runs all pre-commit hooks on the entire codebase
+      # WHY: Ensures consistent code quality and documentation standards
+      # HOW: Executes hooks defined in .pre-commit-config.yaml:
+      #   - Ruff format: Enforces consistent Python formatting
+      #   - Ruff lint: Catches code quality issues
+      #   - README coverage: Ensures features have documentation
+      #   - Frontmatter coverage: Validates Python file metadata
+      # NOTE: Runs on ALL files for deterministic CI results
+      run: |
+        echo "🔧 Running pre-commit checks..."
+        echo "→ Ruff format: Checking code style"
+        echo "→ Ruff lint: Checking code quality"
+        echo "→ README coverage: Checking feature documentation"
+        echo "→ Frontmatter: Checking Python file metadata"
+        pre-commit run --all-files --show-diff-on-failure --color always
         
     - name: PR LOC Gate (Categorized Limits)
       # WHAT: Enforces differentiated PR size limits per ADR-003 and ADR-006

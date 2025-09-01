@@ -1,30 +1,41 @@
-# pyproject.toml
-
 [tool.ruff]
-line-length = 99
-# Exclude template directories from linting
-exclude = [
-    "features/template",  # Template files contain placeholders, not valid Python
+target-version = "py311"
+line-length = 100
+# Choose your rule sets; "ALL" is strict. This is a balanced set.
+select = [
+  "E",  # pycodestyle
+  "F",  # pyflakes
+  "I",  # isort
+  "UP", # pyupgrade
+  "B",  # flake8-bugbear
+  "C4", # flake8-comprehensions
+  "SIM" # flake8-simplify
+]
+ignore = [
+  # Add ignores if the codebase needs; keep minimal.
+  "E203", # space before ':', compatible with black/formatters
 ]
 
-[tool.ruff.lint]
-# E = pycodestyle (errors)
-# W = pycodestyle (warnings)
-# F = Pyflakes (logic errors)
-# I = isort (import sorting)
-select = ["E", "F", "W", "I"]
+# Exclude heavy or generated dirs
+exclude = [
+  ".git",
+  ".venv",
+  "venv",
+  "node_modules",
+  "dist",
+  "build",
+  ".mypy_cache",
+  ".ruff_cache",
+  ".pytest_cache",
+  ".tox",
+  ".next",
+  "features/template",  # Template files contain placeholders, not valid Python
+]
 
-[tool.ruff.format]
-quote-style = "double"
+[tool.ruff.lint.isort]
+known-first-party = ["src", "features", "scripts"]  # adjust to your modules
 
 [tool.pytest.ini_options]
-minversion = "6.0"
-addopts = "-ra -q"
-testpaths = [
-    "tests",
-    "scripts",  # Include test files in scripts directory
-]
-# Also discover test files with test_ prefix in scripts/
+testpaths = ["scripts", "features"]
 python_files = "test_*.py"
-python_classes = "Test*"
-python_functions = "test_*"
+addopts = "-v --tb=short"
