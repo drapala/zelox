@@ -1,7 +1,7 @@
 # LLM-First Makefile for Zelox
 # Provides consistent targets for LLM-friendly development workflow
 
-.PHONY: help pr.loc llm.check test.fast clean confusion.report cost.report pr.check validate.schemas llm.index.validate drift.check drift.report llm.map llm.map.check
+.PHONY: help pr.loc llm.check test.fast clean confusion.report confusion.plan confusion.focus cost.report pr.check validate.schemas llm.index.validate drift.check drift.report llm.map llm.map.check llm.semantic llm.domain llm.learn
 
 # Default target
 help:
@@ -11,6 +11,9 @@ help:
 	@echo "  llm.map         - Auto-generate REPO_MAP.md from codebase"
 	@echo "  llm.map.check   - Validate REPO_MAP.md is up-to-date"
 	@echo "  test.fast       - Run fast test suite"
+	@echo "  confusion.report - Generate cognitive complexity analysis"
+	@echo "  confusion.plan   - Generate refactoring recommendations"
+	@echo "  confusion.focus  - Analyze specific directory for complexity"
 	@echo "  drift.check     - Check for uncontrolled duplication drift"
 	@echo "  drift.report    - Generate detailed drift analysis report"
 	@echo "  clean           - Clean temporary files"
@@ -45,10 +48,20 @@ llm.learn:
 	@echo "Learning from telemetry and generating recommendations..."
 	@python3 scripts/adaptive_learner.py --repo-root . --analyze
 
-# Generate confusion report (telemetry analysis)
+# Generate cognitive complexity analysis
 confusion.report:
-	@echo "Generating confusion report..."
-	@python3 scripts/telemetry_collector.py --analyze --days 7
+	@echo "Generating cognitive complexity analysis..."
+	@python3 scripts/confusion_report.py
+
+# Generate refactoring recommendations  
+confusion.plan:
+	@echo "Generating refactoring recommendations..."
+	@python3 scripts/confusion_report.py --plan --output refactoring_plan.md
+
+# Analyze specific directory for complexity
+confusion.focus:
+	@read -p "Enter directory path: " dir; \
+	python3 scripts/confusion_report.py --focus $$dir --verbose
 
 # Generate cost report (planned)
 cost.report:
