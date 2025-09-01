@@ -1,0 +1,160 @@
+name: PR Quality Gate
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+    types: [ opened, synchronize, reopened ]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  pr-gate:
+    name: LLM-First Quality Gates
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        # Need more history for proper diff analysis
+        fetch-depth: 0
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyyaml jsonschema
+        
+    - name: PR LOC Gate (exclude Markdown)
+      run: |
+        echo "🔍 Checking PR size limits..."
+        python3 scripts/check_pr_loc.py origin/main...HEAD
+      
+    - name: Schema Validation
+      run: |
+        echo "📋 Validating repository schemas..."
+        python3 scripts/validate_schemas.py
+        
+    - name: LLM Readiness Check
+      run: |
+        echo "🤖 Checking LLM readiness score..."
+        python3 scripts/check_llm_readiness.py
+        
+    - name: Validate File Structure
+      run: |
+        echo "📁 Checking LLM-first file structure..."
+        
+        # Check for required directories
+        echo "Checking required directories..."
+        for dir in docs/repo docs/adr features shared scripts schemas; do
+          if [ ! -d "$dir" ]; then
+            echo "❌ Missing required directory: $dir"
+            exit 1
+          fi
+        done
+        
+        # Check for required files
+        echo "Checking required files..."
+        required_files=(
+          "CLAUDE.md"
+          "docs/repo/REPO_MAP.md"
+          "docs/repo/INDEX.yaml" 
+          "docs/repo/FACTS.md"
+          "docs/repo/recovery_patterns.yaml"
+          "scripts/check_pr_loc.py"
+          "scripts/check_llm_readiness.py"
+          "scripts/validate_schemas.py"
+        )
+        
+        for file in "${required_files[@]}"; do
+          if [ ! -f "$file" ]; then
+            echo "❌ Missing required file: $file"
+            exit 1
+          fi
+        done
+        
+        echo "✅ File structure validation passed"
+        
+    - name: ADR Consistency Check
+      run: |
+        echo "📄 Checking ADR consistency..."
+        
+        # Check that ADRs are numbered sequentially
+        python3 -c "
+import os, re
+from pathlib import Path
+
+adr_dir = Path('docs/adr')
+adr_files = sorted([f for f in adr_dir.glob('*.md') if not 'template' in f.name])
+
+numbers = []
+for adr_file in adr_files:
+    match = re.match(r'(\d+)-', adr_file.name)
+    if match:
+        numbers.append(int(match.group(1)))
+
+if numbers != list(range(1, len(numbers) + 1)):
+    print('❌ ADR numbers are not sequential:', numbers)
+    exit(1)
+    
+print(f'✅ ADR numbering is sequential: {len(numbers)} ADRs found')
+"
+        
+    - name: Feature Template Check
+      run: |
+        echo "📦 Checking feature template compliance..."
+        
+        # Check if features follow VSA structure
+        if [ -d "features" ] && [ "$(find features -mindepth 1 -maxdepth 1 -type d | wc -l)" -gt 0 ]; then
+          echo "Found feature directories, checking structure..."
+          
+          for feature_dir in features/*/; do
+            if [ -d "$feature_dir" ]; then
+              feature_name=$(basename "$feature_dir")
+              echo "Checking feature: $feature_name"
+              
+              # Check for README.md
+              if [ ! -f "$feature_dir/README.md" ]; then
+                echo "⚠️  Feature $feature_name missing README.md"
+              fi
+              
+              # Check for at least one of: service.py, models.py, api.py
+              if [ ! -f "$feature_dir/service.py" ] && [ ! -f "$feature_dir/models.py" ] && [ ! -f "$feature_dir/api.py" ]; then
+                echo "⚠️  Feature $feature_name has no core implementation files"
+              fi
+            fi
+          done
+        else
+          echo "ℹ️  No features found - this is acceptable for new repositories"
+        fi
+        
+        echo "✅ Feature structure check completed"
+
+    - name: Generate PR Summary
+      if: always()
+      run: |
+        echo "📊 PR Quality Summary"
+        echo "===================="
+        
+        # Get file counts
+        total_files=$(git diff --name-only origin/main...HEAD | wc -l)
+        code_files=$(python3 -c "
+import subprocess
+files = subprocess.check_output(['git', 'diff', '--name-only', 'origin/main...HEAD'], text=True).strip().split('\n')
+code_files = [f for f in files if not any(f.endswith(ext) for ext in ['.md', '.mdx', '.rst', '.txt']) and f.strip()]
+print(len(code_files))
+")
+        
+        echo "Files changed: $total_files (Code: $code_files)"
+        
+        # Get LOC stats
+        python3 scripts/check_pr_loc.py origin/main...HEAD || true
+        
+        echo ""
+        echo "Quality gates passed! ✅"

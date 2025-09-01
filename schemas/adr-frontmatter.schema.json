@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://zelox.dev/schemas/adr-frontmatter.schema.json",
+  "title": "ADR Front-matter Schema",
+  "description": "Validates YAML front-matter in Architecture Decision Records",
+  "type": "object",
+  "required": ["adr_number", "title", "date", "status", "tags", "complexity", "llm_impact", "human_impact", "reversibility"],
+  "properties": {
+    "adr_number": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Unique ADR number"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 100,
+      "description": "Descriptive title of the decision"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Decision date in YYYY-MM-DD format"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["proposed", "accepted", "rejected", "deprecated", "superseded"],
+      "description": "Current status of the decision"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "architecture", "llm-first", "refactor", "quality", "testing", 
+          "ci", "observability", "security", "performance", "vsa", 
+          "co-location", "bdd", "pr-size", "gates", "tooling"
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "description": "Categorization tags"
+    },
+    "complexity": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "description": "Implementation complexity"
+    },
+    "llm_impact": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "description": "Impact on LLM agent effectiveness"
+    },
+    "human_impact": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "description": "Impact on human developers"
+    },
+    "reversibility": {
+      "type": "string",
+      "enum": ["easy", "moderate", "hard"],
+      "description": "How easy it is to reverse this decision"
+    },
+    "review_deadline": {
+      "anyOf": [
+        {"type": "string", "format": "date"},
+        {"type": "null"}
+      ],
+      "description": "When this decision should be reviewed"
+    },
+    "supersedes": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "uniqueItems": true,
+      "description": "List of ADR numbers this supersedes"
+    },
+    "superseded_by": {
+      "anyOf": [
+        {"type": "integer", "minimum": 1},
+        {"type": "null"}
+      ],
+      "description": "ADR number that supersedes this one"
+    },
+    "related_features": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+      "uniqueItems": true,
+      "description": "Features impacted by this decision"
+    },
+    "drivers": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true,
+      "description": "Decision drivers (e.g., performance, security)"
+    },
+    "alternatives": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 5},
+      "uniqueItems": true,
+      "description": "Alternatives considered"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://drapala.dev/schemas/file-info.schema.json",
+  "title": "File Info Schema",
+  "description": "Validates file metadata in features",
+  "type": "object",
+  "required": ["path", "role"],
+  "properties": {
+    "path": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_/]*\\.(py|ts|tsx|js|jsx|go|java|kt|rs|md|yaml|yml|json)$",
+      "description": "Relative path to file"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "documentation",
+        "domain",
+        "application", 
+        "interface",
+        "tests",
+        "wiring",
+        "adapter",
+        "infra",
+        "config",
+        "observability"
+      ],
+      "description": "File's architectural role"
+    },
+    "loc": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 500,
+      "description": "Lines of code (warn if >500)"
+    },
+    "complexity": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "description": "Cognitive complexity rating"
+    },
+    "purpose": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "What this file is responsible for"
+    },
+    "last_modified": {
+      "type": "string",
+      "format": "date",
+      "description": "Last modification date (YYYY-MM-DD)"
+    },
+    "coverage": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Test coverage percentage for this file (if available)"
+    },
+    "exports": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+      "uniqueItems": true,
+      "description": "Exported symbols (for interface modules)"
+    }
+  },
+  "additionalProperties": false
+}

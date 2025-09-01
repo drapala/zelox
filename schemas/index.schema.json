@@ -1,0 +1,193 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://drapala.dev/schemas/index.schema.json",
+  "title": "INDEX.yaml Schema (Modular)",
+  "description": "Main orchestrator schema for repository index - references modular sub-schemas",
+  "type": "object",
+  "required": ["metadata", "features", "shared", "scripts", "dependencies", "gates", "navigation", "last_updated"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["generated", "version", "repository", "architecture"],
+      "properties": {
+        "generated": {
+          "type": "string",
+          "format": "date"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "repository": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "architecture": {
+          "type": "string",
+          "enum": ["vertical-slice-architecture", "layered", "modular-monolith", "microservices"]
+        },
+        "llm_readiness_score": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "integer", "minimum": 0, "maximum": 100}
+          ]
+        },
+        "repo_url": {
+          "type": "string",
+          "description": "Repository URL"
+        },
+        "default_branch": {
+          "type": "string",
+          "description": "Default branch name"
+        }
+      },
+      "additionalProperties": false
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "$ref": "./feature.schema.json"
+      },
+      "uniqueItems": true
+    },
+    "shared": {
+      "type": "array",
+      "items": {
+        "$ref": "./shared.schema.json"
+      },
+      "uniqueItems": true
+    },
+    "scripts": {
+      "type": "array",
+      "items": {
+        "$ref": "./script.schema.json"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string", "enum": ["python", "typescript", "javascript", "go", "java", "rust", "kotlin"]}
+          ]
+        },
+        "framework": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string"}
+          ]
+        },
+        "database": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string"}
+          ]
+        },
+        "package_manager": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string"}
+          ]
+        },
+        "build_tool": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string"}
+          ]
+        },
+        "test_framework": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string"}
+          ]
+        },
+        "lint_tool": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string"}
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "gates": {
+      "type": "object",
+      "required": ["pr_loc_limit", "pr_files_limit", "llm_readiness_threshold"],
+      "properties": {
+        "pr_loc_limit": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 1000
+        },
+        "pr_files_limit": {
+          "type": "integer", 
+          "minimum": 5,
+          "maximum": 20
+        },
+        "llm_readiness_threshold": {
+          "type": "integer",
+          "minimum": 70,
+          "maximum": 100
+        },
+        "coverage_threshold": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "number", "minimum": 0, "maximum": 100}
+          ]
+        },
+        "max_file_loc": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "integer", "minimum": 100}
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "navigation": {
+      "type": "object",
+      "required": ["start_here", "common_patterns", "decisions"],
+      "properties": {
+        "start_here": {
+          "type": "string"
+        },
+        "feature_template": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string"}
+          ]
+        },
+        "common_patterns": {
+          "type": "string"
+        },
+        "decisions": {
+          "type": "string"
+        },
+        "glossary": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string"}
+          ],
+          "description": "Glossary of domain terms"
+        },
+        "diagrams": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string"}
+          ],
+          "description": "Architecture diagrams index"
+        }
+      },
+      "additionalProperties": false
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "additionalProperties": false
+}

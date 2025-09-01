@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://drapala.dev/schemas/shared.schema.json",
+  "title": "Shared Module Schema",
+  "description": "Validates shared modules (use sparingly)",
+  "type": "object",
+  "required": ["name", "path", "purpose", "used_by"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "minLength": 2,
+      "maxLength": 50,
+      "description": "Module name (snake_case)"
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^shared/[a-z][a-z0-9_]*$",
+      "description": "Path to shared module"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 100,
+      "description": "Clear purpose - why is this shared?"
+    },
+    "used_by": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "minItems": 2,
+      "uniqueItems": true,
+      "description": "Features using this module (min 2 to justify sharing)"
+    },
+    "owners": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "anyOf": [
+          {"format": "email"},
+          {"pattern": "^[a-z][a-z0-9_-]*-team$"}
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true,
+      "description": "Module owners"
+    },
+    "stability": {
+      "type": "string",
+      "enum": ["stable", "experimental", "deprecated"],
+      "default": "stable",
+      "description": "API stability guarantee"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Module version (semver)"
+    },
+    "since_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "When this shared module was introduced"
+    },
+    "replacement": {
+      "anyOf": [
+        {"type": "string"},
+        {"type": "null"}
+      ],
+      "description": "Suggested replacement if deprecated"
+    },
+    "api_doc": {
+      "type": "string",
+      "description": "Link/path to API documentation"
+    }
+  },
+  "additionalProperties": false
+}

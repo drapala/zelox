@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://drapala.dev/schemas/entrypoint.schema.json",
+  "title": "Entrypoint Schema",
+  "description": "Validates feature entrypoint contracts",
+  "type": "object",
+  "required": ["name", "type", "file"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "minLength": 2,
+      "maxLength": 50,
+      "description": "Entrypoint function name (snake_case)"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["api", "service", "command", "event_handler", "job", "webhook"],
+      "description": "Type of entrypoint"
+    },
+    "file": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*\\.(py|ts|tsx|js|go|java|kt|rs):[a-z][a-z0-9_]*$",
+      "description": "File and function reference (file.ext:function_name)"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 200,
+      "description": "Brief description of what this entrypoint does"
+    },
+    "public": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this entrypoint is part of public API"
+    },
+    "io": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "description": "Input contract: JSON Schema object or schema ref string",
+          "anyOf": [
+            {"type": "object"},
+            {"type": "string"}
+          ]
+        },
+        "output": {
+          "description": "Output contract: JSON Schema object or schema ref string",
+          "anyOf": [
+            {"type": "object"},
+            {"type": "string"}
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "description": "Explicit input/output contracts"
+    },
+    "http": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"],
+          "description": "HTTP method (for type=api)"
+        },
+        "path": {
+          "type": "string",
+          "description": "HTTP route path"
+        },
+        "status_codes": {
+          "type": "array",
+          "items": {"type": "integer", "minimum": 100, "maximum": 599},
+          "uniqueItems": true,
+          "description": "Possible HTTP status codes"
+        }
+      },
+      "additionalProperties": false,
+      "description": "HTTP details when entrypoint is an API"
+    },
+    "auth": {
+      "type": "object",
+      "properties": {
+        "required_scopes": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true
+        },
+        "roles": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false,
+      "description": "Auth scopes/roles required"
+    },
+    "schedule": {
+      "type": "string",
+      "description": "Cron expression (for type=job)"
+    },
+    "event": {
+      "type": "object",
+      "properties": {
+        "topic": {"type": "string"},
+        "name": {"type": "string"},
+        "source": {"type": "string"}
+      },
+      "additionalProperties": false,
+      "description": "Event metadata (for type=event_handler/webhook)"
+    },
+    "idempotent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether calling this is idempotent"
+    },
+    "side_effects": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["db_write", "external_call", "filesystem", "email", "pub_event"]
+      },
+      "uniqueItems": true,
+      "description": "Declared side effects"
+    },
+    "rate_limit": {
+      "type": "string",
+      "description": "Rate limit policy, e.g., '100/min'"
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "request": {"type": ["object", "string"]},
+          "response": {"type": ["object", "string"]}
+        },
+        "additionalProperties": false
+      },
+      "description": "Concrete request/response examples"
+    }
+  },
+  "additionalProperties": false
+}

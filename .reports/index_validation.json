@@ -1,0 +1,12 @@
+{
+  "valid": true,
+  "errors": [],
+  "warnings": [],
+  "error_count": 0,
+  "warning_count": 0,
+  "checks_performed": [
+    "schema_structure",
+    "cross_references",
+    "business_rules"
+  ]
+}

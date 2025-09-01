@@ -1,0 +1,100 @@
+# INDEX.yaml - Module Registry and Contracts
+# Machine-readable repository structure for LLM agents
+
+metadata:
+  generated: "2025-09-01"
+  version: "0.1.0"
+  repository: "zelox"
+  architecture: "vertical-slice-architecture"
+  llm_readiness_score: null  # To be calculated by check_llm_readiness.py
+
+# Feature modules (vertical slices)
+features: []
+  # Example structure:
+  # - name: user_management
+  #   path: features/user_management
+  #   status: active
+  #   complexity: medium
+  #   contracts:
+  #     entrypoints:
+  #       - name: register_user
+  #         type: api
+  #         file: api.py:register_user
+  #       - name: validate_user
+  #         type: service
+  #         file: service.py:validate_user
+  #     invariants:
+  #       - "User email must be unique"
+  #       - "Password must be hashed"
+  #   files:
+  #     - path: README.md
+  #       role: documentation
+  #     - path: models.py
+  #       role: domain
+  #       loc: 150
+  #     - path: service.py
+  #       role: application
+  #       loc: 200
+  #     - path: api.py
+  #       role: interface
+  #       loc: 100
+  #     - path: tests.py
+  #       role: tests
+  #       loc: 400
+  #   dependencies:
+  #     internal: []
+  #     external: ["fastapi", "pydantic"]
+  #   owners: ["backend-team"]
+  #   since_version: "0.1.0"
+
+# Shared modules (use sparingly)
+shared: []
+  # Example:
+  # - name: auth
+  #   path: shared/auth
+  #   purpose: "JWT token management"
+  #   used_by: ["user_management", "api_gateway"]
+
+# Scripts and tooling
+scripts:
+  - name: check_pr_loc
+    path: scripts/check_pr_loc.py
+    purpose: "Enforce PR size limits"
+    executable: true
+  
+  # Placeholder for future LLM-first tooling
+  - name: gen_repo_map
+    path: scripts/gen_repo_map.py
+    purpose: "Generate REPO_MAP.md"
+    status: planned
+    
+  - name: check_llm_readiness
+    path: scripts/check_llm_readiness.py
+    purpose: "Calculate LLM Readiness Score"
+    status: planned
+    
+  - name: confusion_report
+    path: scripts/confusion_report.py
+    purpose: "Identify cognitive complexity hotspots"
+    status: planned
+
+# External dependencies
+dependencies:
+  language: null  # To be determined (Python/TypeScript/etc.)
+  framework: null # To be determined
+  database: null  # To be determined
+  
+# Quality gates
+gates:
+  pr_loc_limit: 500
+  pr_files_limit: 10
+  llm_readiness_threshold: 80
+  
+# Navigation hints for LLMs
+navigation:
+  start_here: "docs/repo/REPO_MAP.md"
+  feature_template: "features/template/"
+  common_patterns: "CLAUDE.md"
+  decisions: "docs/adr/"
+  
+last_updated: "2025-09-01"

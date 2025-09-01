@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://drapala.dev/schemas/script.schema.json",
+  "title": "Script Schema",
+  "description": "Validates LLM-first tooling scripts",
+  "type": "object",
+  "required": ["name", "path", "purpose"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "minLength": 2,
+      "maxLength": 50,
+      "description": "Script name (snake_case)"
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^scripts/[a-z][a-z0-9_]*\\.(py|js|sh|ts)$",
+      "description": "Path to script file"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 100,
+      "description": "Clear purpose of this script"
+    },
+    "executable": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether script has execute permissions"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "planned", "deprecated", "experimental"],
+      "default": "active",
+      "description": "Script lifecycle status"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true,
+      "description": "Required packages/tools"
+    },
+    "owners": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "anyOf": [
+          {"format": "email"},
+          {"pattern": "^[a-z][a-z0-9_-]*-team$"}
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true,
+      "description": "Script owners"
+    },
+    "stability": {
+      "type": "string",
+      "enum": ["stable", "experimental", "deprecated"],
+      "description": "Operational stability"
+    },
+    "since_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version when script was introduced"
+    },
+    "effects": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["validation", "ci_gate", "codegen", "analysis", "formatting"]
+      },
+      "uniqueItems": true,
+      "description": "Primary effects of running the script"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": {"type": "string"},
+          "type": {"type": "string"},
+          "description": {"type": "string"}
+        },
+        "additionalProperties": false
+      },
+      "description": "Declared inputs"
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": {"type": "string"},
+          "type": {"type": "string"},
+          "description": {"type": "string"}
+        },
+        "additionalProperties": false
+      },
+      "description": "Declared outputs"
+    }
+  },
+  "additionalProperties": false
+}

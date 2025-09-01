@@ -1,0 +1,156 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://drapala.dev/schemas/feature.schema.json",
+  "title": "Feature Schema", 
+  "description": "Validates vertical slice architecture feature modules",
+  "type": "object",
+  "required": ["name", "path", "status", "complexity", "contracts", "files"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "minLength": 2,
+      "maxLength": 50,
+      "description": "Feature name (snake_case, 2-50 chars)"
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^features/[a-z][a-z0-9_]*$",
+      "description": "Path to feature directory"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "deprecated", "planned", "wip"],
+      "description": "Feature lifecycle status"
+    },
+    "complexity": {
+      "type": "string", 
+      "enum": ["low", "medium", "high"],
+      "description": "Implementation complexity level"
+    },
+    "contracts": {
+      "type": "object",
+      "required": ["entrypoints", "invariants"],
+      "properties": {
+        "entrypoints": {
+          "type": "array",
+          "items": {
+            "$ref": "./entrypoint.schema.json"
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Public API entrypoints"
+        },
+        "invariants": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 200
+          },
+          "uniqueItems": true,
+          "description": "Business rules and constraints"
+        }
+      },
+      "additionalProperties": false
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "$ref": "./file-info.schema.json"
+      },
+      "minItems": 2,
+      "description": "Files in this feature (min 2: code + tests)"
+    },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "internal": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "uniqueItems": true,
+          "description": "Internal feature dependencies"
+        },
+        "external": {
+          "type": "array", 
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "uniqueItems": true,
+          "description": "External package dependencies"
+        }
+      },
+      "additionalProperties": false
+    },
+    "owners": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "anyOf": [
+          {"format": "email"},
+          {"pattern": "^[a-z][a-z0-9_-]*-team$"}
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true,
+      "description": "Feature owners (emails or team-names)"
+    },
+    "since_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version when feature was introduced"
+    },
+    "domain": {
+      "type": "string",
+      "description": "Bounded context / domain area"
+    },
+    "capability": {
+      "type": "string",
+      "description": "Business capability provided by this feature"
+    },
+    "events": {
+      "type": "object",
+      "properties": {
+        "publishes": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true
+        },
+        "consumes": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false,
+      "description": "Domain events published/consumed"
+    },
+    "docs": {
+      "type": "object",
+      "properties": {
+        "readme": {"type": "string"},
+        "diagram": {"type": "string"}
+      },
+      "additionalProperties": false,
+      "description": "Documentation pointers"
+    },
+    "adr_links": {
+      "type": "array",
+      "items": {"type": "integer", "minimum": 1},
+      "uniqueItems": true,
+      "description": "Related ADR numbers"
+    },
+    "risks": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true,
+      "description": "Known risks or caveats"
+    }
+  },
+  "additionalProperties": false
+}

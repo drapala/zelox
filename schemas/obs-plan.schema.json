@@ -1,0 +1,189 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://zelox.dev/schemas/obs-plan.schema.json",
+  "title": "OBS_PLAN.md Schema", 
+  "description": "Validates observability plans for LLM-first features",
+  "type": "object",
+  "required": ["metrics", "cost_tracking", "confusion_hotspots"],
+  "properties": {
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "$ref": "#/definitions/metric"
+      },
+      "description": "Essential metrics (2-5 max for minimal observability)"
+    },
+    "cost_tracking": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/cost_item"
+      },
+      "description": "Cost tracking elements"
+    },
+    "confusion_hotspots": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/confusion_metric"
+      },
+      "description": "LLM confusion tracking"
+    },
+    "alerts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/alert_rule"
+      },
+      "description": "Optional alert rules"
+    },
+    "dependency_freshness": {
+      "type": "object",
+      "properties": {
+        "check_frequency": {
+          "type": "string",
+          "enum": ["daily", "weekly", "monthly"],
+          "default": "weekly"
+        },
+        "critical_deps": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "metric": {
+      "type": "object",
+      "required": ["name", "budget", "alert_threshold"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Metric name in snake_case"
+        },
+        "budget": {
+          "type": "string",
+          "description": "Expected normal value (e.g., '200ms', '1%', '0.2')"
+        },
+        "alert_threshold": {
+          "type": "string", 
+          "description": "Threshold for alerts (e.g., '500ms', '5%', '0.5')"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["latency", "error_rate", "throughput", "count", "gauge"],
+          "description": "Type of metric"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Brief description of what this measures"
+        },
+        "applies_to": {
+          "type": "object",
+          "properties": {
+            "feature": {"type": "string", "description": "Feature name"},
+            "entrypoint": {"type": "string", "description": "Entrypoint name"}
+          },
+          "additionalProperties": false,
+          "description": "Scope of the metric (feature or entrypoint)"
+        }
+      },
+      "additionalProperties": false
+    },
+    "cost_item": {
+      "type": "object",
+      "required": ["item", "tracking_method"],
+      "properties": {
+        "item": {
+          "type": "string",
+          "enum": [
+            "tokens_per_request", 
+            "database_calls_per_request",
+            "llm_api_calls",
+            "compute_time",
+            "storage_usage",
+            "bandwidth_usage"
+          ]
+        },
+        "tracking_method": {
+          "type": "string",
+          "enum": ["estimated", "tracked", "measured"]
+        },
+        "budget": {
+          "type": "string",
+          "description": "Expected cost per unit"
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit of measurement (requests, users, etc.)"
+        }
+      },
+      "additionalProperties": false
+    },
+    "confusion_metric": {
+      "type": "object", 
+      "required": ["metric", "measurement_method"],
+      "properties": {
+        "metric": {
+          "type": "string",
+          "enum": [
+            "indirection_depth",
+            "cross_file_references", 
+            "import_complexity",
+            "cognitive_hops",
+            "abstraction_layers"
+          ]
+        },
+        "measurement_method": {
+          "type": "string",
+          "enum": ["automated", "manual_review", "static_analysis"]
+        },
+        "target_value": {
+          "anyOf": [
+            {"type": "string"},
+            {"type": "number"}
+          ],
+          "description": "Target value to maintain"
+        },
+        "current_value": {
+          "anyOf": [
+            {"type": "string"}, 
+            {"type": "number"},
+            {"type": "null"}
+          ],
+          "description": "Current measured value"
+        }
+      },
+      "additionalProperties": false
+    },
+    "alert_rule": {
+      "type": "object",
+      "required": ["metric_name", "condition", "action"],
+      "properties": {
+        "metric_name": {
+          "type": "string",
+          "description": "Name of metric to alert on"
+        },
+        "condition": {
+          "type": "string",
+          "description": "Alert condition (e.g., '> 500ms', '< 99%')"
+        },
+        "action": {
+          "type": "string",
+          "enum": ["log", "email", "slack", "ci_fail"],
+          "description": "What to do when alert triggers"
+        },
+        "severity": {
+          "type": "string", 
+          "enum": ["info", "warning", "error", "critical"],
+          "default": "warning"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

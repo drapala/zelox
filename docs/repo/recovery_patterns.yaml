@@ -1,0 +1,129 @@
+# recovery_patterns.yaml - LLM Agent Recovery Patterns
+# When LLM agents get confused, these patterns provide structured recovery paths
+
+when_confused:
+  - trigger: "Cannot find feature implementation"
+    actions:
+      - read: "docs/repo/INDEX.yaml"
+      - check: "features/ directory structure"
+      - verify: "REPO_MAP.md for feature list"
+      - fallback: "Ask human for clarification on feature location"
+    
+  - trigger: "Unsure about architecture decisions"
+    actions:
+      - read: "docs/adr/ directory"
+      - check: "FACTS.md for current decisions"
+      - verify: "CLAUDE.md for LLM-first principles"
+      - fallback: "Create new ADR if decision needed"
+    
+  - trigger: "Feature boundaries unclear"
+    actions:
+      - read: "features/[feature_name]/README.md"
+      - check: "INDEX.yaml contracts section"
+      - verify: "wiring.py for dependencies"
+      - fallback: "Review related features for patterns"
+    
+  - trigger: "Test failures after changes"
+    actions:
+      - save: "stacktrace to .reports/last_fail.txt"
+      - search: "similar errors in git log"
+      - attempt: "up to 2 small auto-fixes"
+      - escalate: "to human after 2 failed attempts"
+    
+  - trigger: "PR size limits exceeded"
+    actions:
+      - run: "make pr.loc for detailed breakdown"
+      - check: "if docs are inflating count"
+      - split: "into multiple focused PRs"
+      - document: "splitting rationale in PATCH_PLAN.md"
+
+when_implementing:
+  - trigger: "Starting new feature"
+    actions:
+      - create: "features/[name]/ directory"
+      - copy: "from feature template (when available)"
+      - document: "README.md with purpose and entrypoints"
+      - update: "INDEX.yaml with new feature"
+    
+  - trigger: "Modifying existing feature"
+    actions:
+      - read: "feature's README.md first"
+      - check: "BDD-Lite scenarios in tests"
+      - update: "OBS_PLAN.md if changing APIs"
+      - verify: "contracts in INDEX.yaml remain valid"
+    
+  - trigger: "Adding cross-feature dependency"
+    actions:
+      - document: "in both features' README.md"
+      - update: "INDEX.yaml dependencies"
+      - consider: "if shared module is needed"
+      - avoid: "circular dependencies"
+
+when_testing:
+  - trigger: "Writing new tests"
+    actions:
+      - check: "for BDD-Lite requirements (P0 features)"
+      - co_locate: "tests with feature code"
+      - include: "both happy path and edge cases"
+      - update: "OBS_PLAN.md metrics if needed"
+    
+  - trigger: "Tests failing unexpectedly"
+    actions:
+      - check: "test isolation and mocking"
+      - verify: "no shared state between tests"
+      - run: "tests individually to identify flaky ones"
+      - document: "persistent flakes as tech debt"
+
+when_refactoring:
+  - trigger: "Large refactor needed"
+    actions:
+      - create: "ADR for significant changes"
+      - plan: "migration in PATCH_PLAN.md"
+      - chunk: "changes into <500 LOC PRs"
+      - maintain: "LLM readiness score ≥80"
+    
+  - trigger: "Code duplication detected"
+    actions:
+      - evaluate: "if duplication reduces cognitive hops"
+      - document: "in FACTS.md if intentional"
+      - setup: "drift-check if keeping duplication"
+      - refactor: "only if clear abstraction emerges"
+
+error_patterns:
+  - error: "ImportError: cannot import"
+    likely_cause: "Circular import or missing dependency"
+    recovery:
+      - check: "wiring.py for proper dependency injection"
+      - verify: "import structure follows VSA principles"
+      - resolve: "circular imports via dependency injection"
+    
+  - error: "File not found"
+    likely_cause: "Expecting old layered structure"
+    recovery:
+      - check: "REPO_MAP.md for current structure"
+      - verify: "feature has been migrated to VSA"
+      - update: "import paths to new structure"
+    
+  - error: "LLM Readiness Score below 80"
+    likely_cause: "Too much indirection or poor co-location"
+    recovery:
+      - run: "detailed readiness analysis"
+      - identify: "top 3 complexity hotspots"
+      - refactor: "one hotspot at a time"
+      - measure: "score improvement after each fix"
+
+communication_patterns:
+  when_asking_human:
+    - be_specific: "Include exact error messages and context"
+    - provide_context: "What you were trying to accomplish"
+    - suggest_solutions: "What you've already tried"
+    - be_concise: "One focused question, not multiple issues"
+    
+  when_explaining_changes:
+    - focus_on_why: "Business rationale, not just technical details"
+    - highlight_risks: "What could go wrong"
+    - provide_rollback: "How to undo the change"
+    - estimate_impact: "What other parts might be affected"
+
+last_updated: "2025-09-01"
+version: "1.0"
