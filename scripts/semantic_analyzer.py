@@ -4,7 +4,7 @@ title: Semantic Dependency Analyzer
 purpose: Trace actual call chains and semantic dependencies beyond simple imports
 inputs: [{"name": "codebase_path", "type": "path"}]
 outputs: [
-  {"name": "dependency_graph", "type": "json"}, 
+  {"name": "dependency_graph", "type": "json"},
   {"name": "complexity_report", "type": "dict"}
 ]
 effects: ["ast_analysis", "graph_generation"]

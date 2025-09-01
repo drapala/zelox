@@ -4,7 +4,7 @@ title: Domain Pattern Detector
 purpose: Extract ubiquitous language and detect bounded context violations
 inputs: [{"name": "codebase_path", "type": "path"}]
 outputs: [
-  {"name": "domain_report", "type": "dict"}, 
+  {"name": "domain_report", "type": "dict"},
   {"name": "vsa_recommendations", "type": "list"}
 ]
 effects: ["nlp_analysis", "domain_modeling"]
