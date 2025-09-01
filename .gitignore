@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.hypothesis/
+*.log
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Ruff
+.ruff_cache/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Project specific
+*.tmp
+.temp/
+temp/
+tmp/
+
+# Pre-commit
+.pre-commit-config.yaml.lock
+
+# Local configuration
+.env
+.env.local
+*.local
+
+# Test outputs
+test-results/
+test-reports/
+coverage.xml
+*.cover
+
+# Build artifacts
+*.pyc
+*.pyo

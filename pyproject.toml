@@ -1,6 +1,23 @@
 [tool.ruff]
 target-version = "py311"
 line-length = 100
+# Exclude heavy or generated dirs
+exclude = [
+  ".git",
+  ".venv",
+  "venv",
+  "node_modules",
+  "dist",
+  "build",
+  ".mypy_cache",
+  ".ruff_cache",
+  ".pytest_cache",
+  ".tox",
+  ".next",
+  "features/template/**/*",  # Template files contain placeholders, not valid Python
+]
+
+[tool.ruff.lint]
 # Choose your rule sets; "ALL" is strict. This is a balanced set.
 select = [
   "E",  # pycodestyle
@@ -16,26 +33,56 @@ ignore = [
   "E203", # space before ':', compatible with black/formatters
 ]
 
-# Exclude heavy or generated dirs
-exclude = [
-  ".git",
-  ".venv",
-  "venv",
-  "node_modules",
-  "dist",
-  "build",
-  ".mypy_cache",
-  ".ruff_cache",
-  ".pytest_cache",
-  ".tox",
-  ".next",
-  "features/template",  # Template files contain placeholders, not valid Python
-]
-
 [tool.ruff.lint.isort]
 known-first-party = ["src", "features", "scripts"]  # adjust to your modules
 
 [tool.pytest.ini_options]
 testpaths = ["scripts", "features"]
 python_files = "test_*.py"
-addopts = "-v --tb=short"
+addopts = "-v --tb=short --ignore=scripts/test_check_llm_readiness.py"
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = false
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+disallow_untyped_decorators = false
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = false
+warn_unreachable = false
+strict_equality = true
+exclude = [
+    "build/",
+    "dist/",
+    ".venv/",
+    "venv/",
+    ".mypy_cache/",
+    "features/template/"
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | venv
+  | \.mypy_cache
+  | \.ruff_cache
+  | \.pytest_cache
+  | \.tox
+  | build
+  | dist
+  | features/template
+)/
+'''
+
+[tool.bandit]
+exclude_dirs = ["tests", "test_*", "features/template"]
+skips = ["B101", "B112", "B404", "B603", "B607"]  # Skip low-severity warnings

@@ -40,21 +40,25 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pre-commit ruff pyyaml jsonschema
+        pip install pre-commit ruff pyyaml jsonschema black bandit mypy types-PyYAML types-requests
     
     - name: Pre-commit checks (all files)
       # WHAT: Runs all pre-commit hooks on the entire codebase
       # WHY: Ensures consistent code quality and documentation standards
       # HOW: Executes hooks defined in .pre-commit-config.yaml:
-      #   - Ruff format: Enforces consistent Python formatting
-      #   - Ruff lint: Catches code quality issues
+      #   - Black: Enforces consistent Python formatting
+      #   - Bandit: Security linting for Python
+      #   - MyPy: Static type checking
+      #   - Ruff: Additional linting and code quality checks
       #   - README coverage: Ensures features have documentation
       #   - Frontmatter coverage: Validates Python file metadata
       # NOTE: Runs on ALL files for deterministic CI results
       run: |
         echo "🔧 Running pre-commit checks..."
-        echo "→ Ruff format: Checking code style"
-        echo "→ Ruff lint: Checking code quality"
+        echo "→ Black: Checking code formatting"
+        echo "→ Bandit: Checking security issues"
+        echo "→ MyPy: Checking type annotations"
+        echo "→ Ruff: Checking code quality"
         echo "→ README coverage: Checking feature documentation"
         echo "→ Frontmatter: Checking Python file metadata"
         pre-commit run --all-files --show-diff-on-failure --color always
