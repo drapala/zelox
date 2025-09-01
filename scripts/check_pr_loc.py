@@ -188,6 +188,44 @@ def print_analysis(stats: Dict) -> None:
             print(f"    ... and {len(files) - 3} more")
 
 
+def generate_claude_pr_prompt(stats: Dict, violations: List[str]) -> None:
+    """Generate a copy-paste prompt for Claude CLI to split the PR."""
+    print("\n" + "=" * 60)
+    print("🤖 CLAUDE CLI FIX PROMPT")
+    print("=" * 60)
+    print("\nCopy and paste this into Claude CLI:\n")
+    print("-" * 40)
+    
+    prompt = "My PR exceeds the categorized size limits. Please help me split it.\n\n"
+    prompt += "VIOLATIONS:\n"
+    for violation in violations:
+        prompt += f"• {violation}\n"
+    
+    prompt += f"\nCURRENT PR BREAKDOWN:\n"
+    for category in FileCategory:
+        files = stats["categorized_files"][category]
+        if files:
+            cat_stats = stats["categorized_stats"][category]
+            prompt += f"\n{category.value.upper()}: {len(files)} files, {cat_stats['loc']} LOC\n"
+            for f in files[:3]:
+                prompt += f"  - {f}\n"
+            if len(files) > 3:
+                prompt += f"  ... and {len(files) - 3} more\n"
+    
+    prompt += "\nPlease:\n"
+    prompt += "1. Analyze which files belong together\n"
+    prompt += "2. Create a plan to split into multiple PRs\n"
+    prompt += "3. Ensure each PR respects category limits:\n"
+    prompt += "   - Application: ≤500 LOC, ≤10 files\n"
+    prompt += "   - Test: ≤1000 LOC, ≤20 files\n"
+    prompt += "   - Config: ≤250 LOC, ≤5 files\n"
+    prompt += "4. Generate git commands for the first PR\n"
+    
+    print(prompt)
+    print("-" * 40)
+    print("\n💡 TIP: Claude will create focused PRs respecting category limits")
+
+
 def check_limits(stats: Dict) -> bool:
     """Check if PR exceeds any category limits."""
     violations = []
@@ -234,6 +272,9 @@ def check_limits(stats: Dict) -> bool:
         print("  - Configuration changes might warrant a separate PR")
         print("\n📖 Per ADR-006: Different categories have different limits to")
         print("   incentivize testing while maintaining reviewability.")
+        
+        # Generate Claude CLI prompt
+        generate_claude_pr_prompt(stats, violations)
         return False
     
     print("\n" + "=" * 60)

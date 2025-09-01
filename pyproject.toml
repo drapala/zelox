@@ -1,0 +1,26 @@
+# pyproject.toml
+
+[tool.ruff]
+line-length = 99
+
+[tool.ruff.lint]
+# E = pycodestyle (errors)
+# W = pycodestyle (warnings)
+# F = Pyflakes (logic errors)
+# I = isort (import sorting)
+select = ["E", "F", "W", "I"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+    "scripts",  # Include test files in scripts directory
+]
+# Also discover test files with test_ prefix in scripts/
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
