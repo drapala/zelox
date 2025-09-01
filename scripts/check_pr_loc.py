@@ -259,7 +259,7 @@ def check_limits(stats: dict) -> bool:
             if files_limit and len(files) > files_limit:
                 msg = f"{category.value.capitalize()} files ({len(files)}) "
                 msg += f"exceed limit of {files_limit}"
-            violations.append(msg)
+                violations.append(msg)
 
         # Check LOC limit
         if isinstance(limits, dict):
@@ -267,7 +267,7 @@ def check_limits(stats: dict) -> bool:
             if loc_limit and cat_stats["loc"] > loc_limit:
                 msg = f"{category.value.capitalize()} LOC ({cat_stats['loc']}) "
                 msg += f"exceeds limit of {loc_limit}"
-            violations.append(msg)
+                violations.append(msg)
 
     if violations:
         print("\n" + "=" * 60)
