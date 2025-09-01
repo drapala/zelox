@@ -3,7 +3,10 @@
 title: Confusion Report - Cognitive Complexity Analyzer
 purpose: Identify cognitive complexity hotspots and guide LLM-friendly refactoring
 inputs: [{"name": "repo_root", "type": "path"}, {"name": "threshold_config", "type": "yaml"}]
-outputs: [{"name": "confusion_report", "type": "json"}, {"name": "recommendations", "type": "markdown"}]
+outputs: [
+  {"name": "confusion_report", "type": "json"},
+  {"name": "recommendations", "type": "markdown"}
+]
 effects: ["analysis", "reporting", "recommendations"]
 deps: ["ast", "pathlib", "json", "sys"]
 owners: ["drapala"]
@@ -81,7 +84,7 @@ class CognitiveComplexityAnalyzer:
 
     def _analyze_module(self, file_path: Path, tree: ast.AST, content: str) -> CodeComplexity:
         """Analyze module-level complexity metrics."""
-        imports = len([n for n in ast.walk(tree) if isinstance(n, (ast.Import, ast.ImportFrom))])
+        imports = len([n for n in ast.walk(tree) if isinstance(n, ast.Import | ast.ImportFrom)])
         classes = len([n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)])
         functions = len([n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)])
 
@@ -114,7 +117,7 @@ class CognitiveComplexityAnalyzer:
         # Calculate cyclomatic complexity (simplified)
         cyclomatic = 1  # Base complexity
         for child in ast.walk(node):
-            if isinstance(child, (ast.If, ast.While, ast.For, ast.Try, ast.With)):
+            if isinstance(child, ast.If | ast.While | ast.For | ast.Try | ast.With):
                 cyclomatic += 1
             elif isinstance(child, ast.BoolOp):
                 cyclomatic += len(child.values) - 1
@@ -165,7 +168,7 @@ class CognitiveComplexityAnalyzer:
 
             for child in ast.iter_child_nodes(n):
                 if isinstance(
-                    child, (ast.If, ast.While, ast.For, ast.Try, ast.With, ast.FunctionDef)
+                    child, ast.If | ast.While | ast.For | ast.Try | ast.With | ast.FunctionDef
                 ):
                     _depth_visitor(child, current_depth + 1)
                 else:
@@ -257,7 +260,7 @@ class RefactoringAnalyzer:
                         type="function_complexity",
                         description=f"High complexity in {hotspot.function_name}",
                         affected_files=[hotspot.file_path],
-                        recommendation="Extract helper functions, reduce nesting with early returns",
+                        recommendation="Extract helper functions, reduce nesting",
                         effort_estimate="2-4 hours",
                         complexity_reduction="30-50%",
                     )
@@ -283,7 +286,7 @@ class ConfusionReporter:
 
         # Calculate summary metrics
         total_files = sum(1 for _ in self.repo_root.rglob("*.py"))
-        high_confusion_files = len(set(h.file_path for h in hotspots))
+        high_confusion_files = len({h.file_path for h in hotspots})
         avg_confusion = sum(h.confusion_score for h in hotspots) / len(hotspots) if hotspots else 0
 
         report = {

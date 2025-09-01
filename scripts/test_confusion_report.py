@@ -11,21 +11,21 @@ stability: stable
 since_version: "0.3.0"
 """
 
-import unittest
 import tempfile
-import json
+import unittest
 from pathlib import Path
+
 from confusion_report import (
+    CodeComplexity,
     CognitiveComplexityAnalyzer,
+    ConfusionReporter,
     HotspotDetector,
     RefactoringAnalyzer,
-    ConfusionReporter,
-    CodeComplexity
 )
 
 
 class TestCognitiveComplexityAnalyzer(unittest.TestCase):
-    
+
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
         self.repo_root = Path(self.temp_dir)
@@ -40,12 +40,12 @@ def simple_function(x):
 '''
         test_file = self.repo_root / "simple.py"
         test_file.write_text(simple_code)
-        
+
         complexities = self.analyzer.analyze_file(test_file)
-        
+
         # Should have module and function complexity
         self.assertEqual(len(complexities), 2)
-        
+
         # Function should have low complexity
         func_complexity = [c for c in complexities if c.function_name == "simple_function"][0]
         self.assertLessEqual(func_complexity.confusion_score, 3.0)
@@ -98,12 +98,12 @@ def log_error(msg):
 '''
         test_file = self.repo_root / "complex.py"
         test_file.write_text(complex_code)
-        
+
         complexities = self.analyzer.analyze_file(test_file)
-        
+
         # Find the complex function
         func_complexity = [c for c in complexities if c.function_name == "complex_function"][0]
-        
+
         # Should have high complexity
         self.assertGreaterEqual(func_complexity.confusion_score, 5.0)
         self.assertGreaterEqual(func_complexity.cyclomatic_complexity, 5)
@@ -111,7 +111,7 @@ def log_error(msg):
 
     def test_module_level_analysis(self):
         """Test module-level complexity analysis."""
-        module_code = '''
+        module_code = """
 import os
 import sys
 import json
@@ -131,26 +131,28 @@ def global_function():
 
 def another_function():
     pass
-'''
+"""
         test_file = self.repo_root / "module.py"
         test_file.write_text(module_code)
-        
+
         complexities = self.analyzer.analyze_file(test_file)
-        
+
         # Find module-level complexity
         module_complexity = [c for c in complexities if c.function_name is None][0]
-        
+
         # Should reflect module complexity
         self.assertGreaterEqual(module_complexity.import_dependencies, 5)
-        self.assertGreaterEqual(module_complexity.cyclomatic_complexity, 4)  # 2 classes + 2 functions
+        # 2 classes + 2 functions
+        self.assertGreaterEqual(module_complexity.cyclomatic_complexity, 4)
 
     def tearDown(self):
         import shutil
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
 
 class TestHotspotDetector(unittest.TestCase):
-    
+
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
         self.repo_root = Path(self.temp_dir)
@@ -216,38 +218,40 @@ def skip_item(item):
 '''
         test_file = self.repo_root / "hotspot.py"
         test_file.write_text(complex_code)
-        
+
         # Test different thresholds
         low_threshold_hotspots = self.detector.detect_hotspots(threshold=3.0)
         high_threshold_hotspots = self.detector.detect_hotspots(threshold=8.0)
-        
+
         # Should detect more hotspots with lower threshold
         self.assertGreaterEqual(len(low_threshold_hotspots), len(high_threshold_hotspots))
-        
+
         # Should have at least one hotspot from the complex function
-        complex_hotspots = [h for h in low_threshold_hotspots if h.function_name == "very_complex_function"]
+        complex_hotspots = [
+            h for h in low_threshold_hotspots if h.function_name == "very_complex_function"
+        ]
         self.assertGreater(len(complex_hotspots), 0)
 
     def test_file_filtering(self):
         """Test that test files and cache directories are filtered out."""
         # Create test file (should be filtered)
-        test_code = '''
+        test_code = """
 def test_something():
     assert True
-'''
+"""
         test_file = self.repo_root / "test_module.py"
         test_file.write_text(test_code)
-        
+
         # Create cache directory (should be filtered)
         cache_dir = self.repo_root / "__pycache__"
         cache_dir.mkdir()
         cache_file = cache_dir / "cached.py"
         cache_file.write_text("# cached file")
-        
+
         # Create normal file (should be analyzed)
         normal_file = self.repo_root / "normal.py"
         normal_file.write_text("def normal_func(): pass")
-        
+
         # Test file filtering
         self.assertFalse(self.detector._should_analyze_file(test_file))
         self.assertFalse(self.detector._should_analyze_file(cache_file))
@@ -255,11 +259,12 @@ def test_something():
 
     def tearDown(self):
         import shutil
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
 
 class TestRefactoringAnalyzer(unittest.TestCase):
-    
+
     def test_vertical_slice_recommendations(self):
         """Test generation of vertical slice refactoring recommendations."""
         # Create mock hotspots indicating scattered complexity
@@ -272,7 +277,7 @@ class TestRefactoringAnalyzer(unittest.TestCase):
                 indirection_depth=4,
                 context_switches=15,
                 import_dependencies=6,
-                confusion_score=7.5
+                confusion_score=7.5,
             ),
             CodeComplexity(
                 file_path="features/user/service.py",
@@ -282,7 +287,7 @@ class TestRefactoringAnalyzer(unittest.TestCase):
                 indirection_depth=3,
                 context_switches=12,
                 import_dependencies=4,
-                confusion_score=6.2
+                confusion_score=6.2,
             ),
             CodeComplexity(
                 file_path="features/user/service.py",
@@ -292,17 +297,17 @@ class TestRefactoringAnalyzer(unittest.TestCase):
                 indirection_depth=2,
                 context_switches=8,
                 import_dependencies=3,
-                confusion_score=5.8
-            )
+                confusion_score=5.8,
+            ),
         ]
-        
+
         analyzer = RefactoringAnalyzer(hotspots)
         recommendations = analyzer.generate_recommendations()
-        
+
         # Should generate vertical slice recommendation
         vertical_slice_recs = [r for r in recommendations if r.type == "vertical_slice_opportunity"]
         self.assertGreater(len(vertical_slice_recs), 0)
-        
+
         # Should suggest file splitting
         rec = vertical_slice_recs[0]
         self.assertIn("splitting", rec.recommendation)
@@ -319,17 +324,17 @@ class TestRefactoringAnalyzer(unittest.TestCase):
                 indirection_depth=6,
                 context_switches=25,
                 import_dependencies=0,
-                confusion_score=9.5
+                confusion_score=9.5,
             )
         ]
-        
+
         analyzer = RefactoringAnalyzer(hotspots)
         recommendations = analyzer.generate_recommendations()
-        
+
         # Should generate function complexity recommendation
         func_recs = [r for r in recommendations if r.type == "function_complexity"]
         self.assertGreater(len(func_recs), 0)
-        
+
         # Should suggest extraction and nesting reduction
         rec = func_recs[0]
         self.assertIn("Extract", rec.recommendation)
@@ -337,7 +342,7 @@ class TestRefactoringAnalyzer(unittest.TestCase):
 
 
 class TestConfusionReporter(unittest.TestCase):
-    
+
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
         self.repo_root = Path(self.temp_dir)
@@ -371,21 +376,21 @@ def process_item(item):
 '''
         sample_file = self.repo_root / "sample.py"
         sample_file.write_text(sample_code)
-        
+
         report = self.reporter.generate_report(threshold=3.0)
-        
+
         # Validate report structure
         self.assertIn("summary", report)
         self.assertIn("hotspots", report)
         self.assertIn("architecture_recommendations", report)
-        
+
         # Validate summary metrics
         summary = report["summary"]
         self.assertIn("total_files_analyzed", summary)
         self.assertIn("high_confusion_files", summary)
         self.assertIn("overall_confusion_score", summary)
         self.assertIn("refactoring_priority", summary)
-        
+
         # Should analyze at least one file
         self.assertGreaterEqual(summary["total_files_analyzed"], 1)
 
@@ -393,9 +398,9 @@ def process_item(item):
         """Test report generation with verbose mode enabled."""
         simple_file = self.repo_root / "simple.py"
         simple_file.write_text("def simple(): pass")
-        
+
         verbose_report = self.reporter.generate_report(threshold=1.0, verbose=True)
-        
+
         # Should include detailed analysis section
         self.assertIn("detailed_analysis", verbose_report)
         detailed = verbose_report["detailed_analysis"]
@@ -407,7 +412,8 @@ def process_item(item):
         """Test markdown refactoring plan generation."""
         # Create file with complexity
         complex_file = self.repo_root / "complex.py"
-        complex_file.write_text('''
+        complex_file.write_text(
+            """
 def complex_function(a, b, c):
     if a:
         if b:
@@ -421,15 +427,16 @@ def complex_function(a, b, c):
 
 def process(x): pass
 def skip(x): pass
-''')
-        
+"""
+        )
+
         plan_file = self.repo_root / "test_plan.md"
         report = self.reporter.generate_report(threshold=2.0)
         self.reporter._generate_refactoring_plan(report, str(plan_file))
-        
+
         # Plan file should be created
         self.assertTrue(plan_file.exists())
-        
+
         # Should contain expected sections
         content = plan_file.read_text()
         self.assertIn("# Refactoring Plan", content)
@@ -438,11 +445,12 @@ def skip(x): pass
 
     def tearDown(self):
         import shutil
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
 
 class TestIntegrationScenarios(unittest.TestCase):
-    
+
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
         self.repo_root = Path(self.temp_dir)
@@ -451,7 +459,7 @@ class TestIntegrationScenarios(unittest.TestCase):
         """Test analysis of empty repository."""
         reporter = ConfusionReporter(self.repo_root)
         report = reporter.generate_report()
-        
+
         # Should handle empty repository gracefully
         self.assertEqual(report["summary"]["total_files_analyzed"], 0)
         self.assertEqual(report["summary"]["high_confusion_files"], 0)
@@ -462,10 +470,11 @@ class TestIntegrationScenarios(unittest.TestCase):
         # Simple file
         simple_file = self.repo_root / "simple.py"
         simple_file.write_text("def simple(): return 42")
-        
+
         # Medium complexity file
         medium_file = self.repo_root / "medium.py"
-        medium_file.write_text('''
+        medium_file.write_text(
+            """
 import os
 def medium_function(data):
     if data:
@@ -476,11 +485,13 @@ def medium_function(data):
 
 def process(item): 
     return item * 2
-''')
-        
+"""
+        )
+
         # Complex file
         complex_file = self.repo_root / "complex.py"
-        complex_file.write_text('''
+        complex_file.write_text(
+            """
 import os
 import sys
 from pathlib import Path
@@ -517,23 +528,25 @@ class ComplexProcessor:
     def default_process(self, item): pass
     def handle_invalid(self, item): pass
     def handle_error(self, error, item): pass
-''')
-        
+"""
+        )
+
         reporter = ConfusionReporter(self.repo_root)
         report = reporter.generate_report(threshold=4.0)
-        
+
         # Should analyze all files
         self.assertEqual(report["summary"]["total_files_analyzed"], 3)
-        
+
         # Should identify high complexity files
         self.assertGreaterEqual(report["summary"]["high_confusion_files"], 1)
-        
+
         # Should have hotspots from complex file
         complex_hotspots = [h for h in report["hotspots"] if "complex.py" in h["file_path"]]
         self.assertGreater(len(complex_hotspots), 0)
 
     def tearDown(self):
         import shutil
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
 
