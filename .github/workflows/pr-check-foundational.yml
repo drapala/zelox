@@ -1,0 +1,59 @@
+# .github/workflows/pr-check-foundational.yml
+
+# META: This workflow is the main quality gate for our repository.
+# It validates each PR against the pillars of our LLM-First architecture:
+# 1. Consistency: Linting and formatting ensure machine-readable code.
+# 2. Correctness: Unit tests ensure stability.
+# 3. Structure: Schema validation ensures LLM-readable contracts are valid.
+# 4. Scope: Size limits ensure changes are atomic with low cognitive load.
+
+name: "PR Quality Gate"
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: "Validate PR"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout code with full history"
+        # fetch-depth: 0 is crucial so check_pr_loc.py can
+        # compare the PR with the target branch (origin/main).
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "Setup Python environment"
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: "Cache pip dependencies"
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-dev.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: "Install dependencies"
+        run: pip install -r requirements-dev.txt
+
+      - name: "Run Linting and Formatting Checks"
+        run: |
+          echo ">>> Running linter..."
+          ruff check .
+          echo ">>> Checking formatting..."
+          ruff format --check .
+
+      - name: "Run Unit Tests"
+        run: pytest
+
+      - name: "Validate Schemas and Contracts"
+        run: python scripts/validate_schemas.py
+
+      - name: "Check PR Size Limits (LOC & Files)"
+        run: python scripts/check_pr_loc.py origin/main...HEAD

@@ -4,12 +4,14 @@ Schema Validation Script
 Validates repository files against JSON schemas for LLM-first compliance.
 """
 
+import contextlib
 import json
-import yaml
+import re
 import sys
 from pathlib import Path
-from typing import List, Dict, Any, Tuple
-import re
+from typing import Any
+
+import yaml
 
 try:
     import jsonschema
@@ -27,32 +29,30 @@ class SchemaValidator:
         self.warnings = []
         self._schema_store = None
 
-    def load_schema(self, schema_name: str) -> Dict[str, Any]:
+    def load_schema(self, schema_name: str) -> dict[str, Any]:
         """Load a JSON schema file."""
         schema_path = self.schemas_dir / f"{schema_name}.schema.json"
         if not schema_path.exists():
             raise FileNotFoundError(f"Schema not found: {schema_path}")
 
-        with open(schema_path, "r", encoding="utf-8") as f:
+        with open(schema_path, encoding="utf-8") as f:
             return json.load(f)
 
-    def build_schema_store(self) -> Dict[str, Any]:
+    def build_schema_store(self) -> dict[str, Any]:
         """Load all schemas and build a URI store for $id-based resolution."""
         if self._schema_store is not None:
             return self._schema_store
-        store: Dict[str, Any] = {}
+        store: dict[str, Any] = {}
         for schema_file in self.schemas_dir.glob("*.schema.json"):
             try:
-                with open(schema_file, "r", encoding="utf-8") as f:
+                with open(schema_file, encoding="utf-8") as f:
                     schema_obj = json.load(f)
                 schema_id = schema_obj.get("$id")
                 if schema_id:
                     store[schema_id] = schema_obj
                 # Also map file URI to schema
-                try:
+                with contextlib.suppress(Exception):
                     store[schema_file.resolve().as_uri()] = schema_obj
-                except Exception:
-                    pass
             except Exception:
                 # Skip malformed schema files, will be caught during validation anyway
                 continue
@@ -67,7 +67,7 @@ class SchemaValidator:
             return False
 
         try:
-            with open(index_path, "r", encoding="utf-8") as f:
+            with open(index_path, encoding="utf-8") as f:
                 index_data = yaml.safe_load(f)
             # Load main schema and resolve local $refs manually
             schema = self.load_schema("index")
@@ -97,7 +97,7 @@ class SchemaValidator:
             self.errors.append(f"❌ INDEX.yaml validation failed: {e}")
             return False
 
-    def _resolve_refs(self, schema: Dict[str, Any]) -> Dict[str, Any]:
+    def _resolve_refs(self, schema: dict[str, Any]) -> dict[str, Any]:
         """Recursively resolve $ref references in schema."""
         if isinstance(schema, dict):
             if "$ref" in schema:
@@ -110,7 +110,7 @@ class SchemaValidator:
                     ref_name = ref_path.replace(".schema.json", "").split("/")[-1]
                     try:
                         return self.load_schema(ref_name)
-                    except:
+                    except Exception:
                         return schema
                 return schema
             else:
@@ -120,7 +120,7 @@ class SchemaValidator:
         else:
             return schema
 
-    def extract_yaml_frontmatter(self, content: str) -> Tuple[Dict[str, Any], bool]:
+    def extract_yaml_frontmatter(self, content: str) -> tuple[dict[str, Any], bool]:
         """Extract YAML frontmatter from markdown file."""
         lines = content.strip().split("\n")
 
@@ -132,12 +132,14 @@ class SchemaValidator:
             # Check for ```yaml with "machine-readable metadata" comment nearby
             if line.strip() == "```yaml":
                 # Check if previous line contains metadata comment (case-insensitive)
-                if i > 0 and "machine-readable metadata" in lines[i - 1].lower():
-                    yaml_start = i + 1
-                # Also check if it's part of Front-matter section
-                elif i > 0 and any(
-                    prev_line.startswith("## Front-matter")
-                    for prev_line in lines[max(0, i - 3) : i]
+                if (
+                    i > 0
+                    and "machine-readable metadata" in lines[i - 1].lower()
+                    or i > 0
+                    and any(
+                        prev_line.startswith("## Front-matter")
+                        for prev_line in lines[max(0, i - 3) : i]
+                    )
                 ):
                     yaml_start = i + 1
             elif yaml_start is not None and line.strip() == "```":
@@ -179,7 +181,7 @@ class SchemaValidator:
                 continue
 
             try:
-                with open(adr_file, "r", encoding="utf-8") as f:
+                with open(adr_file, encoding="utf-8") as f:
                     content = f.read()
 
                 frontmatter, found = self.extract_yaml_frontmatter(content)
@@ -200,7 +202,7 @@ class SchemaValidator:
         if total_adrs > 0:
             print(f"   ✅ {valid_count}/{total_adrs} ADRs have valid frontmatter")
             if valid_count == total_adrs:
-                print(f"   ✅ All ADRs properly tagged for LLM discovery")
+                print("   ✅ All ADRs properly tagged for LLM discovery")
 
         return len(self.errors) == 0
 
@@ -221,7 +223,7 @@ class SchemaValidator:
 
         for obs_plan in obs_plans:
             try:
-                with open(obs_plan, "r", encoding="utf-8") as f:
+                with open(obs_plan, encoding="utf-8") as f:
                     content = f.read()
 
                 # Extract YAML from markdown (look for ```yaml blocks)
@@ -252,7 +254,7 @@ class SchemaValidator:
         if obs_plans:
             print(f"   ✅ {valid_count}/{len(obs_plans)} OBS_PLANs have valid structure")
             if valid_count == len(obs_plans):
-                print(f"   ✅ All features have proper observability contracts")
+                print("   ✅ All features have proper observability contracts")
 
         return len(self.errors) == 0
 
@@ -340,7 +342,7 @@ def check_source_files_frontmatter(repo_root: Path) -> bool:
 
         # Check for frontmatter
         try:
-            with open(py_file, "r", encoding="utf-8") as f:
+            with open(py_file, encoding="utf-8") as f:
                 content = f.read()
                 # Check for structured docstrings with metadata
                 if not (
@@ -363,9 +365,9 @@ def check_source_files_frontmatter(repo_root: Path) -> bool:
     print("=" * 60)
     print("SOURCE FILE FRONTMATTER CHECK")
     print("=" * 60)
-    print(
-        f"\nCoverage: {coverage:.1%} ({len(python_files) - len(missing_frontmatter)}/{len(python_files)} files)"
-    )
+    coverage_msg = f"\nCoverage: {coverage:.1%} "
+    coverage_msg += f"({len(python_files) - len(missing_frontmatter)}/{len(python_files)} files)"
+    print(coverage_msg)
 
     if coverage >= 0.9:  # 90% threshold
         print("✅ Frontmatter coverage meets LLM-first standards")

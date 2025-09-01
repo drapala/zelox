@@ -3,43 +3,43 @@
 README Coverage Check
 Ensures features are documented with READMEs for LLM discoverability.
 """
+
 import sys
 from pathlib import Path
-from typing import List, Tuple
 
 
-def find_feature_dirs(repo_root: Path) -> List[Path]:
+def find_feature_dirs(repo_root: Path) -> list[Path]:
     """Find all feature directories."""
     features_dir = repo_root / "features"
     if not features_dir.exists():
         return []
-    
+
     # Get all directories under features/
     return [d for d in features_dir.iterdir() if d.is_dir() and d.name != "template"]
 
 
-def check_readme_coverage(repo_root: Path = Path(".")) -> Tuple[bool, List[str]]:
+def check_readme_coverage(repo_root: Path = Path(".")) -> tuple[bool, list[str]]:
     """Check if all features have README documentation."""
     feature_dirs = find_feature_dirs(repo_root)
-    
+
     if not feature_dirs:
         print("⚠️  No feature directories found to check")
         return True, []
-    
+
     missing_readmes = []
-    
+
     for feature_dir in feature_dirs:
         readme_path = feature_dir / "README.md"
         if not readme_path.exists():
             missing_readmes.append(str(feature_dir.relative_to(repo_root)))
-    
+
     return len(missing_readmes) == 0, missing_readmes
 
 
 def main():
     """Main entry point."""
     repo_root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(".")
-    
+
     print("=" * 60)
     print("README COVERAGE CHECK (LLM-First)")
     print("=" * 60)
@@ -48,9 +48,9 @@ def main():
     print("→ Documentation at the source reduces cognitive hops")
     print("→ Self-contained features improve maintainability")
     print("")
-    
+
     passed, missing = check_readme_coverage(repo_root)
-    
+
     if passed:
         feature_count = len(find_feature_dirs(repo_root))
         print(f"✅ All {feature_count} features have README documentation")
@@ -63,12 +63,12 @@ def main():
         print(f"❌ {len(missing)} features missing README documentation:")
         for feature in missing:
             print(f"   - {feature}/README.md")
-        
+
         print("\n💡 HOW TO FIX:")
         print("   • Create README.md in each feature directory")
         print("   • Document: purpose, API, dependencies, testing")
         print("   • Use the template in features/template/README.md")
-        
+
         # Generate Claude CLI prompt
         print("\n" + "=" * 60)
         print("🤖 CLAUDE CLI FIX PROMPT")
@@ -86,7 +86,7 @@ def main():
         prompt += "5. Configuration options\n"
         print(prompt)
         print("-" * 40)
-        
+
         sys.exit(1)
 
 

@@ -1,0 +1,10 @@
+# requirements-dev.txt
+
+# Linting, Formatting and Testing Tools
+ruff
+pytest
+pytest-cov
+
+# Dependencies for validation scripts
+jsonschema  # Used by validate_schemas.py
+pyyaml      # Used by validate_schemas.py for YAML processing
