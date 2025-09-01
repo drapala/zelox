@@ -1,13 +1,15 @@
 # LLM-First Makefile for Zelox
 # Provides consistent targets for LLM-friendly development workflow
 
-.PHONY: help pr.loc llm.check test.fast clean confusion.report cost.report pr.check validate.schemas llm.index.validate
+.PHONY: help pr.loc llm.check test.fast clean confusion.report cost.report pr.check validate.schemas llm.index.validate llm.map llm.map.check
 
 # Default target
 help:
 	@echo "LLM-First Development Targets:"
 	@echo "  pr.loc          - Check PR size limits (excludes Markdown)"
 	@echo "  llm.check       - Run LLM readiness checks"
+	@echo "  llm.map         - Auto-generate REPO_MAP.md from codebase"
+	@echo "  llm.map.check   - Validate REPO_MAP.md is up-to-date"
 	@echo "  test.fast       - Run fast test suite"
 	@echo "  clean           - Clean temporary files"
 
@@ -53,6 +55,16 @@ validate.schemas:
 llm.index.validate:
 	@echo "Validating INDEX.yaml with cross-validation..."
 	@python3 scripts/validate_schemas.py
+
+# Auto-generate REPO_MAP.md from codebase
+llm.map:
+	@echo "Auto-generating REPO_MAP.md..."
+	@python3 scripts/gen_repo_map.py
+
+# Validate REPO_MAP.md is up-to-date
+llm.map.check:
+	@echo "Validating REPO_MAP.md is up-to-date..."
+	@python3 scripts/gen_repo_map.py --dry-run
 
 # Clean temporary files
 clean:

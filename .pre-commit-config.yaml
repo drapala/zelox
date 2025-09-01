@@ -35,6 +35,14 @@ repos:
         files: ""  # run always
         stages: [pre-commit]
         args: ["scripts/validate_schemas.py", "--check-source-files"]
+      - id: python-syntax-check
+        name: Python syntax compatibility check
+        entry: python3
+        language: system
+        pass_filenames: true
+        files: \.py$
+        stages: [pre-commit]
+        args: ["-m", "py_compile"]
 
 # Global excludes to speed up hooks that still look at repo root
 exclude: |
