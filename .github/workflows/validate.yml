@@ -23,9 +23,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyyaml jsonschema
 
-      - name: Validate INDEX.yaml (cross-validation)
-        run: python scripts/validate_index.py
-
-      - name: Validate schemas (INDEX, ADR, OBS_PLAN)
+      - name: Validate all schemas and contracts
         run: python scripts/validate_schemas.py
 
