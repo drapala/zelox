@@ -1,0 +1,76 @@
+module: semantic_analysis
+purpose: Modular semantic analysis pipeline for Python codebases
+owner: drapala
+version: 0.5.0
+
+files:
+  - path: semantic_parser.py
+    role: parser
+    purpose: Parse Python files and extract semantic elements
+    complexity: low
+    loc: 100
+    
+  - path: semantic_extractor.py
+    role: extractor
+    purpose: Extract patterns and dependencies from parsed data
+    complexity: medium
+    loc: 100
+    
+  - path: semantic_scorer.py
+    role: scorer
+    purpose: Calculate quality scores and LLM readiness
+    complexity: low
+    loc: 80
+    
+  - path: semantic_reporter.py
+    role: reporter
+    purpose: Generate analysis reports in multiple formats
+    complexity: low
+    loc: 80
+    
+  - path: semantic_pipeline.py
+    role: orchestrator
+    purpose: Coordinate pipeline stages in linear flow
+    complexity: low
+    loc: 120
+    
+  - path: test_semantic_modules.py
+    role: tests
+    purpose: Smoke tests for all pipeline modules
+    complexity: low
+    loc: 150
+
+contracts:
+  entrypoints:
+    - semantic_pipeline.analyze_codebase
+    - semantic_pipeline.main
+    
+  data_flow:
+    - ParsedFile (parser output)
+    - SemanticPatterns (extractor output)
+    - QualityScores (scorer output)
+    - AnalysisReport (reporter output)
+    
+  invariants:
+    - LLM readiness score between 0 and 100
+    - Each module under 150 LOC
+    - Max cyclomatic complexity of 8 per function
+    - Linear pipeline with no circular dependencies
+
+metrics:
+  before_refactoring:
+    confusion_score: 72.6
+    cyclomatic_complexity: 25
+    context_switches: 308
+    file_size: 396
+    
+  after_refactoring:
+    estimated_confusion_score: 25
+    max_cyclomatic_complexity: 8
+    estimated_context_switches: 90
+    max_file_size: 150
+    
+  improvement:
+    confusion_reduction: 65%
+    complexity_reduction: 68%
+    context_switch_reduction: 71%
