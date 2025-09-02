@@ -119,7 +119,7 @@ def main():
         )
 
         checker = LLMReadinessChecker(tmp_path)
-        score, message = checker.check_average_hops()
+        score, message = checker.check_cognitive_complexity()
 
         # Should score well for low imports
         assert score >= 15  # Good score for low complexity
@@ -146,7 +146,7 @@ def main():
         )
 
         checker = LLMReadinessChecker(tmp_path)
-        score, message = checker.check_average_hops()
+        score, message = checker.check_cognitive_complexity()
 
         assert score == 15  # Medium score for 4-5 imports
         assert "⚠️" in message
@@ -176,7 +176,7 @@ def main():
         )
 
         checker = LLMReadinessChecker(tmp_path)
-        score, message = checker.check_average_hops()
+        score, message = checker.check_cognitive_complexity()
 
         # Should score poorly for many imports
         assert score <= 15  # Lower score for high complexity
@@ -185,7 +185,7 @@ def main():
     def test_no_python_files(self, tmp_path):
         """Test when no Python files exist."""
         checker = LLMReadinessChecker(tmp_path)
-        score, message = checker.check_average_hops()
+        score, message = checker.check_cognitive_complexity()
 
         assert score == 15  # Default score
         assert "⚠️" in message
