@@ -8,6 +8,7 @@ import ast
 import sys
 from collections import defaultdict
 from pathlib import Path
+from typing import Any
 
 
 class CognitiveComplexityAnalyzer:
@@ -15,8 +16,8 @@ class CognitiveComplexityAnalyzer:
 
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root
-        self.call_graph = defaultdict(set)
-        self.import_graph = defaultdict(set)
+        self.call_graph: dict[str, set[str]] = defaultdict(set)
+        self.import_graph: dict[str, set[str]] = defaultdict(set)
 
     def analyze_file(self, file_path: Path) -> dict[str, int]:
         """Analyze cognitive complexity metrics for a single file."""
@@ -115,7 +116,7 @@ class LLMReadinessChecker:
         self.repo_root = Path(repo_root)
         self.score = 0
         self.max_score = 100
-        self.checks = []
+        self.checks: list[dict[str, Any]] = []
         self.cognitive_analyzer = CognitiveComplexityAnalyzer(self.repo_root)
 
     def check_co_location(self) -> tuple[int, str]:
@@ -298,7 +299,12 @@ class LLMReadinessChecker:
 
     def run_all_checks(self) -> dict:
         """Run all readiness checks and return results"""
-        results = {"score": 0, "max_score": self.max_score, "checks": [], "recommendations": []}
+        results: dict[str, Any] = {
+            "score": 0,
+            "max_score": self.max_score,
+            "checks": [],
+            "recommendations": [],
+        }
 
         # Run individual checks
         checks_to_run = [
