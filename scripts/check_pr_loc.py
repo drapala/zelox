@@ -128,7 +128,7 @@ def analyze_pr(base_ref: str = "origin/main...HEAD") -> dict:
     all_files = get_changed_files(base_ref)
 
     # Categorize files
-    categorized_files = {category: [] for category in FileCategory}
+    categorized_files: dict[FileCategory, list[str]] = {category: [] for category in FileCategory}
     categorized_stats = {
         category: {"added": 0, "deleted": 0, "loc": 0} for category in FileCategory
     }
@@ -177,9 +177,12 @@ def print_analysis(stats: dict) -> None:
 
             # Show limits for this category
             limits = CATEGORY_LIMITS[category]
-            if limits["loc"]:
-                loc_msg = f"  Limits: {cat_stats['loc']}/{limits['loc']} LOC, "
-                loc_msg += f"{len(files)}/{limits['files']} files"
+            if isinstance(limits, dict):
+                loc_limit = limits.get("loc")
+                files_limit = limits.get("files")
+                if loc_limit:
+                    loc_msg = f"  Limits: {cat_stats['loc']}/{loc_limit} LOC, "
+                    loc_msg += f"{len(files)}/{files_limit} files"
                 print(loc_msg)
         else:
             print("  (Documentation excluded from LOC limits)")
@@ -251,16 +254,20 @@ def check_limits(stats: dict) -> bool:
             continue
 
         # Check file count limit
-        if limits["files"] and len(files) > limits["files"]:
-            msg = f"{category.value.capitalize()} files ({len(files)}) "
-            msg += f"exceed limit of {limits['files']}"
-            violations.append(msg)
+        if isinstance(limits, dict):
+            files_limit = limits.get("files")
+            if files_limit and len(files) > files_limit:
+                msg = f"{category.value.capitalize()} files ({len(files)}) "
+                msg += f"exceed limit of {files_limit}"
+                violations.append(msg)
 
         # Check LOC limit
-        if limits["loc"] and cat_stats["loc"] > limits["loc"]:
-            msg = f"{category.value.capitalize()} LOC ({cat_stats['loc']}) "
-            msg += f"exceeds limit of {limits['loc']}"
-            violations.append(msg)
+        if isinstance(limits, dict):
+            loc_limit = limits.get("loc")
+            if loc_limit and cat_stats["loc"] > loc_limit:
+                msg = f"{category.value.capitalize()} LOC ({cat_stats['loc']}) "
+                msg += f"exceeds limit of {loc_limit}"
+                violations.append(msg)
 
     if violations:
         print("\n" + "=" * 60)
@@ -290,8 +297,11 @@ def check_limits(stats: dict) -> bool:
         if files:
             cat_stats = stats["categorized_stats"][category]
             limits = CATEGORY_LIMITS[category]
-            status_msg = f"  {category.value}: {cat_stats['loc']}/{limits['loc']} LOC, "
-            status_msg += f"{len(files)}/{limits['files']} files"
+            if isinstance(limits, dict):
+                loc_limit = limits.get("loc", 0)
+                files_limit = limits.get("files", 0)
+                status_msg = f"  {category.value}: {cat_stats['loc']}/{loc_limit} LOC, "
+                status_msg += f"{len(files)}/{files_limit} files"
             print(status_msg)
 
     return True

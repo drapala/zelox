@@ -93,7 +93,7 @@ class FileAnalyzer:
                                         item.strip().strip("\"'")
                                         for item in array_content.split(",")
                                     ]
-                                    frontmatter[key] = [item for item in items if item]
+                                    frontmatter[key] = [item for item in items if item]  # type: ignore
                     except Exception:
                         continue
 
@@ -142,7 +142,7 @@ class StructureMapper:
 
     def scan_features(self) -> list[dict[str, Any]]:
         """Scan features directory for VSA structure."""
-        features = []
+        features: list[dict[str, Any]] = []
         features_dir = self.repo_root / "features"
 
         if not features_dir.exists():
@@ -164,15 +164,21 @@ class StructureMapper:
                     "name": file_path.name,
                     "purpose": self.analyzer.get_file_purpose(file_path),
                 }
-                feature_info["files"].append(file_info)
+                feature_info["files"].append(file_info)  # type: ignore
 
                 # Track key capabilities
                 if file_path.name == "tests.py":
-                    feature_info["capabilities"].append("Tests")
+                    capabilities = feature_info["capabilities"]
+                    if isinstance(capabilities, list):
+                        capabilities.append("Tests")
                 elif file_path.name == "api.py":
-                    feature_info["capabilities"].append("HTTP API")
+                    capabilities = feature_info["capabilities"]
+                    if isinstance(capabilities, list):
+                        capabilities.append("HTTP API")
                 elif file_path.name == "service.py":
-                    feature_info["capabilities"].append("Business Logic")
+                    capabilities = feature_info["capabilities"]
+                    if isinstance(capabilities, list):
+                        capabilities.append("Business Logic")
 
             features.append(feature_info)
 
@@ -180,7 +186,7 @@ class StructureMapper:
 
     def scan_scripts(self) -> list[dict[str, Any]]:
         """Scan scripts directory for tooling."""
-        scripts = []
+        scripts: list[dict[str, Any]] = []
         scripts_dir = self.repo_root / "scripts"
 
         if not scripts_dir.exists():
@@ -200,7 +206,7 @@ class StructureMapper:
 
     def scan_adrs(self) -> list[dict[str, Any]]:
         """Scan docs/adr directory for Architecture Decision Records."""
-        adrs = []
+        adrs: list[dict[str, Any]] = []
         adr_dir = self.repo_root / "docs" / "adr"
 
         if not adr_dir.exists():
