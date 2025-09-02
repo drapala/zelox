@@ -1,0 +1,44 @@
+# PR Validation Configuration
+# Configurable thresholds for PR size limits
+
+total_files_limit: 25
+
+category_limits:
+  application:
+    loc: 500
+    files: 10
+  test:
+    loc: 1000
+    files: 20
+  config:
+    loc: 250
+    files: 5
+  documentation:
+    loc: null  # No limit
+    files: null  # No limit
+
+# File categorization patterns
+category_patterns:
+  test:
+    - "(^|/)test_[^/]*\\.py$"
+    - "^scripts/test_[^/]*\\.py$"
+    - "(^|/)[^/]*_test\\.py$"
+    - "\\.test\\.[tj]sx?$"
+    - "\\.spec\\.[tj]sx?$"
+    - "^tests?/"
+  
+  config:
+    - "^\\.github/.*\\.(yml|yaml)$"
+    - "^schemas/.*\\.json$"
+    - "^\\..*rc(\\..*)?$"
+    - "(Makefile|makefile)$"
+    - "Dockerfile$"
+    - "docker-compose.*\\.(yml|yaml)$"
+  
+  documentation:
+    - "\\.md$"
+    - "\\.mdx$"
+    - "\\.rst$"
+    - "\\.adoc$"
+    - "\\.txt$"
+    - "(^|/)(LICENSE|NOTICE|AUTHORS|CONTRIBUTORS|CHANGELOG|CHANGES|HISTORY|NEWS|README|TODO)(\\.[a-z]+)?$"
