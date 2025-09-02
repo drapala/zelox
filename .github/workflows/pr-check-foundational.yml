@@ -40,14 +40,16 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: "Install dependencies"
-        run: pip install -r requirements-dev.txt
+        run: |
+          pip install -r requirements-dev.txt
+          pip install black==24.10.0
 
       - name: "Run Linting and Formatting Checks"
         run: |
           echo ">>> Running linter..."
           ruff check .
           echo ">>> Checking formatting..."
-          ruff format --check .
+          black --check .
 
       - name: "Run Unit Tests"
         run: pytest
