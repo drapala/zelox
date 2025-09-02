@@ -126,25 +126,31 @@ class DriftChecker:
 
                 if similarity < threshold:
                     drift_detected = True
-                    report["drifted_blocks"].append(
-                        {
-                            "id": block_id,
-                            "locations": [
-                                f"{base_block.file_path}:{base_block.start_line}-{base_block.end_line}",
-                                f"{other_block.file_path}:{other_block.start_line}-{other_block.end_line}",
-                            ],
-                            "similarity": similarity,
-                            "threshold": threshold,
-                            "recommendation": (
-                                "consolidate_or_diverge" if similarity < 0.5 else "minor_sync"
-                            ),
-                        }
-                    )
+                    drifted_blocks = report["drifted_blocks"]
+                    if isinstance(drifted_blocks, list):
+                        drifted_blocks.append(
+                            {
+                                "id": block_id,
+                                "locations": [
+                                    f"{base_block.file_path}:{base_block.start_line}-{base_block.end_line}",
+                                    f"{other_block.file_path}:{other_block.start_line}-{other_block.end_line}",
+                                ],
+                                "similarity": similarity,
+                                "threshold": threshold,
+                                "recommendation": (
+                                    "consolidate_or_diverge" if similarity < 0.5 else "minor_sync"
+                                ),
+                            }
+                        )
 
             if drift_detected:
-                report["summary"]["drifted_blocks"] += 1
+                summary = report["summary"]
+                if isinstance(summary, dict):
+                    summary["drifted_blocks"] = summary.get("drifted_blocks", 0) + 1
             else:
-                report["summary"]["healthy_blocks"] += 1
+                summary = report["summary"]
+                if isinstance(summary, dict):
+                    summary["healthy_blocks"] = summary.get("healthy_blocks", 0) + 1
 
         return report
 
