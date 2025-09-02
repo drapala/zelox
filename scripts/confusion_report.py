@@ -231,7 +231,7 @@ class RefactoringAnalyzer:
         recommendations = []
 
         # Group hotspots by file for vertical slice opportunities
-        file_groups = {}
+        file_groups: dict[str, list[CodeComplexity]] = {}
         for hotspot in self.hotspots:
             file_path = hotspot.file_path
             if file_path not in file_groups:
@@ -272,7 +272,7 @@ class RefactoringAnalyzer:
 class ConfusionReporter:
     """Main confusion report generator."""
 
-    def __init__(self, repo_root: Path = None):
+    def __init__(self, repo_root: Path | None = None):
         self.repo_root = repo_root or Path.cwd()
         self.analyzer = CognitiveComplexityAnalyzer(self.repo_root)
 

@@ -25,9 +25,9 @@ class SchemaValidator:
     def __init__(self, repo_root: str = "."):
         self.repo_root = Path(repo_root)
         self.schemas_dir = self.repo_root / "schemas"
-        self.errors = []
-        self.warnings = []
-        self._schema_store = None
+        self.errors: list[str] = []
+        self.warnings: list[str] = []
+        self._schema_store: dict[str, Any] | None = None
 
     def load_schema(self, schema_name: str) -> dict[str, Any]:
         """Load a JSON schema file."""
@@ -401,7 +401,7 @@ def main():
         success = check_source_files_frontmatter(repo_root)
     else:
         # Run full schema validations
-        validator = SchemaValidator(repo_root)
+        validator = SchemaValidator(str(repo_root))
         success = validator.run_all_validations()
 
     sys.exit(0 if success else 1)
