@@ -1,0 +1,2186 @@
+{
+  ".pre-commit-config.yaml": {
+    "mtime": 1756771391.6026907,
+    "info": {
+      "path": ".pre-commit-config.yaml",
+      "name": ".pre-commit-config.yaml",
+      "size": 2720,
+      "modified": "2025-09-01T21:03:11.602691",
+      "extension": ".yaml",
+      "hash": "1f619de4cdb4f929"
+    }
+  },
+  "scripts/.drift_check_config.yaml": {
+    "mtime": 1756771391.604572,
+    "info": {
+      "path": "scripts/.drift_check_config.yaml",
+      "name": ".drift_check_config.yaml",
+      "size": 548,
+      "modified": "2025-09-01T21:03:11.604572",
+      "extension": ".yaml",
+      "hash": "ed2b33322ac64530"
+    }
+  },
+  "scripts/pr_validation/config.yaml": {
+    "mtime": 1756773192.5927274,
+    "info": {
+      "path": "scripts/pr_validation/config.yaml",
+      "name": "config.yaml",
+      "size": 922,
+      "modified": "2025-09-01T21:33:12.592727",
+      "extension": ".yaml",
+      "hash": "7a6e0ec85a688747"
+    }
+  },
+  "scripts/pr_validation/INDEX.yaml": {
+    "mtime": 1756773417.9578395,
+    "info": {
+      "path": "scripts/pr_validation/INDEX.yaml",
+      "name": "INDEX.yaml",
+      "size": 1649,
+      "modified": "2025-09-01T21:36:57.957839",
+      "extension": ".yaml",
+      "hash": "c558a96c33ad2d1f"
+    }
+  },
+  "scripts/domain_analysis/INDEX.yaml": {
+    "mtime": 1756772906.2430718,
+    "info": {
+      "path": "scripts/domain_analysis/INDEX.yaml",
+      "name": "INDEX.yaml",
+      "size": 1683,
+      "modified": "2025-09-01T21:28:26.243072",
+      "extension": ".yaml",
+      "hash": "ea279bb0802a9ae7"
+    }
+  },
+  "docs/repo/recovery_patterns.yaml": {
+    "mtime": 1756748321.308048,
+    "info": {
+      "path": "docs/repo/recovery_patterns.yaml",
+      "name": "recovery_patterns.yaml",
+      "size": 4682,
+      "modified": "2025-09-01T14:38:41.308048",
+      "extension": ".yaml",
+      "hash": "9d87fcc04b8b2f7e"
+    }
+  },
+  "docs/repo/INDEX.yaml": {
+    "mtime": 1756749198.2156408,
+    "info": {
+      "path": "docs/repo/INDEX.yaml",
+      "name": "INDEX.yaml",
+      "size": 2560,
+      "modified": "2025-09-01T14:53:18.215641",
+      "extension": ".yaml",
+      "hash": "da1bc8e2238ffa90"
+    }
+  },
+  "README_FOR_HUMANS.md": {
+    "mtime": 1756771391.6034744,
+    "info": {
+      "path": "README_FOR_HUMANS.md",
+      "name": "README_FOR_HUMANS.md",
+      "size": 10416,
+      "modified": "2025-09-01T21:03:11.603474",
+      "extension": ".md",
+      "hash": "0204c7537447e5f1"
+    }
+  },
+  "README.md": {
+    "mtime": 1756754175.4542923,
+    "info": {
+      "path": "README.md",
+      "name": "README.md",
+      "size": 4499,
+      "modified": "2025-09-01T16:16:15.454292",
+      "extension": ".md",
+      "hash": "63714ef52a457310"
+    }
+  },
+  "CLAUDE.md": {
+    "mtime": 1756749459.9763932,
+    "info": {
+      "path": "CLAUDE.md",
+      "name": "CLAUDE.md",
+      "size": 12902,
+      "modified": "2025-09-01T14:57:39.976393",
+      "extension": ".md",
+      "hash": "1a13a140bcd2cad6"
+    }
+  },
+  "docs/README_FOR_HUMANS.md": {
+    "mtime": 1756749951.5786562,
+    "info": {
+      "path": "docs/README_FOR_HUMANS.md",
+      "name": "README_FOR_HUMANS.md",
+      "size": 5143,
+      "modified": "2025-09-01T15:05:51.578656",
+      "extension": ".md",
+      "hash": "6ecc88e728f6e130"
+    }
+  },
+  "scripts/learning/README.md": {
+    "mtime": 1756773402.6318703,
+    "info": {
+      "path": "scripts/learning/README.md",
+      "name": "README.md",
+      "size": 1672,
+      "modified": "2025-09-01T21:36:42.631870",
+      "extension": ".md",
+      "hash": "ab95c663d3c998b8"
+    }
+  },
+  "scripts/confusion_analysis/README.md": {
+    "mtime": 1756773369.1531985,
+    "info": {
+      "path": "scripts/confusion_analysis/README.md",
+      "name": "README.md",
+      "size": 1867,
+      "modified": "2025-09-01T21:36:09.153198",
+      "extension": ".md",
+      "hash": "7f54eee62998e57c"
+    }
+  },
+  "scripts/domain_analysis/README.md": {
+    "mtime": 1756772876.4414194,
+    "info": {
+      "path": "scripts/domain_analysis/README.md",
+      "name": "README.md",
+      "size": 2419,
+      "modified": "2025-09-01T21:27:56.441419",
+      "extension": ".md",
+      "hash": "12b6cd8d5d54e1b4"
+    }
+  },
+  "scripts/schema_validation/README.md": {
+    "mtime": 1756773249.7064364,
+    "info": {
+      "path": "scripts/schema_validation/README.md",
+      "name": "README.md",
+      "size": 4025,
+      "modified": "2025-09-01T21:34:09.706436",
+      "extension": ".md",
+      "hash": "fa5c89632ed4ce07"
+    }
+  },
+  "docs/adr/000-template.md": {
+    "mtime": 1756746391.5755868,
+    "info": {
+      "path": "docs/adr/000-template.md",
+      "name": "000-template.md",
+      "size": 3096,
+      "modified": "2025-09-01T14:06:31.575587",
+      "extension": ".md",
+      "hash": "4a01c6e423b4d297"
+    }
+  },
+  "docs/adr/ADR-015-schema-validation-vertical-slice.md": {
+    "mtime": 1756773325.6861157,
+    "info": {
+      "path": "docs/adr/ADR-015-schema-validation-vertical-slice.md",
+      "name": "ADR-015-schema-validation-vertical-slice.md",
+      "size": 2194,
+      "modified": "2025-09-01T21:35:25.686116",
+      "extension": ".md",
+      "hash": "98f682f1d8c08bb8"
+    }
+  },
+  "docs/adr/005-branch-naming-and-pr-standards.md": {
+    "mtime": 1756752815.3669546,
+    "info": {
+      "path": "docs/adr/005-branch-naming-and-pr-standards.md",
+      "name": "005-branch-naming-and-pr-standards.md",
+      "size": 7961,
+      "modified": "2025-09-01T15:53:35.366955",
+      "extension": ".md",
+      "hash": "0a2eabbeed0adfb6"
+    }
+  },
+  "docs/adr/ADR-003-semantic-analyzer-refactoring.md": {
+    "mtime": 1756773344.7714536,
+    "info": {
+      "path": "docs/adr/ADR-003-semantic-analyzer-refactoring.md",
+      "name": "ADR-003-semantic-analyzer-refactoring.md",
+      "size": 1373,
+      "modified": "2025-09-01T21:35:44.771454",
+      "extension": ".md",
+      "hash": "6bdddbd069a181d5"
+    }
+  },
+  "docs/adr/007-domain-analyzer-vsa-refactoring.md": {
+    "mtime": 1756773171.9561276,
+    "info": {
+      "path": "docs/adr/007-domain-analyzer-vsa-refactoring.md",
+      "name": "007-domain-analyzer-vsa-refactoring.md",
+      "size": 1639,
+      "modified": "2025-09-01T21:32:51.956128",
+      "extension": ".md",
+      "hash": "007cc87175d81c15"
+    }
+  },
+  "docs/adr/001-adopt-llm-first-architecture.md": {
+    "mtime": 1756746456.6165054,
+    "info": {
+      "path": "docs/adr/001-adopt-llm-first-architecture.md",
+      "name": "001-adopt-llm-first-architecture.md",
+      "size": 6406,
+      "modified": "2025-09-01T14:07:36.616505",
+      "extension": ".md",
+      "hash": "b1528b1c6ddf9368"
+    }
+  },
+  "docs/adr/003-pr-loc-gate.md": {
+    "mtime": 1756747710.590825,
+    "info": {
+      "path": "docs/adr/003-pr-loc-gate.md",
+      "name": "003-pr-loc-gate.md",
+      "size": 6677,
+      "modified": "2025-09-01T14:28:30.590825",
+      "extension": ".md",
+      "hash": "84351652c9c0f644"
+    }
+  },
+  "docs/adr/ADR-002-validate-schemas-refactoring.md": {
+    "mtime": 1756773267.8840442,
+    "info": {
+      "path": "docs/adr/ADR-002-validate-schemas-refactoring.md",
+      "name": "ADR-002-validate-schemas-refactoring.md",
+      "size": 1315,
+      "modified": "2025-09-01T21:34:27.884044",
+      "extension": ".md",
+      "hash": "0fa7451132e149bb"
+    }
+  },
+  "docs/adr/007-repo-map-modularization.md": {
+    "mtime": 1756773355.6253386,
+    "info": {
+      "path": "docs/adr/007-repo-map-modularization.md",
+      "name": "007-repo-map-modularization.md",
+      "size": 2102,
+      "modified": "2025-09-01T21:35:55.625339",
+      "extension": ".md",
+      "hash": "dcf9f2c5c699e400"
+    }
+  },
+  "docs/adr/006-differentiated-loc-limits.md": {
+    "mtime": 1756752815.36718,
+    "info": {
+      "path": "docs/adr/006-differentiated-loc-limits.md",
+      "name": "006-differentiated-loc-limits.md",
+      "size": 7420,
+      "modified": "2025-09-01T15:53:35.367180",
+      "extension": ".md",
+      "hash": "946a3eaf4e66a737"
+    }
+  },
+  "docs/adr/ADR-001-domain-analyzer-refactoring.md": {
+    "mtime": 1756773142.6230526,
+    "info": {
+      "path": "docs/adr/ADR-001-domain-analyzer-refactoring.md",
+      "name": "ADR-001-domain-analyzer-refactoring.md",
+      "size": 1391,
+      "modified": "2025-09-01T21:32:22.623053",
+      "extension": ".md",
+      "hash": "90c32e18f6519b2e"
+    }
+  },
+  "docs/adr/004-llm-first-observability.md": {
+    "mtime": 1756747891.288642,
+    "info": {
+      "path": "docs/adr/004-llm-first-observability.md",
+      "name": "004-llm-first-observability.md",
+      "size": 7976,
+      "modified": "2025-09-01T14:31:31.288642",
+      "extension": ".md",
+      "hash": "be578dcf5ddeb4b9"
+    }
+  },
+  "docs/adr/002-adopt-bdd-lite.md": {
+    "mtime": 1756747542.2311866,
+    "info": {
+      "path": "docs/adr/002-adopt-bdd-lite.md",
+      "name": "002-adopt-bdd-lite.md",
+      "size": 7454,
+      "modified": "2025-09-01T14:25:42.231187",
+      "extension": ".md",
+      "hash": "f2bdefc29681b4e0"
+    }
+  },
+  "docs/repo/HOTSPOT_REFACTORING_BACKLOG.md": {
+    "mtime": 1756773050.1914704,
+    "info": {
+      "path": "docs/repo/HOTSPOT_REFACTORING_BACKLOG.md",
+      "name": "HOTSPOT_REFACTORING_BACKLOG.md",
+      "size": 11289,
+      "modified": "2025-09-01T21:30:50.191470",
+      "extension": ".md",
+      "hash": "6ee05861fab7ab86"
+    }
+  },
+  "docs/repo/ADR-adaptive-learner-refactoring.md": {
+    "mtime": 1756773387.0218248,
+    "info": {
+      "path": "docs/repo/ADR-adaptive-learner-refactoring.md",
+      "name": "ADR-adaptive-learner-refactoring.md",
+      "size": 1608,
+      "modified": "2025-09-01T21:36:27.021825",
+      "extension": ".md",
+      "hash": "7d74b1a9d4a2568c"
+    }
+  },
+  "docs/repo/ADR-011-pr-validation-refactoring.md": {
+    "mtime": 1756773338.441912,
+    "info": {
+      "path": "docs/repo/ADR-011-pr-validation-refactoring.md",
+      "name": "ADR-011-pr-validation-refactoring.md",
+      "size": 1410,
+      "modified": "2025-09-01T21:35:38.441912",
+      "extension": ".md",
+      "hash": "677311b5925e4698"
+    }
+  },
+  "docs/repo/REPO_MAP.md": {
+    "mtime": 1756773714.4009604,
+    "info": {
+      "path": "docs/repo/REPO_MAP.md",
+      "name": "REPO_MAP.md",
+      "size": 9544,
+      "modified": "2025-09-01T21:41:54.400960",
+      "extension": ".md",
+      "hash": "47a1fb8a7efd0c0d"
+    }
+  },
+  "docs/repo/FACTS.md": {
+    "mtime": 1756748293.6184876,
+    "info": {
+      "path": "docs/repo/FACTS.md",
+      "name": "FACTS.md",
+      "size": 3607,
+      "modified": "2025-09-01T14:38:13.618488",
+      "extension": ".md",
+      "hash": "0b4828f6ae696aad"
+    }
+  },
+  ".claude/agents/llm-first-architect.md": {
+    "mtime": 1756748142.1050878,
+    "info": {
+      "path": ".claude/agents/llm-first-architect.md",
+      "name": "llm-first-architect.md",
+      "size": 5802,
+      "modified": "2025-09-01T14:35:42.105088",
+      "extension": ".md",
+      "hash": "674af57612876ff3"
+    }
+  },
+  "features/template/OBS_PLAN.md": {
+    "mtime": 1756752815.3675532,
+    "info": {
+      "path": "features/template/OBS_PLAN.md",
+      "name": "OBS_PLAN.md",
+      "size": 5452,
+      "modified": "2025-09-01T15:53:35.367553",
+      "extension": ".md",
+      "hash": "e84579667b07e873"
+    }
+  },
+  "features/template/README.md": {
+    "mtime": 1756748906.1441805,
+    "info": {
+      "path": "features/template/README.md",
+      "name": "README.md",
+      "size": 1612,
+      "modified": "2025-09-01T14:48:26.144181",
+      "extension": ".md",
+      "hash": "dd2609201642989b"
+    }
+  },
+  "scripts/test_drift_check.py": {
+    "mtime": 1756773520.3482213,
+    "info": {
+      "path": "scripts/test_drift_check.py",
+      "name": "test_drift_check.py",
+      "size": 5905,
+      "modified": "2025-09-01T21:38:40.348221",
+      "extension": ".py",
+      "hash": "053206b3d4c471ba",
+      "frontmatter": {
+        "title": "Test Suite for Drift Check Monitor",
+        "purpose": "Comprehensive tests for controlled duplication drift detection",
+        "stability": "stable",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 173,
+      "imports": 4,
+      "functions": 16,
+      "classes": 1
+    }
+  },
+  "scripts/confusion_report.py": {
+    "mtime": 1756773330.1681616,
+    "info": {
+      "path": "scripts/confusion_report.py",
+      "name": "confusion_report.py",
+      "size": 3770,
+      "modified": "2025-09-01T21:35:30.168162",
+      "extension": ".py",
+      "hash": "8726b0f343ec33df",
+      "frontmatter": {
+        "title": "Confusion Report Orchestrator",
+        "purpose": "Orchestrate confusion analysis pipeline",
+        "stability": "stable",
+        "since_version": "2.0.0"
+      },
+      "lines": 142,
+      "imports": 7,
+      "functions": 4,
+      "classes": 0
+    }
+  },
+  "scripts/adaptive_learner.py": {
+    "mtime": 1756770668.7287266,
+    "info": {
+      "path": "scripts/adaptive_learner.py",
+      "name": "adaptive_learner.py",
+      "size": 18261,
+      "modified": "2025-09-01T20:51:08.728727",
+      "extension": ".py",
+      "hash": "c3b1c42892ea43f0",
+      "frontmatter": {
+        "title": "Adaptive Learning System for LLM Architecture",
+        "purpose": "Learn from telemetry patterns to suggest architectural improvements",
+        "stability": "experimental",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 466,
+      "imports": 7,
+      "functions": 15,
+      "classes": 5
+    }
+  },
+  "scripts/semantic_analyzer.py": {
+    "mtime": 1756773598.0835044,
+    "info": {
+      "path": "scripts/semantic_analyzer.py",
+      "name": "semantic_analyzer.py",
+      "size": 3244,
+      "modified": "2025-09-01T21:39:58.083504",
+      "extension": ".py",
+      "hash": "59935c9c5e2daeea",
+      "frontmatter": {
+        "title": "Semantic Dependency Analyzer (Wrapper)",
+        "purpose": "Backward-compatible wrapper for new modular semantic analysis pipeline",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 100,
+      "imports": 7,
+      "functions": 4,
+      "classes": 1
+    }
+  },
+  "scripts/test_check_llm_readiness.py": {
+    "mtime": 1756772081.153062,
+    "info": {
+      "path": "scripts/test_check_llm_readiness.py",
+      "name": "test_check_llm_readiness.py",
+      "size": 14077,
+      "modified": "2025-09-01T21:14:41.153062",
+      "extension": ".py",
+      "hash": "d9370b19a13b7aee",
+      "frontmatter": {
+        "title": "LLM Readiness Check Tests",
+        "purpose": "Validate LLM readiness scoring logic",
+        "stability": "stable",
+        "since_version": "\"0.2.0\""
+      },
+      "lines": 462,
+      "imports": 19,
+      "functions": 26,
+      "classes": 6
+    }
+  },
+  "scripts/validate_schemas.py": {
+    "mtime": 1756773299.9446783,
+    "info": {
+      "path": "scripts/validate_schemas.py",
+      "name": "validate_schemas.py",
+      "size": 3752,
+      "modified": "2025-09-01T21:34:59.944678",
+      "extension": ".py",
+      "hash": "ad98d80b559032cb",
+      "frontmatter": {
+        "title": "Schema Validation Entry Point",
+        "purpose": "Orchestrate schema validation using modular components",
+        "stability": "stable",
+        "since_version": "2.0.0"
+      },
+      "lines": 143,
+      "imports": 5,
+      "functions": 3,
+      "classes": 0
+    }
+  },
+  "scripts/telemetry_collector.py": {
+    "mtime": 1756769838.9483755,
+    "info": {
+      "path": "scripts/telemetry_collector.py",
+      "name": "telemetry_collector.py",
+      "size": 8513,
+      "modified": "2025-09-01T20:37:18.948375",
+      "extension": ".py",
+      "hash": "c65f61c94f148ff5",
+      "frontmatter": {
+        "title": "LLM Telemetry Collector",
+        "purpose": "Track LLM agent interactions and edit success patterns",
+        "stability": "experimental",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 244,
+      "imports": 7,
+      "functions": 10,
+      "classes": 3
+    }
+  },
+  "scripts/drift_check.py": {
+    "mtime": 1756773371.7144206,
+    "info": {
+      "path": "scripts/drift_check.py",
+      "name": "drift_check.py",
+      "size": 3413,
+      "modified": "2025-09-01T21:36:11.714421",
+      "extension": ".py",
+      "hash": "d3fdfa44d685a14e",
+      "frontmatter": {
+        "title": "Drift Check - Simplified Main Entry Point",
+        "purpose": "Coordinate drift detection using modular components",
+        "stability": "stable",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 121,
+      "imports": 5,
+      "functions": 2,
+      "classes": 0
+    }
+  },
+  "scripts/semantic_analyzer_refactored.py": {
+    "mtime": 1756773324.589164,
+    "info": {
+      "path": "scripts/semantic_analyzer_refactored.py",
+      "name": "semantic_analyzer_refactored.py",
+      "size": 4717,
+      "modified": "2025-09-01T21:35:24.589164",
+      "extension": ".py",
+      "hash": "8b5d9b5b3235b938",
+      "frontmatter": {
+        "title": "Semantic Analyzer CLI",
+        "purpose": "Orchestrate semantic analysis using modular components",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 158,
+      "imports": 9,
+      "functions": 5,
+      "classes": 1
+    }
+  },
+  "scripts/domain_analyzer_refactored.py": {
+    "mtime": 1756773124.7806346,
+    "info": {
+      "path": "scripts/domain_analyzer_refactored.py",
+      "name": "domain_analyzer_refactored.py",
+      "size": 4506,
+      "modified": "2025-09-01T21:32:04.780635",
+      "extension": ".py",
+      "hash": "1f3a89b4b000f31c",
+      "frontmatter": {
+        "title": "Domain Analyzer CLI",
+        "purpose": "Orchestrate domain analysis using modular components",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 156,
+      "imports": 9,
+      "functions": 5,
+      "classes": 1
+    }
+  },
+  "scripts/test_gen_repo_map.py": {
+    "mtime": 1756771391.6077116,
+    "info": {
+      "path": "scripts/test_gen_repo_map.py",
+      "name": "test_gen_repo_map.py",
+      "size": 12677,
+      "modified": "2025-09-01T21:03:11.607712",
+      "extension": ".py",
+      "hash": "527c7629d9147bef",
+      "frontmatter": {
+        "title": "Repository Map Generator Tests",
+        "purpose": "Comprehensive test suite for gen_repo_map.py",
+        "stability": "stable",
+        "since_version": "\"0.3.0\""
+      },
+      "lines": 377,
+      "imports": 9,
+      "functions": 24,
+      "classes": 4
+    }
+  },
+  "scripts/test_check_pr_loc.py": {
+    "mtime": 1756759322.284181,
+    "info": {
+      "path": "scripts/test_check_pr_loc.py",
+      "name": "test_check_pr_loc.py",
+      "size": 12832,
+      "modified": "2025-09-01T17:42:02.284181",
+      "extension": ".py",
+      "hash": "96e93d0be61986a1",
+      "frontmatter": {
+        "title": "PR LOC Check Tests",
+        "purpose": "Validate PR size checking logic",
+        "stability": "stable",
+        "since_version": "\"0.2.0\""
+      },
+      "lines": 341,
+      "imports": 6,
+      "functions": 22,
+      "classes": 6
+    }
+  },
+  "scripts/check_llm_readiness.py": {
+    "mtime": 1756773465.6168141,
+    "info": {
+      "path": "scripts/check_llm_readiness.py",
+      "name": "check_llm_readiness.py",
+      "size": 3131,
+      "modified": "2025-09-01T21:37:45.616814",
+      "extension": ".py",
+      "hash": "ed2479e2a9c0b0cf",
+      "frontmatter": {},
+      "lines": 117,
+      "imports": 6,
+      "functions": 2,
+      "classes": 0
+    }
+  },
+  "scripts/check_readme_coverage.py": {
+    "mtime": 1756759322.2837749,
+    "info": {
+      "path": "scripts/check_readme_coverage.py",
+      "name": "check_readme_coverage.py",
+      "size": 3173,
+      "modified": "2025-09-01T17:42:02.283775",
+      "extension": ".py",
+      "hash": "6083bda8cc6714b1",
+      "frontmatter": {},
+      "lines": 95,
+      "imports": 2,
+      "functions": 3,
+      "classes": 0
+    }
+  },
+  "scripts/check_pr_loc.py": {
+    "mtime": 1756773287.1286528,
+    "info": {
+      "path": "scripts/check_pr_loc.py",
+      "name": "check_pr_loc.py",
+      "size": 4663,
+      "modified": "2025-09-01T21:34:47.128653",
+      "extension": ".py",
+      "hash": "5fc8d858697f9385",
+      "frontmatter": {
+        "title": "PR LOC Gate Script",
+        "purpose": "Enforce categorized size limits on PRs",
+        "stability": "stable",
+        "since_version": "2.0.0"
+      },
+      "lines": 168,
+      "imports": 6,
+      "functions": 4,
+      "classes": 0
+    }
+  },
+  "scripts/test_repo_mapping.py": {
+    "mtime": 1756773414.083401,
+    "info": {
+      "path": "scripts/test_repo_mapping.py",
+      "name": "test_repo_mapping.py",
+      "size": 8945,
+      "modified": "2025-09-01T21:36:54.083401",
+      "extension": ".py",
+      "hash": "f33df22a7f1088b7",
+      "frontmatter": {
+        "title": "Repository Mapping Module Tests",
+        "purpose": "Test suite for modular repo mapping components",
+        "stability": "stable",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 282,
+      "imports": 7,
+      "functions": 23,
+      "classes": 5
+    }
+  },
+  "scripts/gen_repo_map.py": {
+    "mtime": 1756773252.0705774,
+    "info": {
+      "path": "scripts/gen_repo_map.py",
+      "name": "gen_repo_map.py",
+      "size": 4618,
+      "modified": "2025-09-01T21:34:12.070577",
+      "extension": ".py",
+      "hash": "1a601cbe218ec94d",
+      "frontmatter": {
+        "title": "Repository Map Generator (Refactored)",
+        "purpose": "CLI entry point for repository map generation using modular components",
+        "stability": "stable",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 145,
+      "imports": 5,
+      "functions": 1,
+      "classes": 0
+    }
+  },
+  "scripts/validate_schemas_refactored.py": {
+    "mtime": 1756773211.805599,
+    "info": {
+      "path": "scripts/validate_schemas_refactored.py",
+      "name": "validate_schemas_refactored.py",
+      "size": 6795,
+      "modified": "2025-09-01T21:33:31.805599",
+      "extension": ".py",
+      "hash": "34e7afcea6619fba",
+      "frontmatter": {
+        "title": "Schema Validator CLI",
+        "purpose": "Orchestrate schema validation using modular components",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 211,
+      "imports": 9,
+      "functions": 8,
+      "classes": 1
+    }
+  },
+  "scripts/domain_analyzer.py": {
+    "mtime": 1756770443.153935,
+    "info": {
+      "path": "scripts/domain_analyzer.py",
+      "name": "domain_analyzer.py",
+      "size": 17957,
+      "modified": "2025-09-01T20:47:23.153935",
+      "extension": ".py",
+      "hash": "163ab6c325daf745",
+      "frontmatter": {
+        "title": "Domain Pattern Detector",
+        "purpose": "Extract ubiquitous language and detect bounded context violations",
+        "stability": "experimental",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 487,
+      "imports": 8,
+      "functions": 26,
+      "classes": 3
+    }
+  },
+  "scripts/drift_detection/drift_reporter.py": {
+    "mtime": 1756773171.517586,
+    "info": {
+      "path": "scripts/drift_detection/drift_reporter.py",
+      "name": "drift_reporter.py",
+      "size": 4872,
+      "modified": "2025-09-01T21:32:51.517586",
+      "extension": ".py",
+      "hash": "ceca60ab7635b049",
+      "frontmatter": {
+        "title": "Drift Reporter",
+        "purpose": "Generate clear drift reports in various formats",
+        "stability": "stable",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 129,
+      "imports": 4,
+      "functions": 5,
+      "classes": 1
+    }
+  },
+  "scripts/drift_detection/block_finder.py": {
+    "mtime": 1756773075.31837,
+    "info": {
+      "path": "scripts/drift_detection/block_finder.py",
+      "name": "block_finder.py",
+      "size": 4114,
+      "modified": "2025-09-01T21:31:15.318370",
+      "extension": ".py",
+      "hash": "bd1487a118e6828d",
+      "frontmatter": {
+        "title": "Block Finder",
+        "purpose": "Find and extract DUPLICATED_BLOCK markers from files",
+        "stability": "stable",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 115,
+      "imports": 3,
+      "functions": 7,
+      "classes": 2
+    }
+  },
+  "scripts/drift_detection/drift_calculator.py": {
+    "mtime": 1756773125.7956233,
+    "info": {
+      "path": "scripts/drift_detection/drift_calculator.py",
+      "name": "drift_calculator.py",
+      "size": 5506,
+      "modified": "2025-09-01T21:32:05.795623",
+      "extension": ".py",
+      "hash": "f72fab11794289da",
+      "frontmatter": {
+        "title": "Drift Calculator",
+        "purpose": "Calculate drift between duplicate blocks",
+        "stability": "stable",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 161,
+      "imports": 5,
+      "functions": 8,
+      "classes": 2
+    }
+  },
+  "scripts/drift_detection/__init__.py": {
+    "mtime": 1756773028.5543835,
+    "info": {
+      "path": "scripts/drift_detection/__init__.py",
+      "name": "__init__.py",
+      "size": 392,
+      "modified": "2025-09-01T21:30:28.554384",
+      "extension": ".py",
+      "hash": "8cdb2c8f134335c9",
+      "frontmatter": {
+        "title": "Drift Detection Module",
+        "purpose": "Modular drift detection for controlled duplication",
+        "stability": "stable",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 17,
+      "imports": 3,
+      "functions": 0,
+      "classes": 0
+    }
+  },
+  "scripts/pr_validation/pr_reporter.py": {
+    "mtime": 1756773162.1552052,
+    "info": {
+      "path": "scripts/pr_validation/pr_reporter.py",
+      "name": "pr_reporter.py",
+      "size": 4871,
+      "modified": "2025-09-01T21:32:42.155205",
+      "extension": ".py",
+      "hash": "6714dae1d34b77b5",
+      "frontmatter": {
+        "title": "PR Reporter",
+        "purpose": "Generate clear reports for PR validation results",
+        "stability": "stable",
+        "since_version": "1.0.0"
+      },
+      "lines": 164,
+      "imports": 2,
+      "functions": 6,
+      "classes": 1
+    }
+  },
+  "scripts/pr_validation/__init__.py": {
+    "mtime": 1756773227.6435175,
+    "info": {
+      "path": "scripts/pr_validation/__init__.py",
+      "name": "__init__.py",
+      "size": 1132,
+      "modified": "2025-09-01T21:33:47.643517",
+      "extension": ".py",
+      "hash": "ab11de31dc912096",
+      "frontmatter": {},
+      "lines": 53,
+      "imports": 4,
+      "functions": 0,
+      "classes": 0
+    }
+  },
+  "scripts/pr_validation/pr_validator.py": {
+    "mtime": 1756773109.6053643,
+    "info": {
+      "path": "scripts/pr_validation/pr_validator.py",
+      "name": "pr_validator.py",
+      "size": 3282,
+      "modified": "2025-09-01T21:31:49.605364",
+      "extension": ".py",
+      "hash": "bf411768e80a2762",
+      "frontmatter": {
+        "title": "PR Validator",
+        "purpose": "Validate PR changes against configured limits",
+        "stability": "stable",
+        "since_version": "1.0.0"
+      },
+      "lines": 132,
+      "imports": 2,
+      "functions": 3,
+      "classes": 1
+    }
+  },
+  "scripts/pr_validation/file_categorizer.py": {
+    "mtime": 1756773211.3227022,
+    "info": {
+      "path": "scripts/pr_validation/file_categorizer.py",
+      "name": "file_categorizer.py",
+      "size": 2067,
+      "modified": "2025-09-01T21:33:31.322702",
+      "extension": ".py",
+      "hash": "ef013765086af200",
+      "frontmatter": {
+        "title": "File Categorizer",
+        "purpose": "Categorize files based on patterns",
+        "stability": "stable",
+        "since_version": "1.0.0"
+      },
+      "lines": 83,
+      "imports": 3,
+      "functions": 3,
+      "classes": 1
+    }
+  },
+  "scripts/pr_validation/loc_counter.py": {
+    "mtime": 1756773067.1574001,
+    "info": {
+      "path": "scripts/pr_validation/loc_counter.py",
+      "name": "loc_counter.py",
+      "size": 2004,
+      "modified": "2025-09-01T21:31:07.157400",
+      "extension": ".py",
+      "hash": "8797b7de25d7fcc6",
+      "frontmatter": {
+        "title": "LOC Counter",
+        "purpose": "Count lines of code in PR changes",
+        "stability": "stable",
+        "since_version": "1.0.0"
+      },
+      "lines": 84,
+      "imports": 2,
+      "functions": 4,
+      "classes": 0
+    }
+  },
+  "scripts/learning/metric_tracker.py": {
+    "mtime": 1756773101.6075187,
+    "info": {
+      "path": "scripts/learning/metric_tracker.py",
+      "name": "metric_tracker.py",
+      "size": 4028,
+      "modified": "2025-09-01T21:31:41.607519",
+      "extension": ".py",
+      "hash": "f14ea51a5853af57",
+      "frontmatter": {
+        "title": "Metrics Tracking Module",
+        "purpose": "Track and aggregate learning system metrics",
+        "stability": "experimental",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 124,
+      "imports": 2,
+      "functions": 6,
+      "classes": 2
+    }
+  },
+  "scripts/learning/test_learning_system.py": {
+    "mtime": 1756773355.943748,
+    "info": {
+      "path": "scripts/learning/test_learning_system.py",
+      "name": "test_learning_system.py",
+      "size": 8511,
+      "modified": "2025-09-01T21:35:55.943748",
+      "extension": ".py",
+      "hash": "2616e980040b9d9c",
+      "frontmatter": {
+        "title": "Learning System Unit Tests",
+        "purpose": "Test learning system components"
+      },
+      "lines": 258,
+      "imports": 10,
+      "functions": 13,
+      "classes": 4
+    }
+  },
+  "scripts/learning/__init__.py": {
+    "mtime": 1756773284.323978,
+    "info": {
+      "path": "scripts/learning/__init__.py",
+      "name": "__init__.py",
+      "size": 630,
+      "modified": "2025-09-01T21:34:44.323978",
+      "extension": ".py",
+      "hash": "916b8344756ddb82",
+      "frontmatter": {
+        "title": "Learning System Package",
+        "purpose": "Modular adaptive learning system for LLM architecture improvements"
+      },
+      "lines": 21,
+      "imports": 5,
+      "functions": 0,
+      "classes": 0
+    }
+  },
+  "scripts/learning/pattern_learner.py": {
+    "mtime": 1756773059.8719378,
+    "info": {
+      "path": "scripts/learning/pattern_learner.py",
+      "name": "pattern_learner.py",
+      "size": 6870,
+      "modified": "2025-09-01T21:30:59.871938",
+      "extension": ".py",
+      "hash": "e2515ab043548ae5",
+      "frontmatter": {
+        "title": "Pattern Learning Module",
+        "purpose": "Learn successful architectural patterns from telemetry data",
+        "stability": "experimental",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 198,
+      "imports": 6,
+      "functions": 8,
+      "classes": 2
+    }
+  },
+  "scripts/learning/adaptation_engine.py": {
+    "mtime": 1756773164.3472476,
+    "info": {
+      "path": "scripts/learning/adaptation_engine.py",
+      "name": "adaptation_engine.py",
+      "size": 7959,
+      "modified": "2025-09-01T21:32:44.347248",
+      "extension": ".py",
+      "hash": "4e311a17ab74c979",
+      "frontmatter": {
+        "title": "Adaptation Engine Module",
+        "purpose": "Generate and prioritize architectural improvements based on patterns",
+        "stability": "experimental",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 209,
+      "imports": 2,
+      "functions": 8,
+      "classes": 6
+    }
+  },
+  "scripts/learning/learning_reporter.py": {
+    "mtime": 1756773224.6512394,
+    "info": {
+      "path": "scripts/learning/learning_reporter.py",
+      "name": "learning_reporter.py",
+      "size": 7332,
+      "modified": "2025-09-01T21:33:44.651239",
+      "extension": ".py",
+      "hash": "3eff80b198d0a26d",
+      "frontmatter": {
+        "title": "Learning Reporter Module",
+        "purpose": "Generate reports and insights from learning system",
+        "stability": "experimental",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 192,
+      "imports": 3,
+      "functions": 8,
+      "classes": 1
+    }
+  },
+  "scripts/learning/wiring.py": {
+    "mtime": 1756773274.3988762,
+    "info": {
+      "path": "scripts/learning/wiring.py",
+      "name": "wiring.py",
+      "size": 4851,
+      "modified": "2025-09-01T21:34:34.398876",
+      "extension": ".py",
+      "hash": "2e3835b4b768e749",
+      "frontmatter": {
+        "title": "Learning System Wiring Module",
+        "purpose": "Wire together learning system components",
+        "stability": "experimental",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 143,
+      "imports": 8,
+      "functions": 5,
+      "classes": 1
+    }
+  },
+  "scripts/confusion_analysis/complexity_analyzer.py": {
+    "mtime": 1756773133.129335,
+    "info": {
+      "path": "scripts/confusion_analysis/complexity_analyzer.py",
+      "name": "complexity_analyzer.py",
+      "size": 4502,
+      "modified": "2025-09-01T21:32:13.129335",
+      "extension": ".py",
+      "hash": "748af80bf8e26288",
+      "frontmatter": {
+        "title": "Complexity Analyzer",
+        "purpose": "Measure code complexity metrics",
+        "stability": "stable",
+        "since_version": "1.0.0"
+      },
+      "lines": 162,
+      "imports": 4,
+      "functions": 16,
+      "classes": 4
+    }
+  },
+  "scripts/confusion_analysis/confusion_scorer.py": {
+    "mtime": 1756773172.4955184,
+    "info": {
+      "path": "scripts/confusion_analysis/confusion_scorer.py",
+      "name": "confusion_scorer.py",
+      "size": 3761,
+      "modified": "2025-09-01T21:32:52.495518",
+      "extension": ".py",
+      "hash": "e410616170d9088f",
+      "frontmatter": {
+        "title": "Confusion Scorer",
+        "purpose": "Calculate confusion scores from metrics",
+        "stability": "stable",
+        "since_version": "1.0.0"
+      },
+      "lines": 119,
+      "imports": 3,
+      "functions": 6,
+      "classes": 2
+    }
+  },
+  "scripts/confusion_analysis/hotspot_detector.py": {
+    "mtime": 1756773214.946713,
+    "info": {
+      "path": "scripts/confusion_analysis/hotspot_detector.py",
+      "name": "hotspot_detector.py",
+      "size": 3342,
+      "modified": "2025-09-01T21:33:34.946713",
+      "extension": ".py",
+      "hash": "1fac9b16e34d269f",
+      "frontmatter": {
+        "title": "Hotspot Detector",
+        "purpose": "Find confusion hotspots in codebase",
+        "stability": "stable",
+        "since_version": "1.0.0"
+      },
+      "lines": 108,
+      "imports": 3,
+      "functions": 5,
+      "classes": 2
+    }
+  },
+  "scripts/confusion_analysis/__init__.py": {
+    "mtime": 1756773095.8713655,
+    "info": {
+      "path": "scripts/confusion_analysis/__init__.py",
+      "name": "__init__.py",
+      "size": 736,
+      "modified": "2025-09-01T21:31:35.871366",
+      "extension": ".py",
+      "hash": "72ea989a8aceba4e",
+      "frontmatter": {
+        "title": "Confusion Analysis Module",
+        "purpose": "Analyze codebase for confusion metrics and hotspots",
+        "stability": "stable",
+        "since_version": "1.0.0"
+      },
+      "lines": 35,
+      "imports": 4,
+      "functions": 0,
+      "classes": 0
+    }
+  },
+  "scripts/confusion_analysis/confusion_reporter.py": {
+    "mtime": 1756773277.1949039,
+    "info": {
+      "path": "scripts/confusion_analysis/confusion_reporter.py",
+      "name": "confusion_reporter.py",
+      "size": 6308,
+      "modified": "2025-09-01T21:34:37.194904",
+      "extension": ".py",
+      "hash": "9b9550aa1b938677",
+      "frontmatter": {
+        "title": "Confusion Reporter",
+        "purpose": "Generate confusion analysis reports",
+        "stability": "stable",
+        "since_version": "1.0.0"
+      },
+      "lines": 179,
+      "imports": 5,
+      "functions": 7,
+      "classes": 1
+    }
+  },
+  "scripts/domain_analysis/domain_models.py": {
+    "mtime": 1756773078.8395598,
+    "info": {
+      "path": "scripts/domain_analysis/domain_models.py",
+      "name": "domain_models.py",
+      "size": 5335,
+      "modified": "2025-09-01T21:31:18.839560",
+      "extension": ".py",
+      "hash": "27ee9e9e71f9efa3",
+      "frontmatter": {
+        "title": "Domain Models Extractor",
+        "purpose": "Extract domain entities and concepts from code",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 162,
+      "imports": 4,
+      "functions": 12,
+      "classes": 1
+    }
+  },
+  "scripts/domain_analysis/domain_mapper.py": {
+    "mtime": 1756772676.3581586,
+    "info": {
+      "path": "scripts/domain_analysis/domain_mapper.py",
+      "name": "domain_mapper.py",
+      "size": 3637,
+      "modified": "2025-09-01T21:24:36.358159",
+      "extension": ".py",
+      "hash": "8dac5f525898cfe4",
+      "frontmatter": {
+        "title": "Domain Mapper",
+        "purpose": "Map and aggregate domain information across repository",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 112,
+      "imports": 5,
+      "functions": 7,
+      "classes": 1
+    }
+  },
+  "scripts/domain_analysis/__init__.py": {
+    "mtime": 1756772973.4919457,
+    "info": {
+      "path": "scripts/domain_analysis/__init__.py",
+      "name": "__init__.py",
+      "size": 24,
+      "modified": "2025-09-01T21:29:33.491946",
+      "extension": ".py",
+      "hash": "f68e5bec1ac4f4ef",
+      "lines": 1,
+      "imports": 0,
+      "functions": 0,
+      "classes": 0
+    }
+  },
+  "scripts/domain_analysis/domain_rules.py": {
+    "mtime": 1756773100.1069098,
+    "info": {
+      "path": "scripts/domain_analysis/domain_rules.py",
+      "name": "domain_rules.py",
+      "size": 5436,
+      "modified": "2025-09-01T21:31:40.106910",
+      "extension": ".py",
+      "hash": "5312956e97d3d240",
+      "frontmatter": {
+        "title": "Domain Rules Analyzer",
+        "purpose": "Analyze business rules and detect bounded context violations",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 177,
+      "imports": 2,
+      "functions": 6,
+      "classes": 0
+    }
+  },
+  "scripts/domain_analysis/domain_reporter.py": {
+    "mtime": 1756772720.8302069,
+    "info": {
+      "path": "scripts/domain_analysis/domain_reporter.py",
+      "name": "domain_reporter.py",
+      "size": 3892,
+      "modified": "2025-09-01T21:25:20.830207",
+      "extension": ".py",
+      "hash": "0e576a5f5abfe2e3",
+      "frontmatter": {
+        "title": "Domain Analysis Reporter",
+        "purpose": "Generate domain analysis reports and CLI interface",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 113,
+      "imports": 5,
+      "functions": 4,
+      "classes": 1
+    }
+  },
+  "scripts/schema_validation/schema_validator.py": {
+    "mtime": 1756772991.9082901,
+    "info": {
+      "path": "scripts/schema_validation/schema_validator.py",
+      "name": "schema_validator.py",
+      "size": 2912,
+      "modified": "2025-09-01T21:29:51.908290",
+      "extension": ".py",
+      "hash": "cdcd88210c27efce",
+      "frontmatter": {
+        "title": "Schema Validator",
+        "purpose": "Core validation logic for schema compliance",
+        "stability": "stable",
+        "since_version": "1.0.0"
+      },
+      "lines": 104,
+      "imports": 4,
+      "functions": 5,
+      "classes": 2
+    }
+  },
+  "scripts/schema_validation/__init__.py": {
+    "mtime": 1756773338.980885,
+    "info": {
+      "path": "scripts/schema_validation/__init__.py",
+      "name": "__init__.py",
+      "size": 603,
+      "modified": "2025-09-01T21:35:38.980885",
+      "extension": ".py",
+      "hash": "76ecd4d72c6c313c",
+      "frontmatter": {},
+      "lines": 22,
+      "imports": 4,
+      "functions": 0,
+      "classes": 0
+    }
+  },
+  "scripts/schema_validation/test_schema_validation.py": {
+    "mtime": 1756773384.6773317,
+    "info": {
+      "path": "scripts/schema_validation/test_schema_validation.py",
+      "name": "test_schema_validation.py",
+      "size": 11451,
+      "modified": "2025-09-01T21:36:24.677332",
+      "extension": ".py",
+      "hash": "2051e07b4b2628ea",
+      "frontmatter": {
+        "title": "Schema Validation Test Suite",
+        "purpose": "Comprehensive tests for schema validation modules",
+        "stability": "stable",
+        "since_version": "1.0.0"
+      },
+      "lines": 418,
+      "imports": 10,
+      "functions": 17,
+      "classes": 5
+    }
+  },
+  "scripts/schema_validation/schema_reporter.py": {
+    "mtime": 1756773111.3871553,
+    "info": {
+      "path": "scripts/schema_validation/schema_reporter.py",
+      "name": "schema_reporter.py",
+      "size": 3935,
+      "modified": "2025-09-01T21:31:51.387155",
+      "extension": ".py",
+      "hash": "0a1a79b147a1b14b",
+      "frontmatter": {
+        "title": "Schema Validation Reporter",
+        "purpose": "Format and output validation results",
+        "stability": "stable",
+        "since_version": "1.0.0"
+      },
+      "lines": 121,
+      "imports": 3,
+      "functions": 8,
+      "classes": 1
+    }
+  },
+  "scripts/schema_validation/schema_rules.py": {
+    "mtime": 1756773071.042247,
+    "info": {
+      "path": "scripts/schema_validation/schema_rules.py",
+      "name": "schema_rules.py",
+      "size": 9318,
+      "modified": "2025-09-01T21:31:11.042247",
+      "extension": ".py",
+      "hash": "f6c6c29522c03f3a",
+      "frontmatter": {
+        "title": "Schema Validation Rules",
+        "purpose": "Specific validation rules for different file types",
+        "stability": "stable",
+        "since_version": "1.0.0"
+      },
+      "lines": 272,
+      "imports": 6,
+      "functions": 7,
+      "classes": 2
+    }
+  },
+  "scripts/schema_validation/schema_loader.py": {
+    "mtime": 1756772954.872223,
+    "info": {
+      "path": "scripts/schema_validation/schema_loader.py",
+      "name": "schema_loader.py",
+      "size": 3062,
+      "modified": "2025-09-01T21:29:14.872223",
+      "extension": ".py",
+      "hash": "e750a9858acb2da2",
+      "frontmatter": {
+        "title": "Schema Loader",
+        "purpose": "Load and parse JSON schemas with reference resolution",
+        "stability": "stable",
+        "since_version": "1.0.0"
+      },
+      "lines": 101,
+      "imports": 3,
+      "functions": 4,
+      "classes": 1
+    }
+  },
+  "scripts/repo_mapping/file_scanner.py": {
+    "mtime": 1756773399.824252,
+    "info": {
+      "path": "scripts/repo_mapping/file_scanner.py",
+      "name": "file_scanner.py",
+      "size": 7210,
+      "modified": "2025-09-01T21:36:39.824252",
+      "extension": ".py",
+      "hash": "62fe4e5d08d1a759",
+      "frontmatter": {
+        "title": "File Scanner Component",
+        "purpose": "Scan repository files with configurable filters and metadata extraction",
+        "stability": "stable",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 200,
+      "imports": 6,
+      "functions": 11,
+      "classes": 1
+    }
+  },
+  "scripts/repo_mapping/map_writer.py": {
+    "mtime": 1756773155.2069662,
+    "info": {
+      "path": "scripts/repo_mapping/map_writer.py",
+      "name": "map_writer.py",
+      "size": 5681,
+      "modified": "2025-09-01T21:32:35.206966",
+      "extension": ".py",
+      "hash": "efd7a91de4b374bd",
+      "frontmatter": {
+        "title": "Map Writer Component",
+        "purpose": "Write repository maps to various outputs with versioning",
+        "stability": "stable",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 177,
+      "imports": 5,
+      "functions": 10,
+      "classes": 1
+    }
+  },
+  "scripts/repo_mapping/map_builder.py": {
+    "mtime": 1756773057.7617955,
+    "info": {
+      "path": "scripts/repo_mapping/map_builder.py",
+      "name": "map_builder.py",
+      "size": 6332,
+      "modified": "2025-09-01T21:30:57.761796",
+      "extension": ".py",
+      "hash": "31d9854ea0a518c4",
+      "frontmatter": {
+        "title": "Map Builder Component",
+        "purpose": "Build structured repository map from scanned files",
+        "stability": "stable",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 183,
+      "imports": 4,
+      "functions": 10,
+      "classes": 1
+    }
+  },
+  "scripts/repo_mapping/map_formatter.py": {
+    "mtime": 1756773104.4105833,
+    "info": {
+      "path": "scripts/repo_mapping/map_formatter.py",
+      "name": "map_formatter.py",
+      "size": 5890,
+      "modified": "2025-09-01T21:31:44.410583",
+      "extension": ".py",
+      "hash": "40149064ca8e2b3b",
+      "frontmatter": {
+        "title": "Map Formatter Component",
+        "purpose": "Format repository map into various output formats",
+        "stability": "stable",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 187,
+      "imports": 3,
+      "functions": 12,
+      "classes": 1
+    }
+  },
+  "scripts/repo_mapping/__init__.py": {
+    "mtime": 1756772958.0829098,
+    "info": {
+      "path": "scripts/repo_mapping/__init__.py",
+      "name": "__init__.py",
+      "size": 480,
+      "modified": "2025-09-01T21:29:18.082910",
+      "extension": ".py",
+      "hash": "63c328ccf62ad9f8",
+      "frontmatter": {
+        "title": "Repository Mapping Module",
+        "purpose": "Modular components for repository structure analysis and documentation",
+        "stability": "stable",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 21,
+      "imports": 5,
+      "functions": 0,
+      "classes": 0
+    }
+  },
+  "scripts/repo_mapping/builder.py": {
+    "mtime": 1756773200.613028,
+    "info": {
+      "path": "scripts/repo_mapping/builder.py",
+      "name": "builder.py",
+      "size": 5427,
+      "modified": "2025-09-01T21:33:20.613028",
+      "extension": ".py",
+      "hash": "e4350b5d07ab37d5",
+      "frontmatter": {
+        "title": "Repository Map Builder",
+        "purpose": "Fluent interface for building repository maps with composable operations",
+        "stability": "stable",
+        "since_version": "\"0.4.0\""
+      },
+      "lines": 150,
+      "imports": 7,
+      "functions": 11,
+      "classes": 1
+    }
+  },
+  "scripts/readiness_check/readiness_reporter.py": {
+    "mtime": 1756773306.7820532,
+    "info": {
+      "path": "scripts/readiness_check/readiness_reporter.py",
+      "name": "readiness_reporter.py",
+      "size": 8327,
+      "modified": "2025-09-01T21:35:06.782053",
+      "extension": ".py",
+      "hash": "00bd10de7cf0c7bc",
+      "frontmatter": {},
+      "lines": 235,
+      "imports": 6,
+      "functions": 7,
+      "classes": 2
+    }
+  },
+  "scripts/readiness_check/readiness_validator.py": {
+    "mtime": 1756773236.2794511,
+    "info": {
+      "path": "scripts/readiness_check/readiness_validator.py",
+      "name": "readiness_validator.py",
+      "size": 5301,
+      "modified": "2025-09-01T21:33:56.279451",
+      "extension": ".py",
+      "hash": "2fdea2ddc1d0fe0e",
+      "frontmatter": {},
+      "lines": 149,
+      "imports": 4,
+      "functions": 7,
+      "classes": 3
+    }
+  },
+  "scripts/readiness_check/readiness_calculator.py": {
+    "mtime": 1756773120.514552,
+    "info": {
+      "path": "scripts/readiness_check/readiness_calculator.py",
+      "name": "readiness_calculator.py",
+      "size": 5456,
+      "modified": "2025-09-01T21:32:00.514552",
+      "extension": ".py",
+      "hash": "f7c4a0e9aace3243",
+      "frontmatter": {},
+      "lines": 145,
+      "imports": 6,
+      "functions": 6,
+      "classes": 2
+    }
+  },
+  "scripts/readiness_check/__init__.py": {
+    "mtime": 1756773031.0091016,
+    "info": {
+      "path": "scripts/readiness_check/__init__.py",
+      "name": "__init__.py",
+      "size": 446,
+      "modified": "2025-09-01T21:30:31.009102",
+      "extension": ".py",
+      "hash": "33f001a275fd4c20",
+      "frontmatter": {},
+      "lines": 17,
+      "imports": 4,
+      "functions": 0,
+      "classes": 0
+    }
+  },
+  "scripts/readiness_check/documentation_metrics.py": {
+    "mtime": 1756773187.5390477,
+    "info": {
+      "path": "scripts/readiness_check/documentation_metrics.py",
+      "name": "documentation_metrics.py",
+      "size": 3542,
+      "modified": "2025-09-01T21:33:07.539048",
+      "extension": ".py",
+      "hash": "a3591edeef1d6ed4",
+      "frontmatter": {},
+      "lines": 114,
+      "imports": 2,
+      "functions": 5,
+      "classes": 2
+    }
+  },
+  "scripts/readiness_check/cognitive_metrics.py": {
+    "mtime": 1756773159.825657,
+    "info": {
+      "path": "scripts/readiness_check/cognitive_metrics.py",
+      "name": "cognitive_metrics.py",
+      "size": 5932,
+      "modified": "2025-09-01T21:32:39.825657",
+      "extension": ".py",
+      "hash": "1ce8a2c571b02e8a",
+      "frontmatter": {},
+      "lines": 168,
+      "imports": 3,
+      "functions": 12,
+      "classes": 2
+    }
+  },
+  "scripts/readiness_check/readiness_metrics.py": {
+    "mtime": 1756773074.2901845,
+    "info": {
+      "path": "scripts/readiness_check/readiness_metrics.py",
+      "name": "readiness_metrics.py",
+      "size": 5592,
+      "modified": "2025-09-01T21:31:14.290184",
+      "extension": ".py",
+      "hash": "80761bfe0499a749",
+      "frontmatter": {},
+      "lines": 169,
+      "imports": 4,
+      "functions": 10,
+      "classes": 5
+    }
+  },
+  "scripts/semantic_analysis/semantic_reporter.py": {
+    "mtime": 1756773244.2130065,
+    "info": {
+      "path": "scripts/semantic_analysis/semantic_reporter.py",
+      "name": "semantic_reporter.py",
+      "size": 8718,
+      "modified": "2025-09-01T21:34:04.213006",
+      "extension": ".py",
+      "hash": "8c010f044e4f51cc",
+      "frontmatter": {
+        "title": "Semantic Analysis Reporter",
+        "purpose": "Generate reports from semantic analysis scores",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 243,
+      "imports": 6,
+      "functions": 11,
+      "classes": 2
+    }
+  },
+  "scripts/semantic_analysis/semantic_scorer.py": {
+    "mtime": 1756773158.733685,
+    "info": {
+      "path": "scripts/semantic_analysis/semantic_scorer.py",
+      "name": "semantic_scorer.py",
+      "size": 7711,
+      "modified": "2025-09-01T21:32:38.733685",
+      "extension": ".py",
+      "hash": "57216fd9fb23b0f1",
+      "frontmatter": {
+        "title": "Semantic Quality Scorer",
+        "purpose": "Score semantic quality and complexity metrics",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 204,
+      "imports": 4,
+      "functions": 7,
+      "classes": 3
+    }
+  },
+  "scripts/semantic_analysis/semantic_extractor.py": {
+    "mtime": 1756773091.3398275,
+    "info": {
+      "path": "scripts/semantic_analysis/semantic_extractor.py",
+      "name": "semantic_extractor.py",
+      "size": 10396,
+      "modified": "2025-09-01T21:31:31.339828",
+      "extension": ".py",
+      "hash": "a242029c9c5d99fd",
+      "frontmatter": {
+        "title": "Semantic Pattern Extractor",
+        "purpose": "Extract semantic patterns and dependencies from parsed data",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 277,
+      "imports": 5,
+      "functions": 13,
+      "classes": 5
+    }
+  },
+  "scripts/semantic_analysis/semantic_parser.py": {
+    "mtime": 1756773765.1705384,
+    "info": {
+      "path": "scripts/semantic_analysis/semantic_parser.py",
+      "name": "semantic_parser.py",
+      "size": 5502,
+      "modified": "2025-09-01T21:42:45.170538",
+      "extension": ".py",
+      "hash": "f93c0d7e908aa2c5",
+      "frontmatter": {
+        "title": "Semantic Parser",
+        "purpose": "Parse Python files and extract semantic elements",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 173,
+      "imports": 4,
+      "functions": 11,
+      "classes": 5
+    }
+  },
+  "scripts/semantic_analysis/semantic_pipeline.py": {
+    "mtime": 1756773326.2075076,
+    "info": {
+      "path": "scripts/semantic_analysis/semantic_pipeline.py",
+      "name": "semantic_pipeline.py",
+      "size": 7994,
+      "modified": "2025-09-01T21:35:26.207508",
+      "extension": ".py",
+      "hash": "0072ba4eb370408b",
+      "frontmatter": {
+        "title": "Semantic Analysis Pipeline",
+        "purpose": "Orchestrate semantic analysis pipeline stages",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 253,
+      "imports": 8,
+      "functions": 12,
+      "classes": 1
+    }
+  },
+  "scripts/semantic_analysis/test_semantic_modules.py": {
+    "mtime": 1756773414.594649,
+    "info": {
+      "path": "scripts/semantic_analysis/test_semantic_modules.py",
+      "name": "test_semantic_modules.py",
+      "size": 9568,
+      "modified": "2025-09-01T21:36:54.594649",
+      "extension": ".py",
+      "hash": "87c677ed649ee697",
+      "frontmatter": {
+        "title": "Semantic Analysis Module Tests",
+        "purpose": "Smoke tests for semantic analysis pipeline modules",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 300,
+      "imports": 14,
+      "functions": 21,
+      "classes": 6
+    }
+  },
+  "scripts/domain_analysis/tests/test_domain_models.py": {
+    "mtime": 1756772994.645134,
+    "info": {
+      "path": "scripts/domain_analysis/tests/test_domain_models.py",
+      "name": "test_domain_models.py",
+      "size": 3061,
+      "modified": "2025-09-01T21:29:54.645134",
+      "extension": ".py",
+      "hash": "74cce9621d6c3b29",
+      "frontmatter": {
+        "title": "Test Domain Models",
+        "purpose": "Golden tests for domain entity extraction",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 114,
+      "imports": 6,
+      "functions": 9,
+      "classes": 3
+    }
+  },
+  "scripts/domain_analysis/tests/test_domain_reporter.py": {
+    "mtime": 1756773032.0636587,
+    "info": {
+      "path": "scripts/domain_analysis/tests/test_domain_reporter.py",
+      "name": "test_domain_reporter.py",
+      "size": 3119,
+      "modified": "2025-09-01T21:30:32.063659",
+      "extension": ".py",
+      "hash": "b671f1df519aff66",
+      "frontmatter": {
+        "title": "Test Domain Reporter",
+        "purpose": "Golden tests for report generation",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 107,
+      "imports": 7,
+      "functions": 7,
+      "classes": 2
+    }
+  },
+  "scripts/domain_analysis/tests/test_domain_mapper.py": {
+    "mtime": 1756773019.3405826,
+    "info": {
+      "path": "scripts/domain_analysis/tests/test_domain_mapper.py",
+      "name": "test_domain_mapper.py",
+      "size": 3384,
+      "modified": "2025-09-01T21:30:19.340583",
+      "extension": ".py",
+      "hash": "accaf8612a4f4bd4",
+      "frontmatter": {
+        "title": "Test Domain Mapper",
+        "purpose": "Golden tests for domain mapping and aggregation",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 109,
+      "imports": 6,
+      "functions": 5,
+      "classes": 1
+    }
+  },
+  "scripts/domain_analysis/tests/test_domain_rules.py": {
+    "mtime": 1756773006.5109875,
+    "info": {
+      "path": "scripts/domain_analysis/tests/test_domain_rules.py",
+      "name": "test_domain_rules.py",
+      "size": 4280,
+      "modified": "2025-09-01T21:30:06.510988",
+      "extension": ".py",
+      "hash": "8c0a31ea2aed46e7",
+      "frontmatter": {
+        "title": "Test Domain Rules",
+        "purpose": "Golden tests for business rule analysis",
+        "stability": "stable",
+        "since_version": "\"0.5.0\""
+      },
+      "lines": 144,
+      "imports": 5,
+      "functions": 6,
+      "classes": 0
+    }
+  },
+  "scripts/domain_analysis/tests/__init__.py": {
+    "mtime": 1756772982.3664746,
+    "info": {
+      "path": "scripts/domain_analysis/tests/__init__.py",
+      "name": "__init__.py",
+      "size": 23,
+      "modified": "2025-09-01T21:29:42.366475",
+      "extension": ".py",
+      "hash": "56e201f00ffc8e04",
+      "lines": 1,
+      "imports": 0,
+      "functions": 0,
+      "classes": 0
+    }
+  },
+  "features/template/service.py": {
+    "mtime": 1756749270.9473777,
+    "info": {
+      "path": "features/template/service.py",
+      "name": "service.py",
+      "size": 10184,
+      "modified": "2025-09-01T14:54:30.947378",
+      "extension": ".py",
+      "hash": "61ed0a7a77eff12d",
+      "frontmatter": {
+        "title": "[FEATURE_NAME] Application Service",
+        "purpose": "Orchestrate business operations and coordinate between layers",
+        "stability": "wip",
+        "since_version": "\"0.1.0\""
+      },
+      "lines": 288,
+      "imports": 4,
+      "functions": 3,
+      "classes": 5
+    }
+  },
+  "features/template/models.py": {
+    "mtime": 1756748928.9619403,
+    "info": {
+      "path": "features/template/models.py",
+      "name": "models.py",
+      "size": 4435,
+      "modified": "2025-09-01T14:48:48.961940",
+      "extension": ".py",
+      "hash": "2f08ef3f1f71c30f",
+      "frontmatter": {
+        "title": "[FEATURE_NAME] Domain Models",
+        "purpose": "Define core entities and value objects for [FEATURE_NAME] feature",
+        "stability": "wip",
+        "since_version": "\"0.1.0\""
+      },
+      "lines": 158,
+      "imports": 4,
+      "functions": 14,
+      "classes": 5
+    }
+  },
+  "features/template/api.py": {
+    "mtime": 1756749282.4945993,
+    "info": {
+      "path": "features/template/api.py",
+      "name": "api.py",
+      "size": 17018,
+      "modified": "2025-09-01T14:54:42.494599",
+      "extension": ".py",
+      "hash": "c96ffe6e67d0d156",
+      "frontmatter": {
+        "title": "[FEATURE_NAME] HTTP API",
+        "purpose": "Expose [FEATURE_NAME] operations via REST endpoints",
+        "stability": "wip",
+        "since_version": "\"0.1.0\""
+      },
+      "lines": 557,
+      "imports": 6,
+      "functions": 5,
+      "classes": 4
+    }
+  },
+  "features/template/tests.py": {
+    "mtime": 1756749293.6837635,
+    "info": {
+      "path": "features/template/tests.py",
+      "name": "tests.py",
+      "size": 13330,
+      "modified": "2025-09-01T14:54:53.683764",
+      "extension": ".py",
+      "hash": "f02b7f5fbc768da1",
+      "frontmatter": {
+        "title": "[FEATURE_NAME] Test Suite",
+        "purpose": "Test all [FEATURE_NAME] functionality with BDD-Lite scenarios for P0 flows",
+        "stability": "wip",
+        "since_version": "\"0.1.0\""
+      },
+      "lines": 353,
+      "imports": 4,
+      "functions": 11,
+      "classes": 5
+    }
+  },
+  "features/template/repository.py": {
+    "mtime": 1756749303.677095,
+    "info": {
+      "path": "features/template/repository.py",
+      "name": "repository.py",
+      "size": 13409,
+      "modified": "2025-09-01T14:55:03.677095",
+      "extension": ".py",
+      "hash": "6a695d4eea9e68fe",
+      "frontmatter": {
+        "title": "[FEATURE_NAME] Data Access Layer",
+        "purpose": "Implement data persistence for [FEATURE_NAME] entities",
+        "stability": "wip",
+        "since_version": "\"0.1.0\""
+      },
+      "lines": 384,
+      "imports": 4,
+      "functions": 2,
+      "classes": 1
+    }
+  },
+  "features/template/wiring.py": {
+    "mtime": 1756749313.904212,
+    "info": {
+      "path": "features/template/wiring.py",
+      "name": "wiring.py",
+      "size": 6570,
+      "modified": "2025-09-01T14:55:13.904212",
+      "extension": ".py",
+      "hash": "6d99c9fa369c6871",
+      "frontmatter": {
+        "title": "[FEATURE_NAME] Dependency Injection Setup",
+        "purpose": "Wire dependencies for [FEATURE_NAME] feature in LLM-first pattern",
+        "stability": "wip",
+        "since_version": "\"0.1.0\""
+      },
+      "lines": 213,
+      "imports": 3,
+      "functions": 10,
+      "classes": 0
+    }
+  },
+  "scripts/semantic_analysis/README.md": {
+    "mtime": 1756773479.6445987,
+    "info": {
+      "path": "scripts/semantic_analysis/README.md",
+      "name": "README.md",
+      "size": 5745,
+      "modified": "2025-09-01T21:37:59.644599",
+      "extension": ".md",
+      "hash": "fd5bc365e8683aad"
+    }
+  },
+  "scripts/semantic_analysis/ADR-LITE-001-semantic-refactor.md": {
+    "mtime": 1756773521.8936148,
+    "info": {
+      "path": "scripts/semantic_analysis/ADR-LITE-001-semantic-refactor.md",
+      "name": "ADR-LITE-001-semantic-refactor.md",
+      "size": 2656,
+      "modified": "2025-09-01T21:38:41.893615",
+      "extension": ".md",
+      "hash": "ffaed7f24c76b109"
+    }
+  },
+  "docs/adr/ADR-012-drift-check-modularization.md": {
+    "mtime": 1756773571.1433876,
+    "info": {
+      "path": "docs/adr/ADR-012-drift-check-modularization.md",
+      "name": "ADR-012-drift-check-modularization.md",
+      "size": 1394,
+      "modified": "2025-09-01T21:39:31.143388",
+      "extension": ".md",
+      "hash": "d62060608d18b418"
+    }
+  },
+  "docs/adr/ADR-007-readiness-check-refactoring.md": {
+    "mtime": 1756773654.906121,
+    "info": {
+      "path": "docs/adr/ADR-007-readiness-check-refactoring.md",
+      "name": "ADR-007-readiness-check-refactoring.md",
+      "size": 1343,
+      "modified": "2025-09-01T21:40:54.906121",
+      "extension": ".md",
+      "hash": "571c74e9432152d2"
+    }
+  },
+  "docs/repo/REFACTORING_SUMMARY_drift_check.md": {
+    "mtime": 1756773751.7321749,
+    "info": {
+      "path": "docs/repo/REFACTORING_SUMMARY_drift_check.md",
+      "name": "REFACTORING_SUMMARY_drift_check.md",
+      "size": 1741,
+      "modified": "2025-09-01T21:42:31.732175",
+      "extension": ".md",
+      "hash": "8cb178b54e758178"
+    }
+  },
+  "docs/repo/REFACTORING_SUMMARY_adaptive_learner.md": {
+    "mtime": 1756773523.0672088,
+    "info": {
+      "path": "docs/repo/REFACTORING_SUMMARY_adaptive_learner.md",
+      "name": "REFACTORING_SUMMARY_adaptive_learner.md",
+      "size": 2395,
+      "modified": "2025-09-01T21:38:43.067209",
+      "extension": ".md",
+      "hash": "e822863e201cf1ac"
+    }
+  },
+  "docs/repo/HOTSPOT_REFACTORING_SUMMARY.md": {
+    "mtime": 1756773485.7609441,
+    "info": {
+      "path": "docs/repo/HOTSPOT_REFACTORING_SUMMARY.md",
+      "name": "HOTSPOT_REFACTORING_SUMMARY.md",
+      "size": 3623,
+      "modified": "2025-09-01T21:38:05.760944",
+      "extension": ".md",
+      "hash": "525d6093cc28627f"
+    }
+  },
+  "docs/repo/.backups/REPO_MAP_20250901_213705.md": {
+    "mtime": 1756773418.9174426,
+    "info": {
+      "path": "docs/repo/.backups/REPO_MAP_20250901_213705.md",
+      "name": "REPO_MAP_20250901_213705.md",
+      "size": 4094,
+      "modified": "2025-09-01T21:36:58.917443",
+      "extension": ".md",
+      "hash": "d005be3becf25057"
+    }
+  },
+  "docs/repo/.versions/REPO_MAP_v20250901_213705.md": {
+    "mtime": 1756773425.0180886,
+    "info": {
+      "path": "docs/repo/.versions/REPO_MAP_v20250901_213705.md",
+      "name": "REPO_MAP_v20250901_213705.md",
+      "size": 7959,
+      "modified": "2025-09-01T21:37:05.018089",
+      "extension": ".md",
+      "hash": "c4c3db9a8cbb1662"
+    }
+  },
+  "scripts/semantic_analysis/INDEX.yaml": {
+    "mtime": 1756773711.175359,
+    "info": {
+      "path": "scripts/semantic_analysis/INDEX.yaml",
+      "name": "INDEX.yaml",
+      "size": 1856,
+      "modified": "2025-09-01T21:41:51.175359",
+      "extension": ".yaml",
+      "hash": "b2aeb08c3895d778"
+    }
+  },
+  "scripts/test_confusion_analysis.py": {
+    "mtime": 1756773485.1555219,
+    "info": {
+      "path": "scripts/test_confusion_analysis.py",
+      "name": "test_confusion_analysis.py",
+      "size": 11083,
+      "modified": "2025-09-01T21:38:05.155522",
+      "extension": ".py",
+      "hash": "856dca0dfb53ef17",
+      "frontmatter": {},
+      "lines": 330,
+      "imports": 13,
+      "functions": 30,
+      "classes": 8
+    }
+  },
+  "scripts/tests/test_readiness_check.py": {
+    "mtime": 1756773743.8968735,
+    "info": {
+      "path": "scripts/tests/test_readiness_check.py",
+      "name": "test_readiness_check.py",
+      "size": 7470,
+      "modified": "2025-09-01T21:42:23.896873",
+      "extension": ".py",
+      "hash": "1307dc64a9be6bcf",
+      "frontmatter": {},
+      "lines": 234,
+      "imports": 13,
+      "functions": 13,
+      "classes": 4
+    }
+  },
+  "scripts/semantic_analysis/verify_refactoring.py": {
+    "mtime": 1756773837.5819764,
+    "info": {
+      "path": "scripts/semantic_analysis/verify_refactoring.py",
+      "name": "verify_refactoring.py",
+      "size": 4672,
+      "modified": "2025-09-01T21:43:57.581976",
+      "extension": ".py",
+      "hash": "47f1f9c007d967b9",
+      "frontmatter": {},
+      "lines": 143,
+      "imports": 2,
+      "functions": 3,
+      "classes": 0
+    }
+  }
+}
