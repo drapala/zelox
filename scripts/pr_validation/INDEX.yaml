@@ -1,0 +1,52 @@
+module: pr_validation
+purpose: Modular PR size validation with configurable limits
+files:
+  - path: loc_counter.py
+    role: utility
+    description: Git operations and line counting
+    loc: 80
+  - path: file_categorizer.py
+    role: utility
+    description: File categorization based on patterns
+    loc: 70
+  - path: pr_validator.py
+    role: validation
+    description: Validation logic against configurable limits
+    loc: 80
+  - path: pr_reporter.py
+    role: reporting
+    description: Report generation and formatting
+    loc: 90
+  - path: config.yaml
+    role: configuration
+    description: Configurable thresholds and patterns
+  - path: __init__.py
+    role: wiring
+    description: Module exports and public API
+
+contracts:
+  entrypoints:
+    - name: get_changed_files
+      module: loc_counter
+      description: Get list of changed files in PR
+    - name: count_file_changes
+      module: loc_counter
+      description: Count added/deleted lines per file
+    - name: categorize_files
+      module: file_categorizer
+      description: Categorize files by type
+    - name: validate_pr
+      module: pr_validator
+      description: Validate PR against limits
+    - name: generate_failure_report
+      module: pr_reporter
+      description: Generate failure report with suggestions
+    - name: generate_success_report
+      module: pr_reporter
+      description: Generate success report
+  
+  invariants:
+    - Documentation files never count toward LOC limits
+    - Effective LOC = added lines + deleted lines
+    - Categories checked in order: TEST > CONFIG > DOCUMENTATION > APPLICATION
+    - Default to APPLICATION if no pattern matches
