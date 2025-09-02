@@ -20,6 +20,8 @@ Simplified PR LOC validation using modular components.
 Per ADR-003 and ADR-006: Incentivizes comprehensive testing.
 """
 
+import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -50,6 +52,11 @@ def load_config() -> dict:
     # Fallback to default config
     return {
         "total_files_limit": 25,
+        "override_labels": [
+            "override: pr-loc-exempt",
+            "override: size-exempt",
+            "override/size-exempt",
+        ],
         "category_limits": {
             FileCategory.APPLICATION: {"loc": 500, "files": 10},
             FileCategory.TEST: {"loc": 1000, "files": 20},
@@ -193,6 +200,21 @@ def get_base_ref(args: list) -> str:
     return "origin/main...HEAD"
 
 
+def get_pr_labels_from_event() -> list[str]:
+    """Extract PR labels from GitHub Actions event payload, if available."""
+    event_path = os.environ.get("GITHUB_EVENT_PATH")
+    if not event_path:
+        return []
+    try:
+        with open(event_path, encoding="utf-8") as f:
+            payload = json.load(f)
+        pr = payload.get("pull_request") or {}
+        labels = pr.get("labels") or []
+        return [lbl.get("name", "") for lbl in labels if isinstance(lbl, dict)]
+    except Exception:
+        return []
+
+
 def main():
     """Main entry point."""
     # Load configuration
@@ -201,6 +223,13 @@ def main():
     # Get base ref
     base_ref = get_base_ref(sys.argv)
     print(f"Checking PR against: {base_ref}")
+
+    # Respect override labels if present in the PR (GitHub Actions)
+    labels = set(get_pr_labels_from_event())
+    override_labels = set(config.get("override_labels", []))
+    if labels & override_labels:
+        print("PR LOC check: override label present; skipping size enforcement.")
+        sys.exit(0)
 
     # Analyze PR
     stats = analyze_pr(base_ref, config)
