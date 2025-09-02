@@ -55,9 +55,8 @@ def categorize_file(
     Check order: TEST > CONFIG > DOCUMENTATION > APPLICATION
     """
     for category in [FileCategory.TEST, FileCategory.CONFIG, FileCategory.DOCUMENTATION]:
-        if category in compiled_patterns:
-            if compiled_patterns[category].search(filepath):
-                return category
+        if category in compiled_patterns and compiled_patterns[category].search(filepath):
+            return category
 
     # Default to APPLICATION
     return FileCategory.APPLICATION
@@ -68,7 +67,7 @@ def categorize_files(
 ) -> dict[FileCategory, list[str]]:
     """Categorize multiple files."""
     compiled = compile_patterns(patterns)
-    categorized = {category: [] for category in FileCategory}
+    categorized: dict[FileCategory, list[str]] = {category: [] for category in FileCategory}
 
     for filepath in filepaths:
         category = categorize_file(filepath, compiled)

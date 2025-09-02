@@ -22,16 +22,7 @@ PR validation logic with configurable thresholds.
 Returns clear pass/fail status with violation details.
 """
 
-from enum import Enum
-
-
-class FileCategory(Enum):
-    """File categories with different limits."""
-
-    APPLICATION = "application"
-    TEST = "test"
-    CONFIG = "config"
-    DOCUMENTATION = "documentation"
+from .file_categorizer import FileCategory
 
 
 def check_category_limit(
@@ -43,7 +34,8 @@ def check_category_limit(
     Returns list of violations (empty if valid).
     """
     violations = []
-    cat_limits = limits.get(category, {})
+    # Support configs keyed by either Enum or string values
+    cat_limits = limits.get(category, limits.get(category.value, {}))
 
     # Check file count
     if cat_limits.get("files") and file_count > cat_limits["files"]:
@@ -102,7 +94,8 @@ def get_category_status(category: FileCategory, stats: dict, limits: dict) -> st
     """Get formatted status for a category."""
     files = stats["categorized_files"].get(category, [])
     cat_stats = stats["categorized_stats"].get(category, {})
-    cat_limits = limits.get(category, {})
+    # Support configs keyed by either Enum or string values
+    cat_limits = limits.get(category, limits.get(category.value, {}))
 
     if not files:
         return ""

@@ -20,6 +20,7 @@ Simplified PR LOC validation using modular components.
 Per ADR-003 and ADR-006: Incentivizes comprehensive testing.
 """
 
+import subprocess
 import sys
 from pathlib import Path
 
@@ -29,10 +30,9 @@ import yaml
 from pr_validation import (
     FileCategory,
     categorize_files,
-    count_file_changes,
+    compile_patterns,
     generate_failure_report,
     generate_success_report,
-    get_changed_files,
     get_effective_loc,
     print_analysis,
     validate_pr,
@@ -85,8 +85,64 @@ def load_config() -> dict:
     }
 
 
-def analyze_pr(base_ref: str, config: dict) -> dict:
+# Backward-compatibility constants and helpers for existing tests
+# Expose TOTAL_FILES_LIMIT expected by tests without changing modular design
+TOTAL_FILES_LIMIT = load_config().get("total_files_limit", 25)
+
+
+def get_file_diff_stats(filepath: str, base_ref: str) -> tuple[int, int]:
+    """Return added, deleted lines for a file (patchable via local git runner)."""
+    try:
+        diff = run_git_command("diff", "--unified=0", base_ref, "--", filepath)
+        if not diff:
+            return 0, 0
+        lines = diff.splitlines()
+        added = sum(1 for line in lines if line.startswith("+") and not line.startswith("+++"))
+        deleted = sum(1 for line in lines if line.startswith("-") and not line.startswith("---"))
+        return added, deleted
+    except Exception:
+        return 0, 0
+
+
+def check_limits(stats: dict) -> bool:
+    """Compatibility wrapper: validate stats against config limits.
+
+    Returns True when within limits, False otherwise.
+    """
+    config = load_config()
+    is_valid, _ = validate_pr(stats, config)
+    return is_valid
+
+
+# Expose run_git_command to satisfy existing tests' patch targets
+def run_git_command(*args: str) -> str:
+    """Execute git command and return output (patchable in tests)."""
+    try:
+        result = subprocess.check_output(["git"] + list(args), text=True, stderr=subprocess.DEVNULL)
+        return result.strip()
+    except subprocess.CalledProcessError:
+        return ""
+
+
+def get_changed_files(base_ref: str = "origin/main...HEAD") -> list[str]:
+    """Get list of changed files using local git runner (patchable)."""
+    output = run_git_command("diff", "--name-only", base_ref)
+    return [f for f in output.splitlines() if f.strip()]
+
+
+def categorize_file(filepath: str) -> FileCategory:
+    """Categorize a file using configured patterns (single-arg wrapper)."""
+    patterns = load_config().get("category_patterns", {})
+    compiled = compile_patterns(patterns)
+    from pr_validation.file_categorizer import categorize_file as _categorize_file
+
+    return _categorize_file(filepath, compiled)
+
+
+def analyze_pr(base_ref: str, config: dict | None = None) -> dict:
     """Analyze PR and return categorized statistics."""
+    if config is None:
+        config = load_config()
     # Get changed files
     all_files = get_changed_files(base_ref)
 
@@ -104,7 +160,7 @@ def analyze_pr(base_ref: str, config: dict) -> dict:
             continue  # Skip docs
 
         for filepath in files:
-            added, deleted = count_file_changes(filepath, base_ref)
+            added, deleted = get_file_diff_stats(filepath, base_ref)
             categorized_stats[category]["added"] += added
             categorized_stats[category]["deleted"] += deleted
             categorized_stats[category]["loc"] += get_effective_loc(added, deleted)
