@@ -40,7 +40,7 @@ from schema_validation.schema_rules import ValidationRules
 
 def validate_all_schemas(repo_root: Path) -> bool:
     """Run all schema validations with clear linear flow."""
-    rules = ValidationRules(repo_root)
+    rules = ValidationRules(str(repo_root))
     reporter = ValidationReporter()
 
     # Print header
@@ -82,7 +82,7 @@ def validate_all_schemas(repo_root: Path) -> bool:
 
 def check_source_frontmatter(repo_root: Path) -> bool:
     """Check Python source files for frontmatter coverage."""
-    rules = ValidationRules(repo_root)
+    rules = ValidationRules(str(repo_root))
 
     print("=" * 60)
     print("SOURCE FILE FRONTMATTER CHECK")
