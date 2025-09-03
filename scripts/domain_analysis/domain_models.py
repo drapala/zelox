@@ -42,7 +42,8 @@ class DomainLanguageExtractor(ast.NodeVisitor):
     def visit_ClassDef(self, node):
         """Extract class names as domain concepts."""
         self.class_names.add(node.name)
-        self.domain_terms.add(node.name)
+        # Derive domain terms from class name in a normalized form
+        self._extract_domain_terms_from_name(node.name)
 
         docstring = ast.get_docstring(node)
         if docstring:
@@ -90,12 +91,16 @@ class DomainLanguageExtractor(ast.NodeVisitor):
         camel_parts = re.findall(r"[A-Z]?[a-z]+|[A-Z]+(?=[A-Z][a-z]|\d|\W|$)|\d+", name)
         for part in camel_parts:
             if len(part) > 2:
-                self.domain_terms.add(part.lower())
+                lowered = part.lower()
+                if not self._is_technical_word(lowered):
+                    self.domain_terms.add(lowered)
 
         snake_parts = name.split("_")
         for part in snake_parts:
             if len(part) > 2:
-                self.domain_terms.add(part.lower())
+                lowered = part.lower()
+                if not self._is_technical_word(lowered):
+                    self.domain_terms.add(lowered)
 
     def _extract_from_docstring(self, docstring: str) -> None:
         """Extract domain terms from docstrings."""

@@ -21,8 +21,8 @@ import argparse
 import json
 from typing import Any
 
-from domain_mapper import map_domain_boundaries
-from domain_rules import (
+from .domain_mapper import map_domain_boundaries
+from .domain_rules import (
     calculate_coherence_score,
     detect_boundary_violations,
     generate_vsa_recommendations,

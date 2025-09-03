@@ -24,7 +24,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from domain_models import extract_domain_language, extract_feature_name
+from .domain_models import extract_domain_language, extract_feature_name
 
 
 class BoundedContextAnalyzer:
