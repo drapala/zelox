@@ -180,7 +180,7 @@ def extract_domain_language(file_path: Path) -> dict[str, Any]:
             "string_literals": extractor.string_literals,
         }
     except Exception as e:
-        raise RuntimeError(f"Failed to extract from {file_path}: {e}")
+        raise RuntimeError(f"Failed to extract from {file_path}: {e}") from e
 
 
 def extract_feature_name(file_path: str) -> str | None:

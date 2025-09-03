@@ -41,7 +41,8 @@ class DomainPatternDetector:
 
         mapping = map_domain_boundaries(self.repo_root)
 
-        file_domains = mapping["file_domains"]
+        # file_domains is currently unused; keep feature-level aggregation
+        _ = mapping["file_domains"]
         feature_domains = mapping["feature_domains"]
 
         violations = detect_boundary_violations(feature_domains)
