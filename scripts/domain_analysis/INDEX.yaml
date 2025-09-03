@@ -1,0 +1,57 @@
+module: domain_analysis
+description: Domain pattern detection and VSA analysis for LLM-friendly architecture
+files:
+  - path: domain_models.py
+    role: flow
+    description: Extract domain entities and concepts from code
+    loc: 150
+  - path: domain_rules.py
+    role: flow
+    description: Analyze business rules and detect violations
+    loc: 145
+  - path: domain_mapper.py
+    role: flow
+    description: Map and aggregate domain information
+    loc: 120
+  - path: domain_reporter.py
+    role: entrypoint
+    description: Generate reports and provide CLI interface
+    loc: 100
+  - path: tests/test_domain_models.py
+    role: tests
+    description: Golden tests for domain extraction
+    loc: 95
+  - path: tests/test_domain_rules.py
+    role: tests
+    description: Golden tests for rule analysis
+    loc: 130
+  - path: tests/test_domain_mapper.py
+    role: tests
+    description: Golden tests for domain mapping
+    loc: 100
+  - path: tests/test_domain_reporter.py
+    role: tests
+    description: Golden tests for report generation
+    loc: 85
+
+contracts:
+  entrypoints:
+    - name: main
+      file: domain_reporter.py
+      description: CLI entry point for domain analysis
+    - name: DomainPatternDetector
+      file: domain_reporter.py
+      description: Main API class for domain analysis
+  
+  invariants:
+    - Each module must be under 200 LOC
+    - Maximum cyclomatic complexity of 10 per function
+    - Maximum indirection depth of 2 levels
+    - All critical paths must have golden tests
+    - YAML frontmatter required for all modules
+
+performance_targets:
+  max_loc_per_file: 200
+  max_cyclomatic_complexity: 10
+  max_indirection_depth: 2
+  test_coverage_target: 90

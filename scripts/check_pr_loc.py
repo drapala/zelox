@@ -5,6 +5,8 @@ Implements differentiated limits for application code, tests, and configuration.
 Per ADR-003 and ADR-006: Incentivizes comprehensive testing while maintaining focus.
 """
 
+import json
+import os
 import re
 import subprocess
 import sys
@@ -76,6 +78,13 @@ CATEGORY_LIMITS = {
 
 # Total files limit across all categories (safety net)
 TOTAL_FILES_LIMIT = 25
+
+# Labels that bypass the PR LOC gate when applied to a PR
+OVERRIDE_LABELS = [
+    "override: pr-loc-exempt",
+    "override: size-exempt",
+    "override/size-exempt",
+]
 
 
 def categorize_file(filepath: str) -> FileCategory:
@@ -149,6 +158,21 @@ def analyze_pr(base_ref: str = "origin/main...HEAD") -> dict:
         "categorized_files": categorized_files,
         "categorized_stats": categorized_stats,
     }
+
+
+def get_pr_labels_from_event() -> list[str]:
+    """Extract PR labels from GitHub Actions event payload, if available."""
+    event_path = os.environ.get("GITHUB_EVENT_PATH")
+    if not event_path:
+        return []
+    try:
+        with open(event_path, encoding="utf-8") as f:
+            payload = json.load(f)
+        pr = payload.get("pull_request") or {}
+        labels = pr.get("labels") or []
+        return [lbl.get("name", "") for lbl in labels if isinstance(lbl, dict)]
+    except Exception:
+        return []
 
 
 def print_analysis(stats: dict) -> None:
@@ -328,6 +352,12 @@ def main():
             base_ref = "HEAD~1...HEAD"
 
     print(f"Checking PR against: {base_ref}")
+
+    # Respect override labels if present (only in GitHub Actions context)
+    labels = set(get_pr_labels_from_event())
+    if labels & set(OVERRIDE_LABELS):
+        print("PR LOC check: override label present; skipping size enforcement.")
+        sys.exit(0)
 
     # Analyze PR
     stats = analyze_pr(base_ref)
